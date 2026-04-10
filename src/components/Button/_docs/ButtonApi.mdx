@@ -1,0 +1,88 @@
+{/* ButtonApi.mdx — API reference */}
+{/* Mirrors: projects/ds-components/button/src/lib/_docs/button-api.mdx */}
+
+import { Meta, ArgTypes } from '@storybook/blocks';
+import { Button } from '../Button';
+
+<Meta title="Components/Button/API" />
+
+# Button API
+
+## Import
+
+```tsx
+import { Button } from '@niceltd/sol-react';
+// Types
+import type { ButtonProps, ButtonHandle, ButtonVariant, ButtonSize } from '@niceltd/sol-react';
+```
+
+## Angular equivalent
+
+```html
+<!-- Angular selector -->
+<sol-button variant="primary" size="large" (buttonClick)="onSave()">
+  Save
+</sol-button>
+```
+
+```tsx
+{/* React equivalent */}
+<Button variant="primary" size="large" onClick={onSave}>
+  Save
+</Button>
+```
+
+---
+
+## Props
+
+<ArgTypes of={Button} />
+
+---
+
+## Ref API (`ButtonHandle`)
+
+The component forwards a ref exposing a single imperative method:
+
+```tsx
+import { useRef } from 'react';
+import { Button, type ButtonHandle } from '@niceltd/sol-react';
+
+function Example() {
+  const btnRef = useRef<ButtonHandle>(null);
+
+  return (
+    <>
+      <Button ref={btnRef} variant="primary">Focus target</Button>
+      <button onClick={() => btnRef.current?.focus()}>Focus the button</button>
+    </>
+  );
+}
+```
+
+| Method    | Description                             |
+|-----------|-----------------------------------------|
+| `focus()` | Programmatically focuses the `<button>` |
+
+---
+
+## Type definitions
+
+```typescript
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'critical';
+export type ButtonSize    = 'large' | 'medium' | 'small';
+
+export interface ButtonHandle {
+  focus: () => void;
+}
+```
+
+---
+
+## Version notes
+
+| Version | Change |
+|---------|--------|
+| v1.0    | Initial React port from Angular `ButtonModule` |
+| Angular v16 | `basic` → `secondary`, `text` → `tertiary`, `warn` → `critical` (carried forward) |
+| Angular v12 | `click` output renamed to `buttonClick` → React prop is `onClick` |

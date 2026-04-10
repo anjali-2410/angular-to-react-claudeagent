@@ -1,0 +1,73 @@
+{/* Button.mdx — Overview documentation page */}
+{/* Mirrors: projects/ds-components/button/src/lib/_docs/button.mdx */}
+
+import { Meta, Canvas } from '@storybook/blocks';
+import * as ButtonExamples from '../_stories/Button.stories';
+import * as ButtonOverview from '../_stories/ButtonOverview.stories';
+
+<Meta title="Components/Button/Overview" />
+
+# Button
+
+Buttons communicate actions that users can take. They are typically placed throughout your UI in places like dialogs, forms, cards, and toolbars. SOL buttons support four visual variants, three sizes, leading/trailing icons, and full ARIA accessibility.
+
+---
+
+## Guidelines
+
+- **Use clear, action-oriented labels** — button text should describe what happens on click (e.g. "Save", "Cancel", "Delete record").
+- **Establish visual hierarchy** — use one `primary` button per region. Secondary and tertiary buttons support non-primary actions.
+- **Maintain consistent sizing** — use `large` for main calls-to-action, `medium` for standard UI actions, and `small` for compact or inline contexts.
+- **Icon-only buttons require an `ariaLabel`** — always provide a descriptive `ariaLabel` when omitting visible text. The label also serves as the accessible tooltip text.
+- **Respect spacing guidelines** — do not place buttons directly adjacent without adequate gap between them.
+
+---
+
+## Variants
+
+The `variant` prop sets the visual emphasis. Choose the variant that fits the action's importance in the current context.
+
+<Canvas of={ButtonExamples.ButtonStyles} />
+
+| Variant     | Use when…                                                        |
+|-------------|------------------------------------------------------------------|
+| `primary`   | The main call-to-action — one per page region                    |
+| `secondary` | Supporting actions alongside a primary button                    |
+| `tertiary`  | Low-emphasis actions; avoids visual clutter                      |
+| `critical`  | Destructive or irreversible actions (delete, remove, disconnect) |
+
+---
+
+## Sizes
+
+The `size` prop controls height, padding, and font size.
+
+<Canvas of={ButtonExamples.ButtonSizes} />
+
+| Size     | Height token             | Typical use                        |
+|----------|--------------------------|------------------------------------|
+| `large`  | `--sol-size-control-lg`  | Primary actions, headers, dialogs  |
+| `medium` | `--sol-size-control-md`  | Standard UI (default size)         |
+| `small`  | `--sol-size-control-sm`  | Toolbars, compact lists, inline    |
+
+---
+
+## States
+
+Buttons respond to user interaction with distinct visual states.
+
+<Canvas of={ButtonExamples.ButtonStates} />
+
+- **Default** — resting state
+- **Disabled** — `disabled` prop prevents interaction and applies muted styling
+- **Alt Disabled** — `disabledAltState` applies visual disabled styling but keeps the button focusable (useful for accessible disabled patterns with `aria-disabled`)
+
+---
+
+## Icon Buttons
+
+Buttons support leading icons (`icon`), trailing icons (`iconEnd`), or icon-only (omit `children`).
+
+<Canvas of={ButtonExamples.ButtonIcon} />
+
+> **Accessibility note:** Icon-only buttons must have an `ariaLabel`. This value is used as both `aria-label` on the `<button>` element and as the tooltip text visible on hover.
