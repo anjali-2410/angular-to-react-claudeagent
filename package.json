@@ -1,7 +1,7 @@
 {
   "name": "@niceltd/sol-react",
   "version": "0.0.1",
-  "description": "SOL Design System — React components (auto-converted from Angular)",
+  "description": "SOL Design System — React components (auto-converted from Angular SOL source)",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,10 +9,15 @@
     "dist"
   ],
   "scripts": {
+    "start": "storybook dev -p 6007",
     "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint src --ext .ts,.tsx",
+    "lint:styles": "stylelint \"src/**/*.css\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,mdx}\"",
+    "format-check": "prettier --check \"src/**/*.{ts,tsx,css,mdx}\"",
     "storybook": "storybook dev -p 6007",
     "build-storybook": "storybook build"
   },
@@ -20,17 +25,62 @@
     "react": ">=18",
     "react-dom": ">=18"
   },
+  "dependencies": {
+    "ag-grid-react": "~31.0.0",
+    "ag-grid-community": "~31.0.0",
+    "ag-grid-enterprise": "~31.0.0",
+    "nouislider": "^15.7.0",
+    "tippy.js": "^6.3.7",
+    "react-toastify": "^10.0.0",
+    "@floating-ui/react": "^0.26.0",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43"
+  },
   "devDependencies": {
     "@testing-library/react": "^14.0.0",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/user-event": "^14.0.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/node": "^20.9.0",
+    "@types/nouislider": "^15.6.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.3.0",
     "vitest": "^1.0.0",
     "@vitejs/plugin-react": "^4.0.0",
-    "jsdom": "^24.0.0"
+    "@vitest/coverage-v8": "^1.0.0",
+    "jsdom": "^24.0.0",
+    "@storybook/react": "^8.4.0",
+    "@storybook/react-vite": "^8.4.0",
+    "@storybook/addon-essentials": "^8.4.0",
+    "@storybook/addon-a11y": "^8.4.0",
+    "@storybook/blocks": "^8.4.0",
+    "@storybook/test": "^8.4.0",
+    "storybook": "^8.4.0",
+    "eslint": "^8.35.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "prettier": "3.2.5",
+    "stylelint": "^14.8.5",
+    "stylelint-config-standard": "^25.0.0"
+  },
+  "cxonePeerDependencyOverrides": {
+    "ag-grid-react": {
+      "find": "~31.0.0",
+      "replace": "^31.0.0"
+    },
+    "ag-grid-community": {
+      "find": "~31.0.0",
+      "replace": "^31.0.0"
+    },
+    "ag-grid-enterprise": {
+      "find": "~31.0.0",
+      "replace": "^31.0.0"
+    }
   }
 }
