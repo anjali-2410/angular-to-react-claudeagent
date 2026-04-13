@@ -1,0 +1,196 @@
+/* ─── Shared base mixin (applied per variant × size) ─── */
+
+.sol-button[class*="btn-"] {
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sol-size-radius-sm);
+  font-family: var(--sol-typography-body-md-font-family);
+  font-weight: var(--sol-base-typography-weight-semi-bold);
+  text-align: center;
+  cursor: pointer;
+  white-space: nowrap;
+  border-width: var(--sol-size-border-default);
+  border-style: solid;
+}
+
+/* ─── Sizes ─── */
+
+.sol-button[class$="-large"] {
+  height: var(--sol-size-control-lg);
+  min-width: 5rem;
+  padding: var(--sol-size-spacing-none) var(--sol-size-spacing-md);
+  font-size: var(--sol-base-typography-size-300);
+  gap: var(--sol-size-spacing-none);
+}
+
+.sol-button[class$="-medium"] {
+  height: var(--sol-size-control-md);
+  min-width: 5rem;
+  padding: var(--sol-size-spacing-none) var(--sol-size-spacing-md);
+  font-size: var(--sol-base-typography-size-300);
+  gap: var(--sol-size-spacing-none);
+}
+
+.sol-button[class$="-small"] {
+  height: var(--sol-size-control-sm);
+  min-width: var(--sol-size-bar-lg);
+  padding: var(--sol-size-spacing-none) var(--sol-size-spacing-xs);
+  font-size: var(--sol-base-typography-size-200);
+  gap: var(--sol-size-spacing-none);
+}
+
+/* Tertiary size overrides (lighter padding and body font-weight) */
+.sol-button.btn-tertiary-large,
+.sol-button.btn-tertiary-medium,
+.sol-button.btn-tertiary-small {
+  padding: var(--sol-size-spacing-none) var(--sol-size-spacing-xs);
+  font-weight: var(--sol-typography-body-md-font-weight);
+  font-size: var(--sol-typography-body-md-font-size);
+}
+
+/* ─── Icon sizing per size ─── */
+
+.sol-button[class$="-large"] .sol-button-icon svg,
+.sol-button[class$="-large"] .sol-button-icon img {
+  width: 1rem;
+  height: 1rem;
+}
+
+.sol-button[class$="-medium"] .sol-button-icon svg,
+.sol-button[class$="-medium"] .sol-button-icon img {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.sol-button[class$="-small"] .sol-button-icon svg,
+.sol-button[class$="-small"] .sol-button-icon img {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.sol-button-icon {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+}
+
+.sol-icon-pointer-events-none {
+  pointer-events: none;
+}
+
+/* Gap when icons are present alongside text */
+.sol-button .sol-button-icon + .projected-content,
+.sol-button .projected-content + .sol-button-icon {
+  margin-left: var(--sol-size-spacing-xs);
+}
+
+.sol-button[class*="btn-tertiary"] .sol-button-icon + .projected-content,
+.sol-button[class*="btn-tertiary"] .projected-content + .sol-button-icon {
+  margin-left: var(--sol-size-spacing-2xs);
+}
+
+/* Icon-only: make button square */
+.sol-button:not(:has(.projected-content)) {
+  aspect-ratio: 1;
+  min-width: unset;
+}
+
+/* ─── Primary ─── */
+
+.sol-button[class*="btn-primary"] {
+  background: var(--sol-color-background-action-primary);
+  color: var(--sol-color-text-action-inverse);
+  border-color: var(--sol-color-background-action-primary);
+}
+
+.sol-button[class*="btn-primary"]:hover {
+  background: var(--sol-color-background-state-hover-primary);
+  border-color: var(--sol-color-background-state-hover-primary);
+}
+
+.sol-button[class*="btn-primary"]:active {
+  background: var(--sol-color-background-state-pressed-primary);
+  border-color: var(--sol-color-background-state-pressed-primary);
+}
+
+/* ─── Secondary ─── */
+
+.sol-button[class*="btn-secondary"] {
+  background: var(--sol-color-background-action-secondary);
+  color: var(--sol-color-text-action);
+  border-color: var(--sol-color-border-standard);
+}
+
+.sol-button[class*="btn-secondary"]:hover {
+  background: var(--sol-color-background-state-hover-neutral);
+}
+
+.sol-button[class*="btn-secondary"]:active {
+  background: var(--sol-color-background-state-pressed-neutral);
+}
+
+/* ─── Tertiary ─── */
+
+.sol-button[class*="btn-tertiary"] {
+  background: var(--sol-color-background-action-tertiary);
+  color: var(--sol-color-text-action);
+  border-color: transparent;
+}
+
+.sol-button[class*="btn-tertiary"]:hover {
+  background: var(--sol-color-background-state-hover-neutral);
+  border-color: transparent;
+}
+
+.sol-button[class*="btn-tertiary"]:active {
+  background: var(--sol-color-background-state-pressed-neutral);
+  border-color: transparent;
+}
+
+/* ─── Critical ─── */
+
+.sol-button[class*="btn-critical"] {
+  background: var(--sol-color-background-status-critical-strong);
+  color: var(--sol-color-text-action-inverse);
+  border-color: var(--sol-color-background-status-critical-strong);
+}
+
+.sol-button[class*="btn-critical"]:hover {
+  background: var(--sol-color-background-state-hover-critical-strong);
+  border-color: var(--sol-color-background-state-hover-critical-strong);
+}
+
+.sol-button[class*="btn-critical"]:active {
+  background: var(--sol-color-background-state-pressed-critical-strong);
+  border-color: var(--sol-color-background-state-pressed-critical-strong);
+}
+
+/* ─── Focus ─── */
+
+.sol-button:focus-visible {
+  outline: var(--sol-size-border-medium) solid var(--sol-color-border-focus-default);
+  outline-offset: var(--sol-size-spacing-3xs);
+  border-radius: var(--sol-size-radius-sm);
+}
+
+/* ─── Disabled ─── */
+
+.sol-button:disabled {
+  background: var(--sol-color-background-field-disabled);
+  border-color: var(--sol-color-border-disabled);
+  color: var(--sol-color-text-disabled);
+  cursor: default;
+  transform: none;
+}
+
+.sol-button[class*="btn-tertiary"]:disabled {
+  background: transparent;
+  border: none;
+}
+
+.sol-button:disabled.disabled-alt-state {
+  border-color: var(--sol-color-background-field-disabled);
+}

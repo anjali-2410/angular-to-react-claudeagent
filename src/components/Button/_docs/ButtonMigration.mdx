@@ -1,0 +1,153 @@
+{/* ButtonMigration.mdx — Migration guide */}
+{/* Mirrors: projects/ds-components/button/src/lib/_docs/button-migration.mdx */}
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Button/Migrate from Angular" />
+
+# Migrate from Angular
+
+This guide covers migrating from the Angular `sol-button` component to the React `Button` component.
+
+---
+
+## Package change
+
+```bash
+# Angular
+npm install @niceltd/sol
+
+# React
+npm install @niceltd/sol-react
+```
+
+---
+
+## Import change
+
+```typescript
+// Angular — NgModule import
+import { ButtonModule } from '@niceltd/sol/button';
+
+@NgModule({ imports: [ButtonModule] })
+export class MyModule {}
+```
+
+```tsx
+// React — direct component import
+import { Button } from '@niceltd/sol-react';
+```
+
+---
+
+## Template → JSX
+
+### Basic button
+
+```html
+<!-- Angular -->
+<sol-button variant="primary" size="large" (buttonClick)="onSave()">
+  Save
+</sol-button>
+```
+
+```tsx
+{/* React */}
+<Button variant="primary" size="large" onClick={onSave}>
+  Save
+</Button>
+```
+
+---
+
+## Input / Prop mapping
+
+| Angular `@Input()` | React prop | Notes |
+|--------------------|------------|-------|
+| `variant` | `variant` | Same values: `primary`, `secondary`, `tertiary`, `critical` |
+| `size` | `size` | Same values: `large`, `medium`, `small` |
+| `disabled` | `disabled` | Identical |
+| `disabledAltState` | `disabledAltState` | Identical |
+| `icon` | `icon` | Changed from `Icon` type to `React.ReactNode` — pass any SVG/component |
+| `iconEnd` | `iconEnd` | Same change as `icon` |
+| `ariaLabel` | `ariaLabel` | Identical |
+| `ariaLabelledBy` | `ariaLabelledBy` | Identical |
+| `ariaDescribedBy` | `ariaDescribedBy` | Identical |
+| `ariaPressed` | `ariaPressed` | Identical |
+| `ariaExpanded` | `ariaExpanded` | Identical |
+| `id` | `id` | Identical |
+| `name` | `name` | Identical |
+| `type` | `type` | Identical (`button`, `submit`, `reset`) |
+| `value` | `value` | Identical |
+| `tabindex` | `tabIndex` | Capitalised `I` to match React convention |
+| `buttonMatMenuTriggerFor` | — | **Not migrated** — no Material Menu in React; manage `ariaExpanded` manually |
+
+---
+
+## Output / Event mapping
+
+| Angular `@Output()` | React prop | Notes |
+|---------------------|------------|-------|
+| `buttonClick` | `onClick` | Standard React event handler |
+| `focus` | `onFocus` | Standard React event handler |
+| `blur` | `onBlur` | Standard React event handler |
+
+---
+
+## `ng-content` → `children`
+
+```html
+<!-- Angular: projected content -->
+<sol-button>Save document</sol-button>
+```
+
+```tsx
+{/* React: children prop */}
+<Button>Save document</Button>
+```
+
+---
+
+## `setFocus()` → `ref`
+
+```typescript
+// Angular
+@ViewChild('myButton', { read: ButtonComponent }) btn!: ButtonComponent;
+this.btn.setFocus();
+```
+
+```tsx
+// React
+const btnRef = useRef<ButtonHandle>(null);
+btnRef.current?.focus();
+
+<Button ref={btnRef}>Focus me</Button>
+```
+
+---
+
+## Icon usage
+
+In Angular, `icon` accepted a specific `Icon` type from `@niceltd/sol/icon`. In React, `icon` and `iconEnd` accept any `React.ReactNode`, so you can pass any SVG, image, or icon component directly.
+
+```html
+<!-- Angular -->
+<sol-button [icon]="IconName.Add">Add</sol-button>
+```
+
+```tsx
+{/* React — pass your icon component or SVG */}
+import { AddIcon } from 'your-icon-library';
+
+<Button icon={<AddIcon />}>Add</Button>
+```
+
+---
+
+## What was NOT migrated
+
+| Feature | Reason |
+|---------|--------|
+| `buttonMatMenuTriggerFor` | No Angular Material Menu in React. Manage `ariaExpanded` and dropdown state manually or with your preferred React dropdown library. |
+| Automatic tooltip on icon-only buttons | In Angular, icon-only buttons auto-showed `ariaLabel` as a tooltip. In React, add your own tooltip component using `ariaLabel` as the tooltip text. |
+| `keydown` output | Not implemented in the React port — add a standard `onKeyDown` handler directly if needed. |
