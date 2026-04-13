@@ -1,5 +1,10 @@
 import type { Preview } from '@storybook/react';
 
+// ─── SOL design tokens ────────────────────────────────────────────────────────
+// Provides all --sol-* CSS custom properties used by every component.
+// Source: https://github.com/nice-cxone/sol-tokens
+import '@niceltd/sol-tokens/sol-tokens.css';
+
 // ─── Global Storybook preview configuration ──────────────────────────────────
 // Mirrors the Angular SOL Storybook preview.js setup:
 //   - Custom story sort order (Introduction → Setup → Guidelines → Components)
