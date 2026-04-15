@@ -1,0 +1,290 @@
+/* Checkbox component styles — compiled from Angular SCSS source */
+/* SVGs are percent-encoded to match Angular source exactly */
+
+.sol-checkbox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sol-checkbox .sol-checkbox-label {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: var(--sol-size-control-sm);
+  height: var(--sol-size-control-sm);
+  padding-left: var(--sol-size-spacing-2xs);
+  padding-right: var(--sol-size-spacing-2xs);
+  cursor: pointer;
+}
+
+.sol-checkbox .sol-checkbox-label .sol-label {
+  margin: auto;
+}
+
+.sol-checkbox .sol-checkbox-label:has(input.sol-checkbox-inputbox:focus-visible) {
+  outline: 2px solid var(--sol-color-border-focus-default);
+  border-radius: var(--sol-size-radius-sm);
+}
+
+.sol-checkbox .sol-checkbox-label :disabled {
+  cursor: default;
+  pointer-events: none;
+  color: var(--sol-color-icon-disabled);
+}
+
+.sol-checkbox .sol-checkbox-label-text label {
+  display: block;
+  color: var(--sol-color-text-default);
+  font-family: var(--sol-typography-body-md-font-family);
+  font-style: normal;
+  font-weight: var(--sol-typography-body-md-font-weight);
+  font-size: var(--sol-typography-body-md-font-size);
+  line-height: var(--sol-typography-body-md-line-height);
+  cursor: pointer;
+  padding-left: var(--sol-size-spacing-xs);
+}
+
+.sol-checkbox .sol-label-required {
+  color: var(--sol-color-text-critical);
+}
+
+/* ── Input box ─────────────────────────────────────────────────────────── */
+
+.sol-checkbox input.sol-checkbox-inputbox {
+  box-sizing: border-box;
+  position: relative;
+  min-width: var(--sol-size-control-xs);
+  width: var(--sol-size-control-xs);
+  height: var(--sol-size-control-xs);
+  border-radius: var(--sol-size-radius-sm);
+  border-width: var(--sol-size-border-default);
+  border-style: solid;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  appearance: none;
+  padding: var(--sol-size-spacing-3xs);
+  outline: none;
+  background: var(--sol-color-background-control-default);
+  border-color: var(--sol-color-border-strong);
+}
+
+.sol-checkbox input.sol-checkbox-inputbox:hover {
+  background: var(--sol-color-background-state-hover-neutral);
+  border-color: var(--sol-color-border-state-hover-neutral);
+}
+
+.sol-checkbox input.sol-checkbox-inputbox:active {
+  background: var(--sol-color-background-state-pressed-neutral);
+  border-color: var(--sol-color-border-state-hover-neutral);
+}
+
+.sol-checkbox input.sol-checkbox-inputbox:disabled {
+  cursor: default;
+  pointer-events: none;
+  background: var(--sol-color-background-control-disabled);
+  border-color: var(--sol-color-border-disabled);
+}
+
+.sol-checkbox input.sol-checkbox-inputbox:disabled + .sol-checkbox-label-text {
+  color: var(--sol-color-text-disabled);
+}
+
+.sol-checkbox input.sol-checkbox-inputbox:disabled + .sol-checkbox-label-text label {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ── Checkmark / indeterminate icon (via CSS mask) ─────────────────────── */
+
+.sol-checkbox input.sol-checkbox-inputbox:checked::after {
+  position: absolute;
+  width: calc(var(--sol-size-control-xs) * 0.5);
+  height: calc(var(--sol-size-control-xs) * 0.5);
+  content: "";
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--sol-color-icon-inverse);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='8' viewBox='0 0 9 8'%3E%3Cpath fill-rule='evenodd' d='M8.673.16a.788.788 0 0 1 .163 1.12l-4.909 6.4a.829.829 0 0 1-1.233.086L.24 5.366a.787.787 0 0 1 0-1.132.831.831 0 0 1 1.157 0l1.787 1.748L7.527.32A.83.83 0 0 1 8.673.16Z' clip-rule='evenodd'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: contain;
+  background-image: none;
+}
+
+.sol-checkbox input.sol-checkbox-inputbox:indeterminate::after {
+  position: absolute;
+  width: calc(var(--sol-size-control-xs) * 0.5);
+  height: calc(var(--sol-size-control-xs) * 0.5);
+  content: "";
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--sol-color-icon-inverse);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='2' viewBox='0 0 10 2'%3E%3Cpath d='M0 1a1 1 0 0 1 1-1h8a1 1 0 0 1 0 2H1a1 1 0 0 1-1-1Z'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: contain;
+  background-image: none;
+}
+
+/* Disabled state — dim the icon */
+.sol-checkbox input.sol-checkbox-inputbox:checked:disabled::after {
+  background-color: var(--sol-color-icon-disabled);
+}
+
+.sol-checkbox input.sol-checkbox-inputbox:indeterminate:disabled::after {
+  background-color: var(--sol-color-icon-disabled);
+}
+
+/* ── Checked / indeterminate background ────────────────────────────────── */
+
+.sol-checkbox input.sol-checkbox-inputbox:indeterminate,
+.sol-checkbox input.sol-checkbox-inputbox:checked {
+  background: var(--sol-color-background-selected-strong);
+  border: var(--sol-size-border-default) solid transparent;
+}
+
+.sol-checkbox input.sol-checkbox-inputbox:indeterminate:focus-visible,
+.sol-checkbox input.sol-checkbox-inputbox:checked:focus-visible {
+  background: var(--sol-color-background-state-hover-selected-strong);
+  border: var(--sol-size-border-default) solid transparent;
+}
+
+.sol-checkbox input.sol-checkbox-inputbox:indeterminate:hover,
+.sol-checkbox input.sol-checkbox-inputbox:checked:hover {
+  background: var(--sol-color-background-state-hover-selected-strong);
+  border: var(--sol-size-border-default) solid transparent;
+}
+
+.sol-checkbox input.sol-checkbox-inputbox:indeterminate:active,
+.sol-checkbox input.sol-checkbox-inputbox:checked:active {
+  background: var(--sol-color-background-state-pressed-selected-strong);
+  border: none;
+}
+
+.sol-checkbox input.sol-checkbox-inputbox:indeterminate:disabled,
+.sol-checkbox input.sol-checkbox-inputbox:checked:disabled {
+  background: var(--sol-color-background-control-disabled);
+  border: var(--sol-size-border-default) solid var(--sol-color-border-disabled);
+}
+
+/* ── Readonly state ────────────────────────────────────────────────────── */
+
+.sol-checkbox input.sol-checkbox-inputbox.readonly {
+  background: var(--sol-color-background-control-disabled);
+  border-color: var(--sol-color-border-disabled);
+}
+
+.sol-checkbox input.sol-checkbox-inputbox.readonly:checked::after {
+  position: absolute;
+  width: calc(var(--sol-size-control-xs) * 0.5);
+  height: calc(var(--sol-size-control-xs) * 0.5);
+  content: "";
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--sol-color-icon-default);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='8' viewBox='0 0 9 8'%3E%3Cpath fill-rule='evenodd' d='M8.673.16a.788.788 0 0 1 .163 1.12l-4.909 6.4a.829.829 0 0 1-1.233.086L.24 5.366a.787.787 0 0 1 0-1.132.831.831 0 0 1 1.157 0l1.787 1.748L7.527.32A.83.83 0 0 1 8.673.16Z' clip-rule='evenodd'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: contain;
+  background-image: none;
+}
+
+.sol-checkbox input.sol-checkbox-inputbox.readonly:indeterminate::after {
+  position: absolute;
+  width: calc(var(--sol-size-control-xs) * 0.5);
+  height: calc(var(--sol-size-control-xs) * 0.5);
+  content: "";
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--sol-color-icon-default);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='2' viewBox='0 0 10 2'%3E%3Cpath d='M0 1a1 1 0 0 1 1-1h8a1 1 0 0 1 0 2H1a1 1 0 0 1-1-1Z'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: contain;
+  background-image: none;
+}
+
+.sol-checkbox input.sol-checkbox-inputbox.readonly:indeterminate,
+.sol-checkbox input.sol-checkbox-inputbox.readonly:checked {
+  background: var(--sol-color-background-control-disabled);
+  border: var(--sol-size-border-default) solid var(--sol-color-border-disabled);
+}
+
+.sol-checkbox input.sol-checkbox-inputbox.readonly:indeterminate:focus-visible,
+.sol-checkbox input.sol-checkbox-inputbox.readonly:checked:focus-visible {
+  background: var(--sol-color-background-control-disabled);
+  border: var(--sol-size-border-default) solid var(--sol-color-border-disabled);
+}
+
+.sol-checkbox input.sol-checkbox-inputbox.readonly:indeterminate:hover,
+.sol-checkbox input.sol-checkbox-inputbox.readonly:checked:hover {
+  background: var(--sol-color-background-control-disabled);
+  border: var(--sol-size-border-default) solid var(--sol-color-border-disabled);
+}
+
+.sol-checkbox input.sol-checkbox-inputbox.readonly:indeterminate:active,
+.sol-checkbox input.sol-checkbox-inputbox.readonly:checked:active {
+  background: var(--sol-color-background-control-disabled);
+  border: var(--sol-size-border-default) solid var(--sol-color-border-disabled);
+}
+
+/* ── Error state ───────────────────────────────────────────────────────── */
+
+.sol-checkbox input.sol-checkbox-inputbox.error-border {
+  border-color: var(--sol-color-border-critical);
+  border-width: var(--sol-size-border-default);
+}
+
+.sol-checkbox .sol-checkbox-error-message {
+  color: var(--sol-color-text-critical);
+  font-family: var(--sol-typography-body-sm-font-family);
+  font-size: var(--sol-typography-body-sm-font-size);
+  line-height: var(--sol-typography-body-sm-line-height);
+  padding-left: var(--sol-size-spacing-2xs);
+  padding-top: var(--sol-size-spacing-3xs);
+}
+
+/* ── Disabled label text ───────────────────────────────────────────────── */
+
+.sol-checkbox input.sol-checkbox-inputbox:disabled + .sol-checkbox-label-text,
+.sol-checkbox input.sol-checkbox-inputbox:disabled + .sol-checkbox-label-text label {
+  color: var(--sol-color-text-disabled);
+}
+
+/* ── Checkbox Group ────────────────────────────────────────────────────── */
+
+.sol-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sol-checkbox-group .sol-checkbox-group-label {
+  margin-bottom: var(--sol-size-spacing-2xs);
+}
+
+.sol-checkbox-group .sol-label {
+  color: var(--sol-color-text-default);
+  font-family: var(--sol-typography-body-md-font-family);
+  font-weight: var(--sol-typography-body-md-font-weight);
+  font-size: var(--sol-typography-body-md-font-size);
+  line-height: var(--sol-typography-body-md-line-height);
+}
+
+.sol-checkbox-group .sol-label-required {
+  color: var(--sol-color-text-critical);
+}
+
+.checkbox-group-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sol-size-spacing-2xs);
+}
+
+.sol-checkbox-group .sol-checkbox-error-message {
+  color: var(--sol-color-text-critical);
+  font-family: var(--sol-typography-body-sm-font-family);
+  font-size: var(--sol-typography-body-sm-font-size);
+  line-height: var(--sol-typography-body-sm-line-height);
+  padding-top: var(--sol-size-spacing-3xs);
+}
