@@ -26,6 +26,7 @@
     "react-dom": ">=18"
   },
   "dependencies": {
+    "@niceltd/sol-tokens": "github:nice-cxone/sol-tokens",
     "ag-grid-react": "~31.0.0",
     "ag-grid-community": "~31.0.0",
     "ag-grid-enterprise": "~31.0.0",
