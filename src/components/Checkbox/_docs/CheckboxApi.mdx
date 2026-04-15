@@ -1,0 +1,62 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Checkbox/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Checkbox Props](#checkbox-props)
+  - [Outputs / Callbacks](#outputs--callbacks)
+  - [CheckboxChangeEvent](#checkboxchangeevent)
+</div>
+<div className="toc-left">
+
+## Checkbox: API
+
+```ts
+import { Checkbox } from '@niceltd/sol-react/checkbox';
+```
+
+### Checkbox Props
+
+<table>
+  <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+  <tr><td>checkboxId</td><td>string</td><td>auto</td><td>The <code>id</code> for the input element. Auto-generated if omitted.</td></tr>
+  <tr><td>disabled</td><td>boolean</td><td>false</td><td>Disables the checkbox.</td></tr>
+  <tr><td>readonly</td><td>boolean</td><td>false</td><td>Makes the checkbox read-only (non-interactive, but not disabled).</td></tr>
+  <tr><td>name</td><td>string</td><td>''</td><td>The <code>name</code> attribute for the input.</td></tr>
+  <tr><td>required</td><td>boolean</td><td>false</td><td>Marks the checkbox as required.</td></tr>
+  <tr><td>value</td><td>string</td><td>''</td><td>The <code>value</code> attribute for the input.</td></tr>
+  <tr><td>ariaLabel</td><td>string</td><td></td><td>The <code>aria-label</code> attribute.</td></tr>
+  <tr><td>ariaLabelledby</td><td>string | null</td><td>null</td><td>The <code>aria-labelledby</code> attribute.</td></tr>
+  <tr><td>ariaDescribedby</td><td>string | null</td><td>null</td><td>The <code>aria-describedby</code> attribute.</td></tr>
+  <tr><td>tabIndex</td><td>number</td><td>0</td><td>The <code>tabindex</code> attribute.</td></tr>
+  <tr><td>customContent</td><td>ReactNode</td><td></td><td>Custom label content. Replaces Angular's <code>customTemplate</code>. Takes priority over <code>label</code> and <code>children</code>.</td></tr>
+  <tr><td>errorState</td><td>boolean</td><td>false</td><td>Shows error border without a message.</td></tr>
+  <tr><td>errorMessage</td><td>string</td><td></td><td>Error message text. Also activates error border.</td></tr>
+  <tr><td>label</td><td>string</td><td></td><td>Text label. Shows required asterisk when combined with <code>required</code>.</td></tr>
+  <tr><td>indeterminate</td><td>boolean</td><td>false</td><td>Sets the indeterminate (mixed) state.</td></tr>
+  <tr><td>checked</td><td>boolean</td><td></td><td>Controlled checked state. Omit for uncontrolled.</td></tr>
+  <tr><td>children</td><td>ReactNode</td><td></td><td>Label content used when <code>label</code> prop is absent.</td></tr>
+</table>
+
+### Outputs / Callbacks
+
+<table>
+  <tr><th>Name</th><th>Type</th><th>Description</th></tr>
+  <tr><td>onClicked</td><td>() =&gt; void</td><td>Emitted on any click, including readonly mode.</td></tr>
+  <tr><td>onCheckedChange</td><td>(event: CheckboxChangeEvent) =&gt; void</td><td>Emitted when checked state changes.</td></tr>
+  <tr><td>onIndeterminateChange</td><td>(event: CheckboxChangeEvent) =&gt; void</td><td>Emitted when indeterminate state changes.</td></tr>
+  <tr><td>onBlur</td><td>(event: CheckboxChangeEvent) =&gt; void</td><td>Emitted on blur.</td></tr>
+  <tr><td>onFocus</td><td>(event: CheckboxChangeEvent) =&gt; void</td><td>Emitted on focus.</td></tr>
+</table>
+
+### CheckboxChangeEvent
+
+```ts
+interface CheckboxChangeEvent {
+  checked: boolean;
+  indeterminate: boolean;
+}
+```
+
+</div>

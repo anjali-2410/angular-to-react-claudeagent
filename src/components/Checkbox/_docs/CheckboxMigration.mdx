@@ -1,0 +1,121 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Checkbox/Migration" />
+
+<div className="toc-left">
+
+# Checkbox — Angular → React Migration Guide
+
+## Import
+
+```ts
+// Angular
+import { CheckboxModule } from '@niceltd/sol/checkbox';
+
+// React
+import { Checkbox, CheckboxGroup } from '@niceltd/sol-react/checkbox';
+```
+
+## Component name
+
+| Angular selector | React component |
+|-----------------|----------------|
+| `<sol-checkbox>` | `<Checkbox>` |
+| `<sol-checkbox-group>` | `<CheckboxGroup>` |
+
+## Prop mapping — Checkbox
+
+| Angular input / output | React prop | Notes |
+|------------------------|-----------|-------|
+| `[checkboxId]` | `checkboxId` | |
+| `[disabled]` | `disabled` | |
+| `[readonly]` | `readonly` | |
+| `[name]` | `name` | |
+| `[required]` | `required` | |
+| `[value]` | `value` | |
+| `[ariaLabel]` | `ariaLabel` | |
+| `[ariaLabelledby]` | `ariaLabelledby` | |
+| `[ariaDescribedby]` | `ariaDescribedby` | |
+| `[tabindex]` | `tabIndex` | camelCase in React |
+| `[customTemplate]="ref"` | `customContent={<JSX>}` | Pass JSX directly instead of `ng-template` |
+| `[errorState]` | `errorState` | |
+| `[errorMessage]` | `errorMessage` | |
+| `[label]` | `label` | |
+| `[indeterminate]` | `indeterminate` | |
+| `[checked]` | `checked` | Controlled. Omit for uncontrolled. |
+| `<ng-content>` | `children` | |
+| `(clicked)` | `onClicked` | |
+| `(checkedChange)` | `onCheckedChange` | Receives `CheckboxChangeEvent` |
+| `(indeterminateChange)` | `onIndeterminateChange` | Receives `CheckboxChangeEvent` |
+| `(blur)` | `onBlur` | Receives `CheckboxChangeEvent` |
+| `(focus)` | `onFocus` | Receives `CheckboxChangeEvent` |
+
+## Prop mapping — CheckboxGroup
+
+| Angular input / output | React prop | Notes |
+|------------------------|-----------|-------|
+| `[name]` | `name` | |
+| `[disabled]` | `disabled` | |
+| `[readonly]` | `readonly` | |
+| `[required]` | `required` | |
+| `[value]` | `value` | |
+| `[label]` | `label` | |
+| `[errorState]` | `errorState` | |
+| `[errorMessage]` | `errorMessage` | |
+| `(clicked)` | `onClicked` | |
+| `[(ngModel)]` | `value` + `onClicked` | Replace two-way binding with controlled pattern |
+
+## Controlled vs uncontrolled
+
+Angular two-way binding maps to the React controlled pattern:
+
+```tsx
+// Angular
+<sol-checkbox [(checked)]="myValue" (checkedChange)="onChecked($event)" />
+
+// React — controlled
+<Checkbox checked={myValue} onCheckedChange={e => setMyValue(e.checked)} />
+
+// React — uncontrolled (manages its own state)
+<Checkbox onCheckedChange={e => console.log(e.checked)} />
+```
+
+## CheckboxEvent vs CheckboxChangeEvent
+
+```ts
+// Angular — carries a reference to the source component
+export class CheckboxEvent {
+  source: CheckboxComponent;
+  checked: boolean;
+  indeterminate: boolean;
+}
+
+// React — data only
+interface CheckboxChangeEvent {
+  checked: boolean;
+  indeterminate: boolean;
+}
+```
+
+## Forms integration
+
+Angular `ReactiveFormsModule` / `ngModel` are replaced by React controlled state:
+
+```tsx
+// Checkbox
+const [accepted, setAccepted] = useState(false);
+<Checkbox checked={accepted} onCheckedChange={e => setAccepted(e.checked)} label="I accept" />
+
+// CheckboxGroup
+const [selections, setSelections] = useState<string[]>([]);
+<CheckboxGroup value={selections} onClicked={setSelections} label="Preferences">
+  <Checkbox value="email">Email</Checkbox>
+  <Checkbox value="sms">SMS</Checkbox>
+</CheckboxGroup>
+```
+
+## Breaking changes (Angular SOL 14 → 16)
+
+- `readOnly` was renamed to `readonly` in SOL 16 — the React prop is `readonly`.
+
+</div>

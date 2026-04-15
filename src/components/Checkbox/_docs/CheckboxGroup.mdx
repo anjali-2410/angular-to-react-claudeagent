@@ -1,0 +1,60 @@
+import { Meta, Canvas } from '@storybook/blocks';
+import * as CheckboxOverviewStories from '../_stories/CheckboxOverview.stories';
+
+<Meta title="Components/Checkbox Group/Overview" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Guidelines](#guidelines)
+  - [Component Variants](#component-variants)
+    - [Basic Group](#basic-group)
+    - [Group with Selected Options](#group-with-selected-options)
+    - [Readonly Group](#readonly-group)
+    - [Disabled Group](#disabled-group)
+    - [Required Group](#required-group)
+</div>
+<div className="toc-left">
+
+# CheckboxGroup
+
+Checkbox groups allow users to select one or more options from a list. Unlike radio buttons, multiple selections are possible. They are commonly used in forms, settings, and filters where users need to select multiple items.
+
+### Guidelines
+
+Use checkbox groups when users need to select multiple options from a list. Checkbox groups allow users to see all available options and make multiple selections. They are ideal for settings, filters, and preference selections where multiple items can be selected.
+
+---
+
+### Component Variants
+
+#### Basic Group
+
+The checkbox group component allows you to group multiple checkboxes together with shared properties like name, disabled state, and validation. This example shows a basic checkbox group with three options:
+
+<Canvas of={CheckboxOverviewStories.groupCheckbox} />
+
+#### Group with Selected Options
+
+A checkbox group with one or more options pre-selected:
+
+<Canvas of={CheckboxOverviewStories.groupSelectedCheckbox} />
+
+#### Readonly Group
+
+A checkbox group in readonly state where users can see the selections but cannot modify them:
+
+<Canvas of={CheckboxOverviewStories.groupReadonlyCheckbox} />
+
+#### Disabled Group
+
+A checkbox group in disabled state where all options are disabled and cannot be interacted with:
+
+<Canvas of={CheckboxOverviewStories.groupDisabledCheckbox} />
+
+#### Required Group
+
+A checkbox group with required validation, indicating that at least one option must be selected:
+
+<Canvas of={CheckboxOverviewStories.groupRequiredCheckbox} />
+
+</div>

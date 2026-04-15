@@ -1,0 +1,54 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Checkbox Group/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [CheckboxGroup Props](#checkboxgroup-props)
+  - [Outputs / Callbacks](#outputs--callbacks)
+</div>
+<div className="toc-left">
+
+## CheckboxGroup: API
+
+```ts
+import { CheckboxGroup } from '@niceltd/sol-react/checkbox';
+```
+
+### CheckboxGroup Props
+
+<table>
+  <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+  <tr><td>name</td><td>string</td><td></td><td>Logical name for the group.</td></tr>
+  <tr><td>disabled</td><td>boolean</td><td>false</td><td>Disables all checkboxes in the group.</td></tr>
+  <tr><td>readonly</td><td>boolean</td><td>false</td><td>Makes all checkboxes in the group read-only.</td></tr>
+  <tr><td>required</td><td>boolean</td><td>false</td><td>Marks the group as required. Shows validation error on blur if no option is selected.</td></tr>
+  <tr><td>value</td><td>string[]</td><td></td><td>Array of selected values (controlled). Omit for uncontrolled.</td></tr>
+  <tr><td>label</td><td>string</td><td></td><td>Text label rendered above the group.</td></tr>
+  <tr><td>errorState</td><td>boolean</td><td>false</td><td>Shows error styling on the group.</td></tr>
+  <tr><td>errorMessage</td><td>string</td><td></td><td>External error message displayed below the group.</td></tr>
+</table>
+
+### Outputs / Callbacks
+
+<table>
+  <tr><th>Name</th><th>Type</th><th>Description</th></tr>
+  <tr><td>onClicked</td><td>(values: string[]) =&gt; void</td><td>Emitted with the new array of selected values when any checkbox in the group changes state.</td></tr>
+</table>
+
+### Page Object
+
+CSS selectors for E2E tests (see `_e2e/Checkbox.page.ts`):
+
+```ts
+import { CheckboxPage, CheckboxGroupPage } from '@niceltd/sol-react/checkbox/_e2e/Checkbox.page';
+
+CheckboxPage.checkboxInput  // 'input.sol-checkbox-inputbox'
+CheckboxPage.checkboxLabel  // '.sol-checkbox-label-text'
+
+CheckboxGroupPage.checkboxInput  // '.sol-checkbox-inputbox'
+CheckboxGroupPage.checkboxItem   // '.checkbox-item'
+CheckboxGroupPage.checkboxLabel  // '.checkbox-label'
+```
+
+</div>
