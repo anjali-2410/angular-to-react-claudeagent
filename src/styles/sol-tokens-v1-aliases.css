@@ -1,0 +1,132 @@
+:root {
+--sol-color-apps-wfm-activity-break: var(--sol-color-app-wfm-activity-break);
+--sol-color-apps-wfm-activity-busy: var(--sol-color-app-wfm-activity-busy);
+--sol-color-apps-wfm-activity-ooo: var(--sol-color-app-wfm-activity-ooo);
+
+--sol-color-background-buttons-ghost-regular: var(--sol-base-color-black); /* NOTE: If you are using this for a text color, please use --sol-color-text-default instead. */
+
+--sol-effect-menushadow: var(--sol-effect-overlayshadow);
+--sol-effect-tooltipshadow: var(--sol-effect-cardshadow);
+
+--sol-global-black: var(--sol-base-color-black);
+
+--sol-global-color-blue-50: var(--sol-base-color-blue-2);
+--sol-global-color-blue-200: var(--sol-base-color-blue-10);
+--sol-global-color-blue-400: var(--sol-base-color-blue-30);
+--sol-global-color-blue-500: var(--sol-base-color-blue-40);
+--sol-global-color-blue-600: var(--sol-base-color-blue-50);
+--sol-global-color-blue-800: var(--sol-base-color-blue-60);
+--sol-global-color-blue-900: var(--sol-base-color-blue-80);
+--sol-global-color-brand-ui11-600: var(--sol-base-color-brand-50);
+
+--sol-global-color-grays-30: var(--sol-base-color-gray-2);
+--sol-global-color-grays-60: var(--sol-base-color-gray-5);
+--sol-global-color-grays-100: var(--sol-base-color-gray-10);
+--sol-global-color-grays-200: var(--sol-base-color-gray-20);
+--sol-global-color-grays-300: var(--sol-base-color-gray-30);
+--sol-global-color-grays-400: rgb(153 153 153);
+--sol-global-color-grays-500: var(--sol-base-color-gray-40);
+--sol-global-color-grays-600: var(--sol-base-color-gray-50);
+--sol-global-color-grays-800: var(--sol-base-color-gray-80);
+--sol-global-color-grays-900: var(--sol-base-color-gray-95);
+
+--sol-global-color-green-50: var(--sol-base-color-green-2);
+--sol-global-color-green-100: var(--sol-base-color-green-5);
+--sol-global-color-green-300: var(--sol-base-color-green-20);
+--sol-global-color-green-500: var(--sol-base-color-green-40);
+--sol-global-color-green-600: var(--sol-base-color-green-60);
+
+--sol-global-color-neutral-300: var(--sol-base-color-neutral-30);
+--sol-global-color-neutral-400: var(--sol-base-color-neutral-40);
+--sol-global-color-neutral-50: var(--sol-base-color-neutral-5);
+--sol-global-color-neutral-500: var(--sol-base-color-neutral-50);
+--sol-global-color-neutral-700: var(--sol-base-color-neutral-70);
+--sol-global-color-neutral-800: var(--sol-base-color-neutral-80);
+--sol-global-color-neutral-900: var(--sol-base-color-neutral-90);
+
+--sol-global-color-red-300: var(--sol-base-color-red-20);
+--sol-global-color-red-50: var(--sol-base-color-red-2);
+--sol-global-color-red-500: var(--sol-base-color-red-40);
+--sol-global-color-red-600: var(--sol-base-color-red-50);
+
+--sol-global-color-ui1-600: var(--sol-base-color-brand-50);
+--sol-global-color-ui1-700: var(--sol-base-color-brand-60);
+--sol-global-color-ui1-900: var(--sol-base-color-brand-90);
+
+--sol-global-color-ui2-50: var(--sol-base-color-neutral-2);
+--sol-global-color-ui2-100: var(--sol-base-color-neutral-5);
+--sol-global-color-ui2-200: var(--sol-base-color-neutral-10);
+--sol-global-color-ui2-300: var(--sol-base-color-neutral-20);
+--sol-global-color-ui2-400: var(--sol-base-color-neutral-30);
+--sol-global-color-ui2-500: var(--sol-base-color-neutral-40);
+--sol-global-color-ui2-600: var(--sol-base-color-neutral-50);
+--sol-global-color-ui2-700: var(--sol-base-color-neutral-50);
+--sol-global-color-ui2-800: var(--sol-base-color-neutral-60);
+
+--sol-global-font-size-300: var(--sol-typography-body-md-font-size);
+--sol-global-font-size-500: var(--sol-base-measure-50);
+--sol-global-font-weight-semi-bold: var(--sol-base-typography-weight-semi-bold);
+--sol-global-size-radius-20: var(--sol-size-radius-sm);
+--sol-global-size-radius-30: var(--sol-size-radius-md);
+--sol-global-size-radius-round: var(--sol-size-radius-round);
+--sol-global-white: var(--sol-base-color-white);
+
+--sol-typography-body-font-family: var(--sol-typography-body-md-font-family);
+--sol-typography-button-font-family: var(--sol-typography-body-md-font-family);
+--sol-typography-heading-3-font-family: var(--sol-typography-heading3-font-family);
+--sol-typography-heading-3-font-weight: var(--sol-typography-heading3-font-weight);
+--sol-typography-heading-6-font-size: var(--sol-typography-heading6-font-size);
+--sol-typography-label-highlight-font-family: var(--sol-typography-body-md-emphasis-font-family);
+--sol-typography-label-line-height: var(--sol-typography-body-md-line-height);
+
+--sol-color-icon-critical: var(--sol-color-icon-status-critical);
+--sol-color-icon-info: var(--sol-color-icon-status-info);
+--sol-color-icon-regular: var(--sol-color-icon-default); /* NOTE: This will be a little more gray, a little less blue. */
+--sol-color-icon-success: var(--sol-color-icon-status-success);
+--sol-color-icon-warning: var(--sol-color-icon-status-warning);
+
+--sol-color-surface-primary: var(--sol-color-background-tone1);
+--sol-color-surface-secondary: var(--sol-color-background-level2);
+
+--sol-color-text-regular: var(--sol-color-text-default);
+--sol-color-text-critical: var(--sol-color-text-critical);
+--sol-color-text-label: var(--sol-global-color-neutral-500); /* NOTE: There is no semantic token for label color. */
+
+--sol-color-background-status-info-regular: var(--sol-color-background-status-info-strong);
+--sol-color-border-general-subtle: var(--sol-color-border-subtle);
+--sol-color-border-general-regular: var(--sol-color-border-standard);
+
+--sol-global-size-0: var(--sol-base-measure-0);
+--sol-global-size-5: var(--sol-base-measure-5);
+--sol-global-size-10: var(--sol-base-measure-10);
+--sol-global-size-20: var(--sol-base-measure-20);
+--sol-global-size-30: var(--sol-base-measure-30);
+--sol-global-size-40: var(--sol-base-measure-40);
+--sol-global-size-50: var(--sol-base-measure-50);
+--sol-global-size-60: var(--sol-base-measure-60);
+--sol-global-size-70: var(--sol-base-measure-70);
+--sol-global-size-80: var(--sol-base-measure-80);
+--sol-global-size-90: var(--sol-base-measure-90);
+--sol-global-size-100: var(--sol-base-measure-100);
+--sol-global-size-110: var(--sol-base-measure-110);
+--sol-global-size-120: var(--sol-base-measure-120);
+--sol-global-size-130: var(--sol-base-measure-140);
+--sol-global-size-140: var(--sol-base-measure-150);
+--sol-global-size-150: var(--sol-base-measure-160);
+--sol-global-size-200: var(--sol-base-measure-170);
+
+--sol-size-controls-l: var(--sol-size-control-lg);
+--sol-size-controls-m: var(--sol-size-control-md); /* NOTE: Medium-sized controls are now a little taller. */
+--sol-size-icon-l: var(--sol-size-icon-lg); /* NOTE: Large-sized icons are now a little taller. */
+--sol-size-icon-m: var(--sol-size-icon-md); /* NOTE: Medium-sized icons are now a little taller. */
+--sol-size-icon-s: var(--sol-size-icon-sm); /* NOTE: Small-sized icons are now a little taller. */
+--sol-size-radius-l: var(--sol-size-radius-lg);
+--sol-size-radius-m: var(--sol-size-radius-md);
+--sol-size-radius-s: var(--sol-size-radius-sm);
+--sol-size-spacing-l: var(--sol-size-spacing-lg);
+--sol-size-spacing-m: var(--sol-size-spacing-md);
+--sol-size-spacing-s: var(--sol-size-spacing-sm);
+--sol-size-spacing-xxl: var(--sol-size-spacing-2xl);
+--sol-size-spacing-xxs: var(--sol-size-spacing-2xs);
+--sol-size-spacing-xxxs: var(--sol-size-spacing-3xs);
+}

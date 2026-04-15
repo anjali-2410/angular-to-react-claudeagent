@@ -1,0 +1,35 @@
+/*
+ * SOL Design System — Global Styles
+ * Source: https://github.com/nice-cxone/sol-tokens
+ *
+ * Load order:
+ *  1. sol-tokens.css          → Full v2 semantic + base tokens (primary source)
+ *  2. sol-tokens-v1-snapshot  → V1 token values for backward-compat aliases
+ *  3. sol-tokens-v1-aliases   → V1 name → V2 name bridge mappings
+ */
+
+@import './sol-tokens.css';
+@import './sol-tokens-v1-snapshot.css';
+@import './sol-tokens-v1-aliases.css';
+
+/* ─── Base resets ─────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--sol-typography-body-md-font-family, 'SOL Sans', 'Open Sans', sans-serif);
+  font-size: var(--sol-typography-body-md-font-size, 0.8125rem);
+  font-weight: var(--sol-typography-body-md-font-weight, 400);
+  line-height: var(--sol-typography-body-md-line-height, 1.25rem);
+  color: var(--sol-color-text-default);
+  background-color: var(--sol-color-background-surface-canvas);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
