@@ -35,7 +35,7 @@
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@niceltd/sol-tokens": "github:nice-cxone/sol-tokens",
+    "@niceltd/sol-tokens": "2.1.0",
     "@floating-ui/react": "^0.26.0",
     "ag-grid-react": "~31.0.0",
     "ag-grid-community": "~31.0.0",
@@ -50,6 +50,9 @@
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.26.1",
+    "@niceltd/cxone-client-platform-services": "^35.18.0",
+    "@niceltd/cxone-playwright-test-utils": "^21.50.0",
+    "@niceltd/eslint-config-cxone": "^3.12.0",
     "@playwright/test": "1.58.2",
     "@storybook/addon-a11y": "^8.0.6",
     "@storybook/addon-actions": "^8.0.6",

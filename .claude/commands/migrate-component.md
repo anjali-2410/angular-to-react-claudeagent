@@ -22,8 +22,8 @@ Migrate an Angular SOL component from the source repo into this React target rep
 
 Given a component name (e.g. `checkbox`), this agent will:
 
-1. **Read all source files** from the Angular repo at:
-   `C:/Users/anjsonawane/sol-components/projects/ds-components/<component-name>/src/lib/`
+1. **Read all source files** from the Angular source repo on GitHub:
+   `https://github.com/nice-cxone/sol-components/tree/main/projects/ds-components/<component-name>/src/lib/`
 
 2. **Analyze** the Angular component — read **every** file in the source directory:
    - `*.component.ts` — inputs, outputs, logic (primary component)
@@ -182,12 +182,30 @@ Convert `<name>` to:
 
 - `kebabName` = `<name>` as-is (e.g., `text-input`)
 - `PascalName` = PascalCase (e.g., `TextInput`)
-- `sourcePath` = `C:/Users/anjsonawane/sol-components/projects/ds-components/<kebabName>/src/lib/`
+- `sourceRepo` = `https://github.com/nice-cxone/sol-components`
+- `sourcePath` = `projects/ds-components/<kebabName>/src/lib` (path within the repo)
+- `githubApiBase` = `https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib`
+- `rawBase` = `https://raw.githubusercontent.com/nice-cxone/sol-components/main/projects/ds-components/<kebabName>/src/lib`
 - `targetPath` = `src/components/<PascalName>/`
 
 ### Step 2 — Read ALL source files
 
-Read every file in `sourcePath`:
+**Discover files** by fetching the GitHub Contents API (returns a JSON array of file/dir entries):
+
+```text
+GET https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib
+GET https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/_docs
+GET https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/_stories
+GET https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/enum  (if present)
+```
+
+**Read each file** by fetching its raw content URL:
+
+```text
+https://raw.githubusercontent.com/nice-cxone/sol-components/main/projects/ds-components/<kebabName>/src/lib/<filename>
+```
+
+File types to fetch:
 
 - TypeScript (`.ts`)
 - HTML template (`.html`)
@@ -207,7 +225,30 @@ Apply all Conversion Rules above. Pay special attention to:
 - `ng-content` → `children` prop
 - SCSS compiled output → CSS with custom properties
 
-### Step 4 — Design Tokens & Styling
+### Step 4 — Sync package.json with Angular source
+
+Before writing any component files, compare the Angular source `package.json` with the React target `package.json` and add any missing `@niceltd/*` packages.
+
+#### Required packages (always check these)
+
+| Package | Location in React target | Reason |
+| --- | --- | --- |
+| `@niceltd/sol-tokens` | `dependencies` | CSS custom property tokens — consumers need this at runtime |
+| `@niceltd/cxone-playwright-test-utils` | `devDependencies` | Playwright E2E utilities — needed for page-object corral scripts |
+| `@niceltd/eslint-config-cxone` | `devDependencies` | Shared internal ESLint config — consistent linting rules |
+| `@niceltd/cxone-client-platform-services` | `devDependencies` | Platform services used by some components and Storybook stories |
+
+#### How to sync
+
+1. Fetch `https://raw.githubusercontent.com/nice-cxone/sol-components/main/package.json` (Angular source).
+2. Read `package.json` in this repo (React target).
+3. For every `@niceltd/*` package in the Angular source, check if it already exists in the React target.
+4. If missing — add it under the correct section (`dependencies` or `devDependencies`) using the **exact same version string** as the Angular source.
+5. If the version specifier differs (e.g. `github:` reference vs semver) — update it to match the Angular source.
+
+> **Note:** All `@niceltd/*` packages are hosted on the private AWS CodeArtifact registry. They cannot be installed until the registry token is configured (see registry setup below). Add them to `package.json` now so the lockfile stays accurate — actual `npm install` happens at the end.
+
+### Step 5 — Design Tokens & Styling
 
 #### Registry setup (do this first)
 
@@ -389,12 +430,19 @@ Before committing, verify:
 User: /migrate-component checkbox
 
 -- Step 1: Resolve names --
-kebabName  = checkbox
-PascalName = Checkbox
-sourcePath = C:/Users/anjsonawane/sol-components/projects/ds-components/checkbox/src/lib/
+kebabName     = checkbox
+PascalName    = Checkbox
+sourceRepo    = https://github.com/nice-cxone/sol-components
+sourcePath    = projects/ds-components/checkbox/src/lib
+githubApiBase = https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/checkbox/src/lib
+rawBase       = https://raw.githubusercontent.com/nice-cxone/sol-components/main/projects/ds-components/checkbox/src/lib
 
--- Step 2: Read ALL source files (glob everything) --
-Reads: checkbox.component.ts              ← primary component
+-- Step 2: Discover & read ALL source files via GitHub --
+Fetches API : https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/checkbox/src/lib
+Fetches API : .../src/lib/_docs
+Fetches API : .../src/lib/_stories
+
+Reads (raw) : .../src/lib/checkbox.component.ts              ← primary component
 Reads: checkbox.component.html
 Reads: checkbox.component.scss
 Reads: checkbox-group.component.ts        ← sub-component discovered
@@ -449,8 +497,8 @@ After committing, glob both directories and print a structured report showing ev
 
 ### How to produce the report
 
-1. Glob the Angular source path and collect every file.
-2. Glob the React target path and collect every file.
+1. Fetch the GitHub Contents API for the Angular source path and collect every file entry.
+2. Glob the React target path (`src/components/<PascalName>/`) and collect every file.
 3. For each Angular file apply the mapping rules below to determine its expected React equivalent (or mark it N/A).
 4. Check whether the expected React file exists in the target.
 5. Print the full table and summary block shown in the output format.
@@ -485,87 +533,58 @@ After committing, glob both directories and print a structured report showing ev
 
 ### Output format
 
-Print the report in this exact structure:
+Print the report in this structure (replace the Checkbox example values with the actual component's data):
 
 ```text
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  MIGRATION VERIFICATION — <ComponentName>
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MIGRATION REPORT — Checkbox
+Source : github.com/nice-cxone/sol-components → projects/ds-components/checkbox/src/lib/
+Target : src/components/Checkbox/
 
-  Source : C:/Users/anjsonawane/sol-components/.../<component>/src/lib/
-  Target : src/components/<PascalName>/
+FILE MAPPING
+  ✅  checkbox.component.ts / .html   → Checkbox.tsx
+  ✅  checkbox.component.scss         → Checkbox.css
+  ✅  checkbox-group.component.ts     → CheckboxGroup.tsx  (sub-component)
+  ✅  checkbox-group.component.scss   → Checkbox.css  (merged)
+  ✅  checkbox.types.ts               → Checkbox.tsx  (inline types)
+  ✅  checkbox.component.spec.ts      → Checkbox.test.tsx
+  ✅  checkbox-group.component.spec.ts → Checkbox.test.tsx  (merged)
+  ✅  checkbox.page.ts                → _e2e/Checkbox.page.ts
+  ✅  checkbox-group.page.ts          → _e2e/Checkbox.page.ts  (merged)
+  ✅  _stories/checkbox.stories.ts    → _stories/Checkbox.stories.tsx
+  ✅  _stories/checkbox-group.stories.ts → _stories/CheckboxGroup.stories.tsx
+  ✅  _stories/checkbox-reactive-forms.stories.ts → _stories/CheckboxForms.stories.tsx
+  ✅  _stories/checkbox-group-forms.stories.ts    → _stories/CheckboxGroupForms.stories.tsx
+  ✅  _stories/overview-checkbox.stories.ts       → _stories/CheckboxOverview.stories.tsx
+  ✅  _docs/checkbox-overview.mdx      → _docs/Checkbox.mdx
+  ✅  _docs/checkbox-api.mdx           → _docs/CheckboxApi.mdx
+  ✅  _docs/checkbox-group-overview.mdx → _docs/CheckboxGroup.mdx
+  ✅  _docs/checkbox-group-api.mdx     → _docs/CheckboxGroupApi.mdx
+  ✅  _docs/checkbox-migrate-from-breeze.mdx → _docs/CheckboxMigration.mdx
+  ✅  public_api.ts                    → index.ts
+  ⬜  checkbox.module.ts               → N/A  (Angular module)
+  ⬜  ng-package.json                  → N/A  (Angular build config)
+  ⬜  checkbox-required-validator.ts   → N/A  (Angular NG_VALIDATORS)
 
-  FILE MAPPING
-  ┌─────────────────────────────────────────────────┬──────────────────────────────────────────┬────────┐
-  │ Angular source                                  │ React target                             │ Status │
-  ├─────────────────────────────────────────────────┼──────────────────────────────────────────┼────────┤
-  │ checkbox.component.ts                           │ Checkbox.tsx                             │  ✅    │
-  │ checkbox.component.html                         │ Checkbox.tsx  (inline JSX)               │  ✅    │
-  │ checkbox.component.scss                         │ Checkbox.css                             │  ✅    │
-  │ checkbox-group.component.ts                     │ CheckboxGroup.tsx                        │  ✅    │
-  │ checkbox-group.component.scss                   │ Checkbox.css  (merged)                   │  ✅    │
-  │ checkbox.types.ts                               │ Checkbox.tsx  (inline types)             │  ✅    │
-  │ checkbox.component.spec.ts                      │ Checkbox.test.tsx                        │  ✅    │
-  │ checkbox-group.component.spec.ts                │ Checkbox.test.tsx  (merged)              │  ✅    │
-  │ checkbox.page.ts                                │ _e2e/Checkbox.page.ts                    │  ✅    │
-  │ checkbox-group.page.ts                          │ _e2e/Checkbox.page.ts  (merged)          │  ✅    │
-  │ _stories/checkbox.stories.ts                    │ _stories/Checkbox.stories.tsx            │  ✅    │
-  │ _stories/checkbox-group.stories.ts              │ _stories/CheckboxGroup.stories.tsx       │  ✅    │
-  │ _stories/checkbox-reactive-forms.stories.ts     │ _stories/CheckboxForms.stories.tsx       │  ✅    │
-  │ _stories/checkbox-group-forms.stories.ts        │ _stories/CheckboxGroupForms.stories.tsx  │  ✅    │
-  │ _stories/overview-checkbox.stories.ts           │ _stories/CheckboxOverview.stories.tsx    │  ✅    │
-  │ _docs/checkbox-overview.mdx                     │ _docs/Checkbox.mdx                       │  ✅    │
-  │ _docs/checkbox-api.mdx                          │ _docs/CheckboxApi.mdx                    │  ✅    │
-  │ _docs/checkbox-group-overview.mdx               │ _docs/CheckboxGroup.mdx                  │  ✅    │
-  │ _docs/checkbox-group-api.mdx                    │ _docs/CheckboxGroupApi.mdx               │  ✅    │
-  │ _docs/checkbox-migrate-from-breeze.mdx          │ _docs/CheckboxMigration.mdx              │  ✅    │
-  │ public_api.ts                                   │ index.ts                                 │  ✅    │
-  │ checkbox.module.ts                              │ —  (N/A: Angular module)                 │  ✅    │
-  │ ng-package.json                                 │ —  (N/A: Angular build config)           │  ✅    │
-  │ checkbox-required-validator.ts                  │ —  (N/A: Angular NG_VALIDATORS)          │  ✅    │
-  └─────────────────────────────────────────────────┴──────────────────────────────────────────┴────────┘
+STORY COUNT
+  checkbox.stories.ts (1)                → Checkbox.stories.tsx (1)            ✅
+  checkbox-group.stories.ts (2)          → CheckboxGroup.stories.tsx (2)       ✅
+  checkbox-reactive-forms.stories.ts (1) → CheckboxForms.stories.tsx (1)       ✅
+  checkbox-group-forms.stories.ts (2)    → CheckboxGroupForms.stories.tsx (2)  ✅
+  overview-checkbox.stories.ts (9)       → CheckboxOverview.stories.tsx (9)    ✅
 
-  STORY COUNT
-  ┌──────────────────────────────────────────────┬────────┬──────────────────────────────────────────┬────────┬────────┐
-  │ Angular stories file                         │ Count  │ React stories file                       │ Count  │ Status │
-  ├──────────────────────────────────────────────┼────────┼──────────────────────────────────────────┼────────┼────────┤
-  │ checkbox.stories.ts                          │   1    │ Checkbox.stories.tsx                     │   1    │  ✅    │
-  │ checkbox-group.stories.ts                    │   2    │ CheckboxGroup.stories.tsx                │   2    │  ✅    │
-  │ checkbox-reactive-forms.stories.ts           │   1    │ CheckboxForms.stories.tsx                │   1    │  ✅    │
-  │ checkbox-group-forms.stories.ts              │   2    │ CheckboxGroupForms.stories.tsx           │   2    │  ✅    │
-  │ overview-checkbox.stories.ts                 │   9    │ CheckboxOverview.stories.tsx             │   9    │  ✅    │
-  └──────────────────────────────────────────────┴────────┴──────────────────────────────────────────┴────────┴────────┘
-
-  STATS
-  ┌──────────────────────────────────────────────────────────────────┐
-  │  Angular source files total        26                            │
-  │  ├─ Ported to React                21  (merged into 16 files)   │
-  │  └─ Not applicable (Angular-only)   3  (module, package, validator) │
-  │                                                                  │
-  │  React target files total          16                            │
-  │  ├─ Components                      2  (Checkbox, CheckboxGroup) │
-  │  ├─ Styles                          1  (Checkbox.css)            │
-  │  ├─ Tests                           1  (Checkbox.test.tsx)       │
-  │  ├─ Barrel export                   1  (index.ts)                │
-  │  ├─ E2E page objects                1  (_e2e/Checkbox.page.ts)   │
-  │  ├─ Storybook stories               5  (_stories/)               │
-  │  └─ Documentation                   5  (_docs/)                  │
-  │                                                                  │
-  │  Missing files                      0                            │
-  │  Coverage                         100%                           │
-  └──────────────────────────────────────────────────────────────────┘
-
-  ✅  Migration complete — all source files accounted for.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SUMMARY
+  Angular source : 26 files  (21 ported → 16 React files, 3 N/A)
+  React target   : 16 files  (2 components, 1 CSS, 1 test, 5 stories, 5 docs, 1 e2e, 1 barrel)
+  Missing        : 0
+  Coverage       : 100% ✅
 ```
 
-If any row shows ❌ in the Status column, list the missing files separately after the table:
+If any file is missing, add a section at the end:
 
 ```text
-  MISSING FILES (action required)
-  ─────────────────────────────────────────────────────────────
-  ❌  _docs/CheckboxGroup.mdx   ← from checkbox-group-overview.mdx
+ACTION REQUIRED — 2 missing files
+  ❌  _docs/CheckboxGroup.mdx         ← from checkbox-group-overview.mdx
   ❌  _stories/CheckboxGroupForms.stories.tsx  ← from checkbox-group-forms.stories.ts
 ```
 
-Adjust the STATS block to reflect the actual missing count and coverage percentage.
+Adjust the SUMMARY numbers to reflect actual missing count and coverage percentage.
