@@ -174,7 +174,97 @@ Apply all Conversion Rules above. Pay special attention to:
 - `ng-content` → `children` prop
 - SCSS compiled output → CSS with custom properties
 
-### Step 4 — Write target files
+### Step 4 — Design Tokens & Styling
+
+#### Registry setup (do this first)
+
+The SOL token package is private and hosted on **AWS CodeArtifact**, not the public npm registry.
+
+1. Check the user's global `~/.npmrc` for the registry URL — it will look like:
+
+   ```text
+   registry=https://nice-devops-<id>.d.codeartifact.<region>.amazonaws.com/npm/<feed>/
+   //<host>/:_authToken=<token>
+   ```
+
+2. Set the project `.npmrc` to inherit from global (do NOT override with `registry=https://registry.npmjs.org/`):
+
+   ```ini
+   strict-ssl=false
+   ```
+
+3. If the CodeArtifact token is expired (they last 12 hours), ask the user to refresh it:
+
+   ```bash
+   aws codeartifact login --tool npm --domain nice-devops --domain-owner <account-id> --region <region> --repository <feed>
+   ```
+
+#### Adding the token dependency
+
+Add to `package.json` as a runtime dependency (not devDependency — consumers need it):
+
+```json
+"dependencies": {
+  "@niceltd/sol-tokens": "<version>"
+}
+```
+
+Check the Angular repo's `package.json` for the correct version.
+
+#### tokens.css — import from package, bridge-alias old names
+
+`src/tokens/tokens.css` must import the real package first, then define bridge aliases
+for any React-local token names that differ from the Angular names:
+
+```css
+@import '@niceltd/sol-tokens/sol-tokens.css';
+
+:root {
+  /* Bridge aliases — map React component CSS names to Angular token names */
+  /* Remove each alias once the component CSS is updated to use Angular names directly */
+  --sol-font-family-base: var(--sol-typography-body-md-font-family);
+  --sol-font-size-sm:     var(--sol-typography-body-sm-font-size);
+  --sol-font-size-md:     var(--sol-typography-body-md-font-size);
+  --sol-font-size-lg:     var(--sol-typography-body-lg-font-size);
+  /* ... etc */
+}
+```
+
+Do NOT hardcode raw values (`#hex`, `rem`) for tokens that exist in the package.
+Tokens with no package equivalent (z-index, transitions, component-specific heights) may remain hardcoded.
+
+#### Loading tokens into the page
+
+Tokens must be imported in **two places** so they are available in all contexts:
+
+1. **Library entry** `src/index.ts` — so consumers get tokens automatically:
+
+   ```ts
+   import './tokens/tokens.css';
+   ```
+
+2. **Storybook preview** `.storybook/preview.ts` — Storybook does not go through `index.ts`:
+
+   ```ts
+   /// <reference types="vite/client" />
+   import '../src/tokens/tokens.css';
+   ```
+
+Also add `src/vite-env.d.ts` so TypeScript accepts CSS side-effect imports:
+
+```ts
+/// <reference types="vite/client" />
+```
+
+#### Component CSS rules
+
+- Use Angular token names directly where known (e.g. `--sol-size-radius-sm`, `--sol-typography-body-md-font-size`).
+- Do **not** include fallback values in `var()` calls — `var(--sol-size-radius-sm)` not `var(--sol-size-radius-sm, 0.25rem)`. Fallbacks hide missing tokens.
+- Tokens already defined in the package with the same name (e.g. `--sol-color-text-default`, `--sol-color-background-primary`) do not need a bridge alias — they flow through automatically.
+
+---
+
+### Step 5 — Write target files
 
 Create all files in `src/components/<PascalName>/`:
 ```
@@ -192,7 +282,7 @@ src/components/<PascalName>/
     └── <PascalName>Migration.mdx
 ```
 
-### Step 5 — Update barrel export
+### Step 6 — Update barrel export
 
 In `src/index.ts`, add:
 ```typescript
@@ -200,7 +290,7 @@ export { <PascalName> } from './components/<PascalName>';
 export type { <PascalName>Props } from './components/<PascalName>';
 ```
 
-### Step 6 — Commit and push
+### Step 7 — Commit and push
 
 ```bash
 cd /c/Users/anjsonawane/angular-to-react-claudeagent
