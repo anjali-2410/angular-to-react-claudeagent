@@ -1,0 +1,70 @@
+import { Meta, Canvas } from '@storybook/blocks';
+import * as ActionBarStories from '../_stories/ActionBar.stories';
+
+<Meta title="Components/Action Bar/Overview" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Guidelines](#guidelines)
+  - [Variants](#variants)
+    - [Default Action Bar](#default-action-bar)
+  - [Do's and Don'ts](#dos-and-donts)
+  - [Use Cases](#use-cases)
+</div>
+<div className="toc-left">
+
+# Action Bar
+
+Action Bar is a notification component that displays important contextual information to users, typically at the top of the screen. It is commonly used to indicate impersonation states, temporary sessions, or other important status information that requires user attention.
+
+---
+
+## Guidelines
+
+Use Action Bar when you need to display persistent contextual information that users should be aware of during their session. The component is particularly useful for:
+
+- Indicating when a user is impersonating another account
+- Displaying temporary session information
+- Showing important warnings or notifications that should remain visible
+
+Key considerations:
+- Keep the message text concise but informative
+- Provide a clear action button for users to end or modify the current state
+- Use appropriate ARIA attributes for accessibility
+
+---
+
+## Variants
+
+### Default Action Bar
+
+<Canvas of={ActionBarStories.ActionBarStory} layout="centered" withToolbar />
+
+---
+
+## Do's and Don'ts
+
+### Do's
+
+- Use clear, descriptive text that explains the current state
+- Provide an action button to allow users to change or end the state
+- Ensure the component is accessible with proper ARIA labels
+- Use the live message feature (`liveMessage={true}`) for dynamic content updates
+
+### Don'ts
+
+- Don't use Action Bar for temporary notifications that should auto-dismiss
+- Don't include overly long text messages — keep them concise
+- Don't use multiple Action Bars simultaneously
+
+---
+
+## Use Cases
+
+**User Impersonation** — Display when an administrator is viewing the application as another user.
+
+**Temporary Sessions** — Indicate when a user is in a limited or temporary access mode.
+
+**Important Notifications** — Show critical information that should remain visible during the session.
+
+</div>

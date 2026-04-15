@@ -1,0 +1,34 @@
+/* ActionBar component styles — compiled from action-bar.component.scss */
+
+.sol-action-bar {
+  position: fixed;
+  left: 50%;
+  height: 0;
+  z-index: 1000;
+  top: 0;
+}
+
+.sol-action-bar .bar-wrapper {
+  display: flex;
+  padding: var(--sol-size-spacing-xs) var(--sol-size-spacing-sm);
+  align-content: center;
+  max-height: 6rem;
+  border: var(--sol-size-border-default) solid var(--sol-color-border-status-warning);
+  transform: translateX(-50%);
+  background-color: var(--sol-color-background-status-warning-subtle);
+  min-width: 20rem;
+  overflow: hidden;
+  gap: var(--sol-size-spacing-sm);
+}
+
+.sol-action-bar .bar-wrapper .bar-label {
+  color: var(--sol-color-text-default);
+  overflow: hidden;
+  align-self: center;
+}
+
+.sol-action-bar .bar-wrapper .bar-label:focus-visible {
+  outline: var(--sol-size-border-medium) solid var(--sol-color-border-focus-default);
+  outline-offset: var(--sol-size-spacing-2xs);
+  border-radius: var(--sol-size-radius-xs);
+}

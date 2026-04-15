@@ -10,3 +10,6 @@ export type { CheckboxProps, CheckboxChangeEvent, CheckboxGroupContextValue, Che
 
 export { AccordionGroup, AccordionGroupContext, AccordionItem } from './components/Accordion';
 export type { AccordionGroupProps, AccordionGroupContextValue, AccordionItemProps } from './components/Accordion';
+
+export { ActionBar } from './components/ActionBar';
+export type { ActionBarProps } from './components/ActionBar';
