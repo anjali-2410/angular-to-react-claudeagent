@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "start": "storybook dev -p 6007",
+    "start": "storybook dev -p 6008",
     "build": "tsc",
     "build-storybook": "storybook build",
     "build-storybook-prod": "npm run docs:json && storybook build",
@@ -23,7 +23,7 @@
     "lint:styles": "stylelint \"src/**/*.{css,scss,sass}\"",
     "format": "prettier --write \"src/**/*.{js,ts,tsx,jsx,css,scss,mdx}\"",
     "format-check": "prettier --check \"src/**/*.{js,ts,tsx,jsx,css,scss,mdx}\"",
-    "storybook": "storybook dev -p 6007",
+    "storybook": "storybook dev -p 6008",
     "e2e-suite_01": "npx playwright install chromium && npx playwright test --config=e2e/suite01/suite01.config.ts",
     "e2e-suite_02": "npx playwright install chromium && npx playwright test --config=e2e/suite02/suite02.config.ts",
     "e2e-suite_03": "npx playwright install chromium && npx playwright test --config=e2e/suite03/suite03.config.ts",

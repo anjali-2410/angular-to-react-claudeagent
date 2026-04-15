@@ -440,3 +440,132 @@ Updates: src/index.ts (adds Checkbox + CheckboxGroup exports)
 -- Step 7: Commit & push --
 Runs: git add + commit + push
 ```
+
+---
+
+## Step 8 — Post-migration verification report
+
+After committing, glob both directories and print a structured report showing every Angular source file, its React counterpart, and overall stats. Run this step every time a migration completes.
+
+### How to produce the report
+
+1. Glob the Angular source path and collect every file.
+2. Glob the React target path and collect every file.
+3. For each Angular file apply the mapping rules below to determine its expected React equivalent (or mark it N/A).
+4. Check whether the expected React file exists in the target.
+5. Print the full table and summary block shown in the output format.
+
+### Mapping rules (Angular → React)
+
+| Angular file pattern | React equivalent | Notes |
+|---|---|---|
+| `*.component.ts` + `*.component.html` | `<PascalName>.tsx` | Merged into one TSX |
+| `*.component.scss` | `<PascalName>.css` | All SCSS files merge into one CSS |
+| `*-group.component.ts` | `<PascalName>Group.tsx` | Sub-component |
+| `*-group.component.scss` | `<PascalName>.css` | Merged |
+| `*.component.spec.ts` | `<PascalName>.test.tsx` | All specs merge into one test file |
+| `*-group.component.spec.ts` | `<PascalName>.test.tsx` | Merged |
+| `*.types.ts` | `<PascalName>.tsx` (inline types) | Merged |
+| `*.page.ts` | `_e2e/<PascalName>.page.ts` | All page objects merge into one |
+| `*-group.page.ts` | `_e2e/<PascalName>.page.ts` | Merged |
+| `public_api.ts` / `index.ts` | `index.ts` | Barrel export |
+| `_stories/<component>.stories.ts` | `_stories/<PascalName>.stories.tsx` | |
+| `_stories/overview-<component>.stories.ts` | `_stories/<PascalName>Overview.stories.tsx` | |
+| `_stories/*-group.stories.ts` | `_stories/<PascalName>Group.stories.tsx` | |
+| `_stories/*-reactive-forms.stories.ts` | `_stories/<PascalName>Forms.stories.tsx` | |
+| `_stories/*-group-forms.stories.ts` | `_stories/<PascalName>GroupForms.stories.tsx` | |
+| `_docs/*-overview.mdx` | `_docs/<PascalName>.mdx` | |
+| `_docs/*-api.mdx` | `_docs/<PascalName>Api.mdx` | |
+| `_docs/*-group-overview.mdx` | `_docs/<PascalName>Group.mdx` | |
+| `_docs/*-group-api.mdx` | `_docs/<PascalName>GroupApi.mdx` | |
+| `_docs/*-migrate-from-*.mdx` | `_docs/<PascalName>Migration.mdx` | |
+| `*.module.ts` | — | N/A — Angular module system |
+| `ng-package.json` | — | N/A — Angular build config |
+| `*-required-validator.ts` | — | N/A — Angular NG_VALIDATORS directive |
+
+### Output format
+
+Print the report in this exact structure:
+
+```text
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  MIGRATION VERIFICATION — <ComponentName>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Source : C:/Users/anjsonawane/sol-components/.../<component>/src/lib/
+  Target : src/components/<PascalName>/
+
+  FILE MAPPING
+  ┌─────────────────────────────────────────────────┬──────────────────────────────────────────┬────────┐
+  │ Angular source                                  │ React target                             │ Status │
+  ├─────────────────────────────────────────────────┼──────────────────────────────────────────┼────────┤
+  │ checkbox.component.ts                           │ Checkbox.tsx                             │  ✅    │
+  │ checkbox.component.html                         │ Checkbox.tsx  (inline JSX)               │  ✅    │
+  │ checkbox.component.scss                         │ Checkbox.css                             │  ✅    │
+  │ checkbox-group.component.ts                     │ CheckboxGroup.tsx                        │  ✅    │
+  │ checkbox-group.component.scss                   │ Checkbox.css  (merged)                   │  ✅    │
+  │ checkbox.types.ts                               │ Checkbox.tsx  (inline types)             │  ✅    │
+  │ checkbox.component.spec.ts                      │ Checkbox.test.tsx                        │  ✅    │
+  │ checkbox-group.component.spec.ts                │ Checkbox.test.tsx  (merged)              │  ✅    │
+  │ checkbox.page.ts                                │ _e2e/Checkbox.page.ts                    │  ✅    │
+  │ checkbox-group.page.ts                          │ _e2e/Checkbox.page.ts  (merged)          │  ✅    │
+  │ _stories/checkbox.stories.ts                    │ _stories/Checkbox.stories.tsx            │  ✅    │
+  │ _stories/checkbox-group.stories.ts              │ _stories/CheckboxGroup.stories.tsx       │  ✅    │
+  │ _stories/checkbox-reactive-forms.stories.ts     │ _stories/CheckboxForms.stories.tsx       │  ✅    │
+  │ _stories/checkbox-group-forms.stories.ts        │ _stories/CheckboxGroupForms.stories.tsx  │  ✅    │
+  │ _stories/overview-checkbox.stories.ts           │ _stories/CheckboxOverview.stories.tsx    │  ✅    │
+  │ _docs/checkbox-overview.mdx                     │ _docs/Checkbox.mdx                       │  ✅    │
+  │ _docs/checkbox-api.mdx                          │ _docs/CheckboxApi.mdx                    │  ✅    │
+  │ _docs/checkbox-group-overview.mdx               │ _docs/CheckboxGroup.mdx                  │  ✅    │
+  │ _docs/checkbox-group-api.mdx                    │ _docs/CheckboxGroupApi.mdx               │  ✅    │
+  │ _docs/checkbox-migrate-from-breeze.mdx          │ _docs/CheckboxMigration.mdx              │  ✅    │
+  │ public_api.ts                                   │ index.ts                                 │  ✅    │
+  │ checkbox.module.ts                              │ —  (N/A: Angular module)                 │  ✅    │
+  │ ng-package.json                                 │ —  (N/A: Angular build config)           │  ✅    │
+  │ checkbox-required-validator.ts                  │ —  (N/A: Angular NG_VALIDATORS)          │  ✅    │
+  └─────────────────────────────────────────────────┴──────────────────────────────────────────┴────────┘
+
+  STORY COUNT
+  ┌──────────────────────────────────────────────┬────────┬──────────────────────────────────────────┬────────┬────────┐
+  │ Angular stories file                         │ Count  │ React stories file                       │ Count  │ Status │
+  ├──────────────────────────────────────────────┼────────┼──────────────────────────────────────────┼────────┼────────┤
+  │ checkbox.stories.ts                          │   1    │ Checkbox.stories.tsx                     │   1    │  ✅    │
+  │ checkbox-group.stories.ts                    │   2    │ CheckboxGroup.stories.tsx                │   2    │  ✅    │
+  │ checkbox-reactive-forms.stories.ts           │   1    │ CheckboxForms.stories.tsx                │   1    │  ✅    │
+  │ checkbox-group-forms.stories.ts              │   2    │ CheckboxGroupForms.stories.tsx           │   2    │  ✅    │
+  │ overview-checkbox.stories.ts                 │   9    │ CheckboxOverview.stories.tsx             │   9    │  ✅    │
+  └──────────────────────────────────────────────┴────────┴──────────────────────────────────────────┴────────┴────────┘
+
+  STATS
+  ┌──────────────────────────────────────────────────────────────────┐
+  │  Angular source files total        26                            │
+  │  ├─ Ported to React                21  (merged into 16 files)   │
+  │  └─ Not applicable (Angular-only)   3  (module, package, validator) │
+  │                                                                  │
+  │  React target files total          16                            │
+  │  ├─ Components                      2  (Checkbox, CheckboxGroup) │
+  │  ├─ Styles                          1  (Checkbox.css)            │
+  │  ├─ Tests                           1  (Checkbox.test.tsx)       │
+  │  ├─ Barrel export                   1  (index.ts)                │
+  │  ├─ E2E page objects                1  (_e2e/Checkbox.page.ts)   │
+  │  ├─ Storybook stories               5  (_stories/)               │
+  │  └─ Documentation                   5  (_docs/)                  │
+  │                                                                  │
+  │  Missing files                      0                            │
+  │  Coverage                         100%                           │
+  └──────────────────────────────────────────────────────────────────┘
+
+  ✅  Migration complete — all source files accounted for.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+If any row shows ❌ in the Status column, list the missing files separately after the table:
+
+```text
+  MISSING FILES (action required)
+  ─────────────────────────────────────────────────────────────
+  ❌  _docs/CheckboxGroup.mdx   ← from checkbox-group-overview.mdx
+  ❌  _stories/CheckboxGroupForms.stories.tsx  ← from checkbox-group-forms.stories.ts
+```
+
+Adjust the STATS block to reflect the actual missing count and coverage percentage.
