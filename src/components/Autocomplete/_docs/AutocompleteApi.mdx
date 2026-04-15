@@ -1,0 +1,217 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Autocomplete/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Props](#props)
+  - [Imperative Handle](#imperative-handle)
+  - [Page Object](#page-object)
+</div>
+<div className="toc-left">
+
+# Autocomplete: API
+
+## Component API Description
+
+### Autocomplete
+
+#### Props
+
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Data Type</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td>minimumSearchTextLength</td>
+		<td>number</td>
+		<td>The minimum number of characters required before showing autocomplete suggestions. Default: 3</td>
+	</tr>
+	<tr>
+		<td>placeholder</td>
+		<td>string | undefined</td>
+		<td>Placeholder text displayed in the input field. Default: 'Search for item'.</td>
+	</tr>
+	<tr>
+		<td>ariaLabel</td>
+		<td>string</td>
+		<td>ARIA label for accessibility. Required for screen reader support.</td>
+	</tr>
+	<tr>
+		<td>panelId</td>
+		<td>string | undefined</td>
+		<td>ID for the dropdown panel. Auto-generated if omitted.</td>
+	</tr>
+	<tr>
+		<td>value</td>
+		<td>string | undefined</td>
+		<td>Controlled value for the search input.</td>
+	</tr>
+	<tr>
+		<td>onChange</td>
+		<td>(value: string) =&gt; void</td>
+		<td>Called whenever the input text changes.</td>
+	</tr>
+	<tr>
+		<td>onOptionSelected</td>
+		<td>(event: AutocompleteOptionSelectedEvent) =&gt; void</td>
+		<td>Called when an option is selected from the dropdown.</td>
+	</tr>
+	<tr>
+		<td>onClearedSearchText</td>
+		<td>() =&gt; void</td>
+		<td>Called when the clear button is clicked to remove search text.</td>
+	</tr>
+	<tr>
+		<td>onDropdownVisible</td>
+		<td>(visible: boolean) =&gt; void</td>
+		<td>Called when the dropdown opens (true) or closes (false).</td>
+	</tr>
+	<tr>
+		<td>children</td>
+		<td>ReactNode</td>
+		<td>AutocompleteOption children to display in the dropdown.</td>
+	</tr>
+</table>
+
+## Imperative Handle
+
+Use `ref` with `AutocompleteHandle` to access imperative methods:
+
+<table>
+	<tr>
+		<th>Method Name</th>
+		<th>Parameters</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td>setFocus</td>
+		<td>None</td>
+		<td>Programmatically focuses the input field.</td>
+	</tr>
+	<tr>
+		<td>clearSearchText</td>
+		<td>None</td>
+		<td>Clears the search text and emits the onClearedSearchText callback.</td>
+	</tr>
+</table>
+
+### AutocompleteOption
+
+#### Props
+
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Data Type</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td>id</td>
+		<td>string</td>
+		<td>Unique identifier for the option.</td>
+	</tr>
+	<tr>
+		<td>name</td>
+		<td>string</td>
+		<td>Display name of the option (used as the selected value).</td>
+	</tr>
+	<tr>
+		<td>disabled</td>
+		<td>boolean</td>
+		<td>Whether the option is disabled and cannot be selected. Default: false</td>
+	</tr>
+	<tr>
+		<td>children</td>
+		<td>ReactNode</td>
+		<td>Custom content to display inside the option.</td>
+	</tr>
+</table>
+
+### SearchAutocompleteItem
+
+#### Props
+
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Data Type</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td>text</td>
+		<td>string</td>
+		<td>Primary label text to display.</td>
+	</tr>
+	<tr>
+		<td>searchText</td>
+		<td>string</td>
+		<td>Text to highlight within the label.</td>
+	</tr>
+	<tr>
+		<td>path</td>
+		<td>string</td>
+		<td>Hierarchical path string (e.g. "Root/Parent/Child"). Automatically truncated with ellipsis when too long.</td>
+	</tr>
+</table>
+
+## Page Object
+
+### Properties
+
+<table>
+	<tr>
+		<th>Property Name</th>
+		<th>Type</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td>inputText</td>
+		<td>string</td>
+		<td>Selector for the autocomplete input field: '.sol-auto-complete input.sol-input'</td>
+	</tr>
+	<tr>
+		<td>autocompletePanel</td>
+		<td>string</td>
+		<td>Selector for the dropdown panel: '.sol-autocomplete-panel'</td>
+	</tr>
+	<tr>
+		<td>clearButton</td>
+		<td>string</td>
+		<td>Selector for the clear button: 'button[aria-label="clear icon"]'</td>
+	</tr>
+	<tr>
+		<td>autocompleteSpinner</td>
+		<td>string</td>
+		<td>Selector for the loading spinner: 'div#spinner'</td>
+	</tr>
+</table>
+
+### Methods
+
+<table>
+	<tr>
+		<th>Method Name</th>
+		<th>Parameters</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td>click</td>
+		<td>selector: string, force?: boolean, timeout?: number</td>
+		<td>Click an element by selector.</td>
+	</tr>
+	<tr>
+		<td>isVisible</td>
+		<td>selector: string, timeout?: number</td>
+		<td>Check if an element is visible. Default timeout: 2000ms.</td>
+	</tr>
+	<tr>
+		<td>focus</td>
+		<td>selector: string, timeout?: number</td>
+		<td>Focus an element by selector.</td>
+	</tr>
+</table>
+
+</div>

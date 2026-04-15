@@ -1,0 +1,203 @@
+.sol-auto-complete {
+  position: relative;
+
+  .sol-text-input {
+    position: relative;
+  }
+
+  .sol-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .sol-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--sol-color-background-input-default);
+    border: var(--sol-size-border-default) solid var(--sol-color-border-standard);
+    border-radius: var(--sol-size-radius-sm);
+    color: var(--sol-color-text-default);
+    font-family: var(--sol-typography-body-md-font-family);
+    font-size: var(--sol-typography-body-md-font-size);
+    font-weight: var(--sol-typography-body-md-font-weight);
+    line-height: var(--sol-typography-body-md-line-height);
+    height: var(--sol-size-control-md);
+    padding: 0 var(--sol-size-spacing-sm);
+    outline: none;
+
+    &::placeholder {
+      color: var(--sol-color-text-placeholder);
+    }
+
+    &:focus {
+      border-color: var(--sol-color-border-focus-default);
+      outline: var(--sol-size-border-medium) solid var(--sol-color-border-focus-default);
+      outline-offset: calc(var(--sol-size-border-medium) * -1);
+    }
+  }
+
+  .sol-input-trailing-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--sol-size-spacing-xs);
+    color: var(--sol-color-text-default);
+
+    &:hover {
+      color: var(--sol-color-text-hover);
+    }
+  }
+}
+
+/* Dropdown panel */
+.sol-autocomplete-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-top: var(--sol-size-spacing-2xs);
+  z-index: 1000;
+  border-radius: var(--sol-size-radius-md);
+  max-height: 16.875rem;
+  padding: var(--sol-size-spacing-xs) 0 var(--sol-size-border-medium);
+  background: var(--sol-color-background-surface-overlay);
+  border: 1px solid var(--sol-color-border-standard);
+  font-family: var(--sol-typography-body-md-font-family);
+  font-size: var(--sol-typography-body-md-font-size);
+  box-shadow: var(--sol-elevation-overlay-shadow);
+  overflow-y: auto;
+  outline: none;
+
+  &:has(.item-not-found) {
+    padding: 0;
+  }
+}
+
+/* Fade indicators */
+.sol-autocomplete-fade-top,
+.sol-autocomplete-fade-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--sol-size-bar-sm);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+}
+
+.sol-autocomplete-fade-top {
+  top: 0;
+  background: linear-gradient(to bottom, var(--sol-color-background-surface-overlay) 0%, transparent 100%);
+}
+
+.sol-autocomplete-fade-bottom {
+  bottom: 0;
+  background: linear-gradient(to top, var(--sol-color-background-surface-overlay) 0%, transparent 100%);
+}
+
+/* Option items */
+.sol-autocomplete-option {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  height: var(--sol-size-listitem-md);
+  margin: 0 var(--sol-size-spacing-xs);
+  width: calc(100% - var(--sol-size-spacing-xs) * 2);
+  padding: 0 var(--sol-size-spacing-xs);
+  border: var(--sol-size-border-default) solid transparent;
+  border-radius: var(--sol-size-radius-sm);
+  background: var(--sol-color-listitem-default);
+  color: var(--sol-color-text-default);
+  font-family: var(--sol-typography-body-md-font-family);
+  font-size: var(--sol-typography-body-md-font-size);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover:not(.sol-autocomplete-option--disabled) {
+    background-color: var(--sol-color-background-state-hover-neutral);
+  }
+
+  &:active:not(.sol-autocomplete-option--disabled) {
+    background-color: var(--sol-color-background-state-pressed-neutral);
+  }
+
+  &.sol-autocomplete-option--active:not(.sol-autocomplete-option--disabled) {
+    background-color: transparent;
+    outline: var(--sol-size-border-medium) solid var(--sol-color-border-focus-default);
+    outline-offset: calc(var(--sol-size-border-medium) * -1);
+  }
+
+  &.sol-autocomplete-option--disabled {
+    cursor: default;
+    opacity: 1;
+  }
+
+  &.item-not-found {
+    height: var(--sol-size-control-lg);
+    color: var(--sol-color-text-secondary);
+    font-family: var(--sol-typography-body-md-font-family);
+    font-size: var(--sol-typography-body-md-font-size);
+    font-weight: var(--sol-typography-body-md-font-weight);
+    line-height: var(--sol-typography-body-md-line-height);
+    margin: 0;
+    width: 100%;
+    border-radius: 0;
+    cursor: default;
+  }
+}
+
+/* Screen reader only */
+.sol-screenreader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Search autocomplete item (sub-component) */
+.search-item-wrapper {
+  min-height: 38px;
+  width: 100%;
+  min-width: 250px;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  font-style: normal;
+  font-weight: var(--sol-typography-body-lg-font-weight);
+  font-family: var(--sol-typography-body-lg-font-family);
+
+  .search-item-text {
+    color: var(--sol-base-color-gray-90);
+    font-size: 13px;
+    line-height: 120%;
+  }
+
+  .search-item-path {
+    color: var(--sol-color-text-secondary);
+    font-size: 12px;
+    line-height: 125%;
+  }
+
+  .highlighter {
+    font-weight: bolder;
+    color: #000;
+  }
+}

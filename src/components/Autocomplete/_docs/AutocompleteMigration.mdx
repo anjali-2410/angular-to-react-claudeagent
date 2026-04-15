@@ -1,0 +1,103 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Autocomplete/Migration" />
+
+<div className="toc-left">
+
+# Autocomplete: Migration Guide (Angular → React)
+
+## Overview
+
+This guide covers migrating from the Angular `<sol-autocomplete>` component to the React `<Autocomplete>` component.
+
+## Component Mapping
+
+| Angular | React |
+|---------|-------|
+| `<sol-autocomplete>` | `<Autocomplete>` |
+| `<sol-autocomplete-option>` | `<AutocompleteOption>` |
+| `<sol-search-autocomplete-item>` | `<SearchAutocompleteItem>` |
+| `solTextHighlighter` pipe | Built into `SearchAutocompleteItem` |
+
+## Inputs → Props
+
+| Angular Input | React Prop | Notes |
+|---------------|-----------|-------|
+| `minimumSearchTextLength` | `minimumSearchTextLength` | Default: 3 |
+| `placeholder` | `placeholder` | Default: 'Search for item' |
+| `ariaLabel` | `ariaLabel` | Required |
+| `panelId` | `panelId` | Auto-generated if omitted |
+| `[(ngModel)]` / `[formControl]` | `value` + `onChange` | Use controlled pattern |
+
+## Outputs → Callbacks
+
+| Angular Output | React Callback | Notes |
+|----------------|---------------|-------|
+| `optionSelected` | `onOptionSelected` | Event shape: `{ value: string, id: string }` |
+| `clearedSearchText` | `onClearedSearchText` | `() => void` |
+| `dropdownVisible` | `onDropdownVisible` | `(visible: boolean) => void` |
+
+## Children
+
+Angular used `<sol-autocomplete-option>` as content-projected children; React uses the same pattern:
+
+```tsx
+<Autocomplete ariaLabel="Search" value={query} onChange={setQuery}>
+  {filteredItems.map(item => (
+    <AutocompleteOption key={item.id} id={item.id} name={item.name}>
+      {item.name}
+    </AutocompleteOption>
+  ))}
+</Autocomplete>
+```
+
+## Custom Template (SearchAutocompleteItem)
+
+```tsx
+// Angular
+<sol-autocomplete-option [id]="option.id" [name]="option.name">
+  <sol-search-autocomplete-item
+    [text]="option.name"
+    [path]="option.path.join('/')"
+    [searchText]="searchText"
+  ></sol-search-autocomplete-item>
+</sol-autocomplete-option>
+
+// React
+<AutocompleteOption id={option.id} name={option.name}>
+  <SearchAutocompleteItem
+    text={option.name}
+    path={option.path.join('/')}
+    searchText={searchText}
+  />
+</AutocompleteOption>
+```
+
+## Imperative API
+
+```tsx
+// Angular — call setFocus() via ViewChild
+@ViewChild(AutoCompleteComponent) autocomplete!: AutoCompleteComponent;
+this.autocomplete.setFocus();
+
+// React — use ref
+const ref = useRef<AutocompleteHandle>(null);
+<Autocomplete ref={ref} ariaLabel="Search" ... />
+ref.current?.setFocus();
+ref.current?.clearSearchText();
+```
+
+## Form Integration
+
+```tsx
+// Angular NgModel
+<sol-autocomplete [(ngModel)]="searchText">...</sol-autocomplete>
+
+// React controlled
+const [searchText, setSearchText] = useState('');
+<Autocomplete value={searchText} onChange={setSearchText} ariaLabel="Search">
+  ...
+</Autocomplete>
+```
+
+</div>

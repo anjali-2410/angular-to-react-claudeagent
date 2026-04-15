@@ -13,3 +13,13 @@ export type { AccordionGroupProps, AccordionGroupContextValue, AccordionItemProp
 
 export { ActionBar } from './components/ActionBar';
 export type { ActionBarProps } from './components/ActionBar';
+
+export { Autocomplete, AutocompleteOption, SearchAutocompleteItem } from './components/Autocomplete';
+export type {
+  AutocompleteProps,
+  AutocompleteHandle,
+  AutocompleteOptionProps,
+  AutocompleteOptionSelectedEvent,
+  AutocompleteOptionData,
+  SearchAutocompleteItemProps,
+} from './components/Autocomplete';

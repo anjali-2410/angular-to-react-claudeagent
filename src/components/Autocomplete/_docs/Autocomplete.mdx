@@ -1,0 +1,69 @@
+import { Meta, Canvas } from '@storybook/blocks';
+import * as AutocompleteStories from '../_stories/Autocomplete.stories';
+
+<Meta title="Components/Autocomplete/Overview" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Guidelines](#guidelines)
+  - [Component Variants](#component-variants)
+    - [Bottom Position](#bottom-position)
+    - [Backend Search Mock](#backend-search-mock)
+    - [Custom Template](#custom-template)
+</div>
+
+<div className="toc-left">
+
+  ## Autocomplete
+
+  The `<Autocomplete>` component provides an intuitive way for users to search and select from a list of options. It displays filtered suggestions as the user types, improving the user experience by reducing the need to scroll through long lists.
+
+  ## Guidelines
+
+  - Use autocomplete when users need to select from a large list of options (typically more than 10 items).
+  - Set a minimum search text length to avoid overwhelming users with too many results at once.
+  - Provide clear placeholder text to guide users on what they can search for.
+  - Use autocomplete for search functionality where users may not know the exact term they're looking for.
+  - Consider showing a loading indicator for backend searches that may take time.
+  - Display a "No items found" message when search returns no results to provide feedback.
+  - Use custom templates when additional context (like paths or descriptions) helps users identify the correct option.
+  - The autocomplete panel automatically positions itself based on available space.
+
+  <hr/>
+
+  ## Component Variants
+
+  ### Bottom Position
+
+  When the autocomplete is placed near the bottom of the viewport, the dropdown panel automatically positions itself upward to remain visible.
+
+  <Canvas
+    of={AutocompleteStories.AutocompleteBottomPosition}
+    withToolbar
+  />
+
+  <hr/>
+
+  ### Backend Search Mock
+
+  Demonstrates integration with asynchronous backend search with a loading indicator. Useful for large datasets that cannot be loaded upfront.
+
+  <Canvas
+    of={AutocompleteStories.AutocompleteMockBackendSearch}
+    withToolbar
+  />
+
+  <hr/>
+
+  ### Custom Template
+
+  Use custom templates for autocomplete options to display additional information like hierarchical paths or descriptions.
+
+  <Canvas
+    of={AutocompleteStories.AutocompleteWithSearchItem}
+    withToolbar
+  />
+
+  <hr/>
+
+</div>
