@@ -25,26 +25,56 @@ Given a component name (e.g. `checkbox`), this agent will:
 1. **Read all source files** from the Angular repo at:
    `C:/Users/anjsonawane/sol-components/projects/ds-components/<component-name>/src/lib/`
 
-2. **Analyze** the Angular component:
-   - `*.component.ts` — inputs, outputs, logic
+2. **Analyze** the Angular component — read **every** file in the source directory:
+   - `*.component.ts` — inputs, outputs, logic (primary component)
    - `*.component.html` — template structure
    - `*.component.scss` — styles (converted to CSS custom properties)
-   - `*.module.ts` — imports/dependencies
+   - `*.module.ts` — imports/dependencies (not ported, but used to discover sub-components)
    - `enum/*.enum.ts` — TypeScript enums
-   - `_docs/*.mdx` — documentation
-   - `_stories/*.stories.ts` — Storybook stories
-   - `*.spec.ts` — unit tests
+   - `_docs/*.mdx` — **all** documentation files (there may be more than one per sub-component)
+   - `_stories/*.stories.ts` — **all** story files (there may be 3–5)
+   - `*.spec.ts` — unit tests (there may be one per sub-component)
+   - `*.types.ts` — shared types and enums
+   - `*.page.ts` — Playwright page objects (E2E test utilities)
+   - `*-group.component.ts` etc. — **sub-components** (e.g. `CheckboxGroup`, `ChipGroup`, `RadioGroup`) that live alongside the primary component
 
-3. **Generate React equivalents** in `src/components/<ComponentName>/`:
+3. **Generate React equivalents** in `src/components/<ComponentName>/`.
+
+   **Primary component files (always created):**
+
    - `<ComponentName>.tsx` — React component (TypeScript, forwardRef where needed)
    - `<ComponentName>.css` — CSS (Angular SCSS → CSS custom properties, same class names)
    - `<ComponentName>.test.tsx` — Vitest + @testing-library/react tests
-   - `index.ts` — barrel export
-   - `_stories/<ComponentName>.stories.tsx` — interactive Storybook stories
-   - `_stories/<ComponentName>Overview.stories.tsx` — docs-only overview story
-   - `_docs/<ComponentName>.mdx` — Overview doc page
-   - `_docs/<ComponentName>Api.mdx` — API reference
-   - `_docs/<ComponentName>Migration.mdx` — Angular → React migration guide
+   - `index.ts` — barrel export for all components and types in this directory
+
+   **Sub-component files (create for each companion component found in source):**
+
+   - `<SubComponentName>.tsx` — React sub-component (e.g. `CheckboxGroup.tsx`)
+   - Tests go into the primary `<ComponentName>.test.tsx` (or a separate `<SubComponentName>.test.tsx` if the spec file is large)
+
+   **Storybook stories — one file per Angular story file:**
+
+   - `_stories/<ComponentName>.stories.tsx` ← from `<component>.stories.ts`
+   - `_stories/<ComponentName>Overview.stories.tsx` ← from `overview-<component>.stories.ts`
+   - `_stories/<SubComponentName>.stories.tsx` ← from `<component>-group.stories.ts` (if exists)
+   - `_stories/<ComponentName>Forms.stories.tsx` ← from `<component>-reactive-forms.stories.ts` or `<component>-forms.stories.ts` (if exists); show React controlled-component / React Hook Form equivalents
+   - `_stories/<SubComponentName>Forms.stories.tsx` ← from `<component>-group-forms.stories.ts` (if exists)
+
+   > **Rule:** count the Angular story files and produce the same number of React story files, one-to-one.
+
+   **Docs — one file per Angular MDX doc:**
+
+   - `_docs/<ComponentName>.mdx` ← from `<component>-overview.mdx`
+   - `_docs/<ComponentName>Api.mdx` ← from `<component>-api.mdx`
+   - `_docs/<ComponentName>Migration.mdx` ← from `<component>-migrate-from-*.mdx`
+   - `_docs/<SubComponentName>.mdx` ← from `<component>-group-overview.mdx` (if exists)
+   - `_docs/<SubComponentName>Api.mdx` ← from `<component>-group-api.mdx` (if exists)
+
+   > **Rule:** count the Angular MDX files and produce the same number of React MDX files, one-to-one.
+
+   **Page objects (optional — create only when `.page.ts` exists in source):**
+
+   - `_e2e/<ComponentName>.page.ts` — Playwright page-object selectors (CSS class names stay the same as Angular)
 
 4. **Update** `src/index.ts` to export the new component.
 
@@ -149,6 +179,7 @@ When the user runs `/migrate-component <name>`:
 ### Step 1 — Resolve component name
 
 Convert `<name>` to:
+
 - `kebabName` = `<name>` as-is (e.g., `text-input`)
 - `PascalName` = PascalCase (e.g., `TextInput`)
 - `sourcePath` = `C:/Users/anjsonawane/sol-components/projects/ds-components/<kebabName>/src/lib/`
@@ -157,6 +188,7 @@ Convert `<name>` to:
 ### Step 2 — Read ALL source files
 
 Read every file in `sourcePath`:
+
 - TypeScript (`.ts`)
 - HTML template (`.html`)
 - SCSS (`.scss`)
@@ -168,6 +200,7 @@ Read every file in `sourcePath`:
 ### Step 3 — Analyze and convert
 
 Apply all Conversion Rules above. Pay special attention to:
+
 - All `input()` signals → React props
 - All `output()` signals → React callback props
 - Template control flow (`@if`, `@for`, `@switch`) → JSX expressions
@@ -266,20 +299,29 @@ Also add `src/vite-env.d.ts` so TypeScript accepts CSS side-effect imports:
 
 ### Step 5 — Write target files
 
-Create all files in `src/components/<PascalName>/`:
-```
+Create all files in `src/components/<PascalName>/`. The exact set of files depends on what exists in the Angular source — use the tree below as a template and add/remove files to match the source 1-to-1:
+
+```text
 src/components/<PascalName>/
-├── <PascalName>.tsx
-├── <PascalName>.css
-├── <PascalName>.test.tsx
-├── index.ts
+├── <PascalName>.tsx                          ← primary component
+├── <SubComponentName>.tsx                    ← one per sub-component (if any)
+├── <PascalName>.css                          ← all component styles in one file
+├── <PascalName>.test.tsx                     ← covers all specs (primary + sub)
+├── index.ts                                  ← barrel export for everything
+├── _e2e/
+│   └── <PascalName>.page.ts                 ← only if .page.ts exists in source
 ├── _stories/
-│   ├── <PascalName>.stories.tsx
-│   └── <PascalName>Overview.stories.tsx
+│   ├── <PascalName>.stories.tsx             ← one per Angular .stories.ts
+│   ├── <PascalName>Overview.stories.tsx     ← from overview-*.stories.ts
+│   ├── <SubComponentName>.stories.tsx       ← from *-group.stories.ts (if exists)
+│   ├── <PascalName>Forms.stories.tsx        ← from *-reactive-forms.stories.ts (if exists)
+│   └── <SubComponentName>Forms.stories.tsx  ← from *-group-forms.stories.ts (if exists)
 └── _docs/
-    ├── <PascalName>.mdx
-    ├── <PascalName>Api.mdx
-    └── <PascalName>Migration.mdx
+    ├── <PascalName>.mdx                     ← from *-overview.mdx
+    ├── <PascalName>Api.mdx                  ← from *-api.mdx
+    ├── <PascalName>Migration.mdx            ← from *-migrate-from-*.mdx
+    ├── <SubComponentName>.mdx               ← from *-group-overview.mdx (if exists)
+    └── <SubComponentName>Api.mdx            ← from *-group-api.mdx (if exists)
 ```
 
 ### Step 6 — Update barrel export
@@ -305,39 +347,96 @@ git push origin main
 
 Before committing, verify:
 
-- [ ] Component renders without errors (TypeScript compiles cleanly)
+### Components
+
+- [ ] TypeScript compiles cleanly (`npm run build`)
 - [ ] All Angular `input()` signals mapped to React props with correct types
 - [ ] All Angular `output()` signals mapped to callback props
 - [ ] `ng-content` → `children` (or named slots → render props)
-- [ ] SCSS class names preserved identically in CSS
-- [ ] CSS uses `--sol-*` custom properties (not hardcoded values)
-- [ ] Storybook stories have matching names and controls to Angular source
-- [ ] Tests cover the same scenarios as Angular spec file
-- [ ] `src/index.ts` updated with new exports
+- [ ] Sub-components (e.g. `*Group`) created as separate `.tsx` files
 - [ ] No Angular-specific imports remain in React files
+
+### Styles
+
+- [ ] SCSS class names preserved identically in CSS
+- [ ] CSS uses `--sol-*` custom properties (no hardcoded hex/rem values)
+- [ ] All SCSS `@mixin` / `@each` blocks expanded to flat CSS rules
+
+### Stories
+
+- [ ] Same number of `.stories.tsx` files as Angular `.stories.ts` files
+- [ ] Every Angular story name has a matching React story export
+- [ ] Sub-component stories in their own file (e.g. `CheckboxGroup.stories.tsx`)
+- [ ] Forms stories converted to React controlled-component pattern
+
+### Docs
+
+- [ ] Same number of `.mdx` files as Angular `.mdx` files
+- [ ] Sub-component overview + API docs created as separate files (e.g. `CheckboxGroup.mdx`, `CheckboxGroupApi.mdx`)
+- [ ] Migration guide covers Angular → React prop mapping
+
+### Tests & Exports
+
+- [ ] Tests cover the same scenarios as all Angular spec files
+- [ ] `src/index.ts` updated with exports for all components and types
+- [ ] Page object created in `_e2e/` if `.page.ts` existed in source
 
 ---
 
 ## Example: Running the Agent
 
-```
+```text
 User: /migrate-component checkbox
 
-Agent actions:
-1. Reads: projects/ds-components/checkbox/src/lib/checkbox.component.ts
-2. Reads: projects/ds-components/checkbox/src/lib/checkbox.component.html
-3. Reads: projects/ds-components/checkbox/src/lib/checkbox.component.scss
-4. Reads: projects/ds-components/checkbox/src/lib/_stories/checkbox.stories.ts
-5. Reads: projects/ds-components/checkbox/src/lib/checkbox.component.spec.ts
-6. Creates: src/components/Checkbox/Checkbox.tsx
-7. Creates: src/components/Checkbox/Checkbox.css
-8. Creates: src/components/Checkbox/Checkbox.test.tsx
-9. Creates: src/components/Checkbox/index.ts
-10. Creates: src/components/Checkbox/_stories/Checkbox.stories.tsx
-11. Creates: src/components/Checkbox/_stories/CheckboxOverview.stories.tsx
-12. Creates: src/components/Checkbox/_docs/Checkbox.mdx
-13. Creates: src/components/Checkbox/_docs/CheckboxApi.mdx
-14. Creates: src/components/Checkbox/_docs/CheckboxMigration.mdx
-15. Updates: src/index.ts (adds Checkbox exports)
-16. Runs: git add + commit + push
+-- Step 1: Resolve names --
+kebabName  = checkbox
+PascalName = Checkbox
+sourcePath = C:/Users/anjsonawane/sol-components/projects/ds-components/checkbox/src/lib/
+
+-- Step 2: Read ALL source files (glob everything) --
+Reads: checkbox.component.ts              ← primary component
+Reads: checkbox.component.html
+Reads: checkbox.component.scss
+Reads: checkbox-group.component.ts        ← sub-component discovered
+Reads: checkbox-group.component.scss
+Reads: checkbox.types.ts
+Reads: checkbox.module.ts                 ← read to discover sub-components; not ported
+Reads: checkbox.component.spec.ts
+Reads: checkbox-group.component.spec.ts   ← sub-component spec
+Reads: checkbox.page.ts                   ← Playwright page object
+Reads: checkbox-group.page.ts
+Reads: _stories/checkbox.stories.ts
+Reads: _stories/checkbox-group.stories.ts ← separate story file for sub-component
+Reads: _stories/checkbox-reactive-forms.stories.ts
+Reads: _stories/checkbox-group-forms.stories.ts
+Reads: _stories/overview-checkbox.stories.ts
+Reads: _docs/checkbox-overview.mdx
+Reads: _docs/checkbox-api.mdx
+Reads: _docs/checkbox-group-overview.mdx  ← sub-component doc
+Reads: _docs/checkbox-group-api.mdx
+Reads: _docs/checkbox-migrate-from-breeze.mdx
+
+-- Step 5: Write target files (one React file per Angular file) --
+Creates: src/components/Checkbox/Checkbox.tsx
+Creates: src/components/Checkbox/CheckboxGroup.tsx          ← sub-component
+Creates: src/components/Checkbox/Checkbox.css
+Creates: src/components/Checkbox/Checkbox.test.tsx          ← covers both specs
+Creates: src/components/Checkbox/index.ts
+Creates: src/components/Checkbox/_e2e/Checkbox.page.ts      ← page object
+Creates: src/components/Checkbox/_stories/Checkbox.stories.tsx
+Creates: src/components/Checkbox/_stories/CheckboxGroup.stories.tsx       ← sub-component stories
+Creates: src/components/Checkbox/_stories/CheckboxForms.stories.tsx       ← reactive forms → controlled
+Creates: src/components/Checkbox/_stories/CheckboxGroupForms.stories.tsx  ← group forms stories
+Creates: src/components/Checkbox/_stories/CheckboxOverview.stories.tsx
+Creates: src/components/Checkbox/_docs/Checkbox.mdx
+Creates: src/components/Checkbox/_docs/CheckboxApi.mdx
+Creates: src/components/Checkbox/_docs/CheckboxGroup.mdx                  ← sub-component overview
+Creates: src/components/Checkbox/_docs/CheckboxGroupApi.mdx               ← sub-component API
+Creates: src/components/Checkbox/_docs/CheckboxMigration.mdx
+
+-- Step 6: Update barrel --
+Updates: src/index.ts (adds Checkbox + CheckboxGroup exports)
+
+-- Step 7: Commit & push --
+Runs: git add + commit + push
 ```
