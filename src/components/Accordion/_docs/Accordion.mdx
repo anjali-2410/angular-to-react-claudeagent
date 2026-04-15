@@ -1,0 +1,37 @@
+import { Meta, Canvas } from '@storybook/blocks';
+import * as AccordionStories from '../_stories/Accordion.stories';
+
+<Meta title="Components/Accordion/Overview" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Guidelines](#guidelines)
+  - [Component Variants](#component-variants)
+    - [Single](#single)
+    - [Multiple](#multiple)
+</div>
+
+<div className="toc-left">
+
+# Accordion
+
+The `<AccordionGroup>` shows a summary of the panel content and acts as the control for expanding and collapsing. By default, `AccordionGroup` includes a toggle icon at the end of the header to indicate the expansion state. The `AccordionItem` shows the content of the accordion when expanded.
+
+## Guidelines
+
+- Use accordions to simplify long content pages and minimize scrolling.
+- Avoid using accordions if users need to access content under several accordions frequently.
+- Accordions are ideal for content-heavy pages where users need to focus on specific sections.
+- They can guide users through processes by showing relevant information and hiding distractions.
+- Commonly used in multistep flows to make the experience more manageable.
+- Use `className="sol-panel"` on the accordion container to apply panel styling.
+
+---
+
+## Component Variants
+
+<Canvas of={AccordionStories.Multiple} withToolbar />
+
+---
+
+</div>

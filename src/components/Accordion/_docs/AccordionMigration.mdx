@@ -1,0 +1,104 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Accordion/Migration" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Import](#import)
+  - [Component Name](#component-name)
+  - [Prop Mapping](#prop-mapping)
+  - [Custom Header](#custom-header)
+  - [Migrating from Breeze](#migrating-from-breeze)
+</div>
+
+<div className="toc-left">
+
+## Accordion — Angular → React Migration Guide
+
+### Import
+
+```ts
+// Angular
+import { AccordionModule } from '@niceltd/sol/accordion';
+
+// React
+import { AccordionGroup, AccordionItem } from '@niceltd/sol-react/accordion';
+```
+
+### Component Name
+
+| Angular selector | React component |
+| --- | --- |
+| `<sol-accordion-group>` | `<AccordionGroup>` |
+| `<sol-accordion-item>` | `<AccordionItem>` |
+
+### Prop Mapping — AccordionGroup
+
+| Angular `@Input` | React prop | Notes |
+| --- | --- | --- |
+| `[multiple]` | `multiple` | |
+| `[id]` | `id` | |
+
+### Prop Mapping — AccordionItem
+
+| Angular `@Input` / `@Output` | React prop | Notes |
+| --- | --- | --- |
+| `[header]` | `header` | |
+| `[id]` | `id` | |
+| `[selected]` | `selected` | |
+| `[hideToggle]` | `hideToggle` | |
+| `[disabled]` | `disabled` | |
+| `[customHeader]="templateRef"` | `customHeader={<JSX>}` | Pass JSX directly — no `ng-template` needed |
+| `(opened)` | `onOpened` | |
+| `(closed)` | `onClosed` | |
+| `(toggle)` | `onToggle` | |
+
+### Custom Header
+
+Angular required an `ng-template` reference:
+
+```html
+<!-- Angular -->
+<ng-template #customHeader>
+  <span>Custom content</span>
+</ng-template>
+<sol-accordion-item [customHeader]="customHeader">Content</sol-accordion-item>
+```
+
+React accepts JSX directly as the `customHeader` prop:
+
+```tsx
+// React
+<AccordionItem customHeader={<span>Custom content</span>}>
+  Content
+</AccordionItem>
+```
+
+### CSS Class Changes
+
+The Angular component used Angular Material internal class names. React uses `sol-accordion-*` classes:
+
+| Angular (mat-*) | React (sol-accordion-*) |
+| --- | --- |
+| `.mat-expansion-panel` | `.sol-accordion-panel` |
+| `.mat-expansion-panel-header` | `.sol-accordion-panel-header` |
+| `.mat-content` | `.sol-accordion-panel-header-content` |
+| `.mat-expansion-panel-content` | `.sol-accordion-panel-content` |
+| `.mat-expansion-panel-body` | `.sol-accordion-panel-body` |
+| `.mat-expanded` (on header) | `.expanded` (on header) |
+
+Update any custom CSS or Playwright selectors that referenced `mat-*` classes.
+
+### Migrating from Breeze
+
+In SOL Accordion, `customHeader` is passed as a `TemplateRef` (Angular) / ReactNode (React) instead of using a separate `cxone-accordion-custom-header` component.
+
+Change the tag names:
+
+| Breeze | SOL Angular | SOL React |
+| --- | --- | --- |
+| `<cxone-accordion>` | `<sol-accordion-group>` | `<AccordionGroup>` |
+| `<cxone-accordion-tab>` | `<sol-accordion-item>` | `<AccordionItem>` |
+| `<cxone-accordion-custom-header>` | `[customHeader]="tmplRef"` | `customHeader={<JSX>}` |
+
+</div>

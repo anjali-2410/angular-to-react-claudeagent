@@ -1,0 +1,115 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Accordion/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [AccordionGroup Props](#accordiongroup-props)
+  - [AccordionItem Props](#accordionitem-props)
+  - [AccordionItem Outputs](#accordionitem-outputs)
+  - [Page Object](#page-object)
+</div>
+<div className="toc-left">
+
+## Accordion: API
+
+```ts
+import { AccordionGroup, AccordionItem } from '@niceltd/sol-react/accordion';
+```
+
+### AccordionGroup Props
+
+<table>
+  <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+  <tr>
+    <td>multiple</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>Whether the accordion should allow multiple expanded items simultaneously.</td>
+  </tr>
+  <tr>
+    <td>id</td>
+    <td>string | null</td>
+    <td>null</td>
+    <td>A unique id value for the accordion container element.</td>
+  </tr>
+</table>
+
+### AccordionItem Props
+
+<table>
+  <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+  <tr>
+    <td>header</td>
+    <td>string</td>
+    <td>''</td>
+    <td>The text displayed as the panel header.</td>
+  </tr>
+  <tr>
+    <td>id</td>
+    <td>string | null</td>
+    <td>auto</td>
+    <td>Unique id for the accordion panel element.</td>
+  </tr>
+  <tr>
+    <td>selected</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>Whether the panel is initially expanded.</td>
+  </tr>
+  <tr>
+    <td>hideToggle</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>Whether to hide the toggle arrow indicator.</td>
+  </tr>
+  <tr>
+    <td>disabled</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>Whether the panel is disabled and cannot be toggled.</td>
+  </tr>
+  <tr>
+    <td>customHeader</td>
+    <td>ReactNode</td>
+    <td></td>
+    <td>Custom header content. Replaces Angular's <code>customHeader: TemplateRef</code>. Overrides the <code>header</code> text when provided.</td>
+  </tr>
+</table>
+
+### AccordionItem Outputs
+
+<table>
+  <tr><th>Name</th><th>Type</th><th>Description</th></tr>
+  <tr>
+    <td>onOpened</td>
+    <td>() =&gt; void</td>
+    <td>Emitted every time the panel is opened.</td>
+  </tr>
+  <tr>
+    <td>onClosed</td>
+    <td>() =&gt; void</td>
+    <td>Emitted every time the panel is closed.</td>
+  </tr>
+  <tr>
+    <td>onToggle</td>
+    <td>() =&gt; void</td>
+    <td>Emitted on every open or close toggle.</td>
+  </tr>
+</table>
+
+### Page Object
+
+```ts
+import { AccordionPage } from '@niceltd/sol-react/accordion/_e2e/Accordion.page';
+
+const acc = new AccordionPage(page, { id: 'optional-id' });
+
+await acc.getTabCount();           // number of panels
+await acc.getTabHeaderText(0);     // header text of panel at index
+await acc.isTabSelected(0);        // true if aria-expanded === 'true'
+await acc.isTabDisabled(0);        // true if aria-disabled === 'true'
+await acc.toggleTab(0);            // click panel header at index
+```
+
+</div>

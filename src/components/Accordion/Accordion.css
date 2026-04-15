@@ -1,0 +1,135 @@
+/* Accordion component styles
+ * Converted from accordion.component.scss (Angular Material → headless React)
+ * mat-expansion-panel   → .sol-accordion-panel
+ * mat-expansion-panel-header → .sol-accordion-panel-header
+ * .mat-content          → .sol-accordion-panel-header-content
+ * mat-expansion-panel-content → .sol-accordion-panel-content
+ * mat-expansion-panel-body    → .sol-accordion-panel-body
+ */
+
+/* ── Panel ─────────────────────────────────────────────────────────────── */
+
+.sol-accordion-group .sol-accordion-panel {
+  background: transparent;
+  box-sizing: border-box;
+  border-bottom: var(--sol-size-border-default) solid var(--sol-base-color-gray-90);
+  overflow: visible;
+  box-shadow: none;
+}
+
+.sol-accordion-group .sol-accordion-panel.disabled {
+  border-color: var(--sol-color-border-disabled);
+}
+
+.sol-accordion-group .sol-accordion-panel:last-of-type {
+  border-color: transparent;
+}
+
+/* ── Panel header ──────────────────────────────────────────────────────── */
+
+.sol-accordion-group .sol-accordion-panel-header {
+  height: auto;
+  min-height: 1.5rem;
+  padding: 0.5rem 0.5rem 0.46rem;
+  border: none;
+  user-select: none;
+  font-family: var(--sol-typography-body-md-font-family);
+  font-weight: var(--sol-base-typography-weight-semi-bold);
+  font-size: var(--sol-base-typography-size-300);
+  line-height: 1.25rem;
+  color: var(--sol-color-text-default);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.sol-accordion-group .sol-accordion-panel-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sol-size-spacing-sm);
+  width: 100%;
+}
+
+.sol-accordion-group .sol-accordion-header-content {
+  display: flex;
+  gap: var(--sol-size-spacing-xs);
+  align-items: center;
+  width: 100%;
+}
+
+.sol-accordion-group .sol-accordion-header-content svg {
+  padding: 0.25rem 0 0;
+  width: var(--sol-size-icon-md);
+  height: var(--sol-size-icon-md);
+}
+
+/* Arrow icon */
+
+.sol-accordion-group .sol-accordion-arrow-icon {
+  color: var(--sol-color-text-secondary);
+  width: var(--sol-size-icon-md);
+  height: var(--sol-size-icon-md);
+  flex-shrink: 0;
+  transition: all 0.2s ease-out;
+}
+
+/* Expanded header */
+
+.sol-accordion-group .sol-accordion-panel-header.expanded {
+  border-bottom: none;
+}
+
+.sol-accordion-group .sol-accordion-panel-header.expanded .sol-accordion-arrow-icon {
+  transform: rotate(180deg);
+}
+
+/* Disabled header */
+
+.sol-accordion-group .sol-accordion-panel-header[aria-disabled='true'] {
+  background: transparent;
+  color: var(--sol-color-text-disabled);
+  cursor: default;
+}
+
+.sol-accordion-group .sol-accordion-panel-header[aria-disabled='true'] .sol-accordion-arrow-icon {
+  color: var(--sol-color-icon-disabled);
+}
+
+/* Focus */
+
+.sol-accordion-group .sol-accordion-panel-header:focus-visible {
+  outline: var(--sol-size-border-default) solid var(--sol-color-border-focus-default);
+  outline-offset: 4px;
+}
+
+/* Hover — no background tint */
+
+.sol-accordion-group .sol-accordion-panel-header:hover:not([aria-disabled='true']),
+.sol-accordion-group .sol-accordion-panel-header:focus:not([aria-disabled='true']) {
+  background: none;
+}
+
+/* ── Collapsible content ───────────────────────────────────────────────── */
+
+.sol-accordion-group .sol-accordion-panel-content {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease-out;
+}
+
+.sol-accordion-group .sol-accordion-panel.expanded .sol-accordion-panel-content {
+  max-height: 2000px;
+  transition: max-height 0.3s ease-in;
+}
+
+/* ── Panel body ────────────────────────────────────────────────────────── */
+
+.sol-accordion-group .sol-accordion-panel-body {
+  font-family: var(--sol-typography-body-md-font-family);
+  font-weight: var(--sol-typography-body-md-font-weight);
+  font-size: var(--sol-typography-body-md-font-size);
+  line-height: var(--sol-typography-body-md-line-height);
+  color: var(--sol-color-text-default);
+  padding: 0.5rem;
+}
