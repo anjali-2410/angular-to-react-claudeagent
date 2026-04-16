@@ -1,0 +1,97 @@
+import { Canvas, Meta } from '@storybook/blocks';
+import * as BreadcrumbStory from '../_stories/Breadcrumb.stories';
+
+<Meta title="Components/Breadcrumb/Overview" />
+
+<style>
+  {`
+  .sbdocs.sbdocs-wrapper .sol-breadcrumb a:hover,
+  .sbdocs.sbdocs-wrapper .sol-breadcrumb-link:hover {
+    color: var(--sol-color-text-link) !important;
+    text-decoration: underline !important;
+  }
+  `}
+</style>
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Breadcrumb](#breadcrumb)
+  - [Guidelines](#guidelines)
+  - [Variants](#variants)
+  - [Do's and Don'ts](#dos-and-donts)
+  - [Use Cases](#use-cases)
+</div>
+<div className="toc-left">
+
+# Breadcrumb
+
+The Breadcrumb component provides a navigation aid that helps users understand their current location within the application hierarchy and navigate back to previous levels. It displays a trail of links showing the path from the home or root level to the current page.
+
+---
+
+## Guidelines
+
+- Keep breadcrumb labels clear and concise
+- Use breadcrumbs for hierarchical navigation with 2 or more levels
+- Place breadcrumbs at the top of the page, below the header
+- Don't use breadcrumbs for single-level navigation
+
+---
+
+## Variants
+
+### All Scenarios Snapshot
+
+Preview the primary states (single item through truncation) in one place:
+
+<Canvas of={BreadcrumbStory.AllScenarios} />
+
+### Automatic Truncation
+
+When you have more than 4 breadcrumb levels, the component automatically truncates middle items and displays them in a menu:
+
+**Pattern:** `Home / ... / Level 3 / Current Page Title`
+
+The menu button (`···`) contains all hidden intermediate levels, keeping the breadcrumb compact while maintaining full navigation capability.
+
+### Basic Breadcrumb
+
+Standard breadcrumb navigation with up to 4 levels:
+
+**When to use:**
+
+- Hierarchical content structure (e.g., Home > Products > Category > Item)
+- Multi-step processes or wizards
+- Deep navigation trees
+- E-commerce product browsing
+
+---
+
+## Do's and Don'ts
+
+### Do's ✅
+
+- **Do** use breadcrumbs for hierarchical navigation
+- **Do** keep labels short and descriptive (ideally 1–3 words)
+- **Do** use breadcrumbs consistently across your application
+
+### Don'ts ❌
+
+- **Don't** use breadcrumbs for flat navigation structures
+- **Don't** duplicate the primary navigation
+- **Don't** use overly long labels that cause excessive truncation
+- **Don't** replace breadcrumbs with back buttons
+
+---
+
+## Use Cases
+
+### Hierarchical Breadcrumb (classic "Home > Category > Page")
+
+Use when your site/app has multiple levels of hierarchy and you want users to see where they are and easily navigate back up.
+
+### Current-Page Breadcrumb (emphasizing "where I am")
+
+Use when you want the breadcrumb to include and emphasize the current page, mainly for orientation rather than navigation.
+
+</div>

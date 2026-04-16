@@ -1,0 +1,77 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Breadcrumb/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Props](#props)
+  - [BreadcrumbItem Interface](#breadcrumbitem-interface)
+  - [Angular → React Migration](#angular--react-migration)
+</div>
+<div className="toc-left">
+
+## Breadcrumb: API
+
+```ts
+import { Breadcrumb, type BreadcrumbItem } from '@niceltd/sol-react/breadcrumb';
+```
+
+---
+
+### Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `BreadcrumbItem[]` | Yes | — | Array of breadcrumb items to display in the trail |
+| `ariaLabel` | `string` | No | `'Breadcrumb'` | Accessible label for the `<nav>` landmark |
+| `onItemClicked` | `(data: { item: BreadcrumbItem; event: Event }) => void` | No | — | Emitted when a navigable item (`path`) is clicked |
+
+---
+
+### BreadcrumbItem Interface
+
+```ts
+interface BreadcrumbItem {
+  label: string;       // Display text (required)
+  path?: string;       // Router path — emits onItemClicked when clicked
+  handler?: () => void; // Custom click handler — called directly, no event emitted
+}
+```
+
+An item is considered **navigable** if it has either `path` or `handler`. The last item should typically have neither (it represents the current page).
+
+---
+
+### Example Usage
+
+```tsx
+import { Breadcrumb } from '@niceltd/sol-react/breadcrumb';
+
+const items = [
+  { label: 'Home', path: '/' },
+  { label: 'Settings', handler: () => openSettingsModal() },
+  { label: 'Profile', path: '/settings/profile' },
+  { label: 'Edit Profile' }, // current page — no path/handler
+];
+
+<Breadcrumb
+  items={items}
+  onItemClicked={({ item }) => router.navigate(item.path!)}
+/>
+```
+
+---
+
+## Angular → React Migration
+
+| Angular `@Input` / `@Output` | React prop | Notes |
+| --- | --- | --- |
+| `[items]` | `items` | Required in both |
+| `[ariaLabel]` | `ariaLabel` | Same name, same default `'Breadcrumb'` |
+| `(itemClicked)` | `onItemClicked` | Same payload `{ item, event }` |
+
+**The progressive overflow logic** (auto-truncation based on container width) is fully preserved in React. Angular used `signal()` + `flushSync` re-renders replace Angular's `ChangeDetectorRef.detectChanges()`.
+
+**The overflow dropdown** (`sol-menu`) is replaced with a custom React `<ul>` dropdown, keeping identical CSS class names for E2E compatibility.
+
+</div>

@@ -1,0 +1,207 @@
+/* Breadcrumb component styles — compiled from breadcrumb.component.scss */
+
+.sol-breadcrumb {
+  display: block;
+  width: 100%;
+  /* Performance optimization: isolate layout calculations */
+  contain: layout style;
+}
+
+/* ── List ──────────────────────────────────────────────────────────────────── */
+
+.sol-breadcrumb-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--sol-size-spacing-xs);
+}
+
+/* ── Items ─────────────────────────────────────────────────────────────────── */
+
+.sol-breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sol-size-spacing-xs);
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+/* Menu item container */
+.sol-breadcrumb-item-menu {
+  flex-shrink: 0;
+  min-width: auto;
+  gap: var(--sol-size-spacing-xs);
+}
+
+/* Button hover / aria-expanded=true state inside menu item */
+.sol-breadcrumb-item-menu .sol-button:hover,
+.sol-breadcrumb-item-menu .sol-button[aria-expanded='true'] {
+  background-color: var(--sol-color-background-state-pressed-neutral);
+}
+
+/* Button icon color inside menu item */
+.sol-breadcrumb-item-menu .sol-button svg {
+  color: var(--sol-color-text-default);
+  fill: var(--sol-color-text-default);
+}
+
+/* Remove default focus ring from button shell — button element handles its own */
+.sol-breadcrumb-item-menu .sol-button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.sol-breadcrumb-item-menu .sol-button:focus-visible {
+  outline: var(--sol-size-border-medium) solid var(--sol-color-border-focus-default);
+  outline-offset: 0.125rem;
+}
+
+.sol-breadcrumb-item-menu .sol-button:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Override tertiary-small button icon size */
+.sol-breadcrumb-item-menu .sol-button.btn-tertiary-small svg,
+.sol-breadcrumb-item-menu .sol-button.btn-tertiary-small img {
+  width: var(--sol-size-icon-sm);
+  height: var(--sol-size-icon-sm);
+}
+
+/* Second-to-last item can shrink when truncation is needed (Stage 3) */
+.sol-breadcrumb-item-second-to-last {
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.sol-breadcrumb-item-last {
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+/* ── Links ─────────────────────────────────────────────────────────────────── */
+
+.sol-breadcrumb-link {
+  color: var(--sol-color-text-link);
+  vertical-align: middle;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: var(--sol-size-control-sm);
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.2s ease;
+  border-radius: var(--sol-size-radius-xs);
+}
+
+.sol-breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+.sol-breadcrumb-link:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.sol-breadcrumb-link:focus-visible {
+  outline: var(--sol-size-border-medium) solid var(--sol-color-border-focus-default);
+  outline-offset: var(--sol-size-radius-xs);
+}
+
+.sol-breadcrumb-link:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Truncation — Stage 3 only */
+.sol-breadcrumb-link-truncated {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  display: block;
+}
+
+/* ── Text (non-navigable items) ────────────────────────────────────────────── */
+
+.sol-breadcrumb-text {
+  color: var(--sol-color-text-default);
+  vertical-align: middle;
+  white-space: nowrap;
+  min-height: var(--sol-size-icon-sm);
+  display: inline-flex;
+  align-items: center;
+}
+
+.sol-breadcrumb-text-last {
+  color: var(--sol-color-text-secondary);
+}
+
+/* Truncation — Stage 3 only */
+.sol-breadcrumb-text-truncated {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  display: block;
+}
+
+/* ── Separator ─────────────────────────────────────────────────────────────── */
+
+.sol-breadcrumb-separator {
+  color: var(--sol-color-text-default);
+  user-select: none;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* ── Overflow dropdown menu ────────────────────────────────────────────────── */
+
+/* Relative wrapper so the dropdown positions relative to the menu button */
+.sol-breadcrumb-menu-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.sol-breadcrumb-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 1000;
+  background: var(--sol-color-background-surface-overlay);
+  border: var(--sol-size-border-default) solid var(--sol-color-border-subtle);
+  border-radius: var(--sol-size-radius-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  list-style: none;
+  margin: 0;
+  padding: var(--sol-size-spacing-2xs) 0;
+  min-width: 8rem;
+}
+
+.sol-breadcrumb-dropdown-item button {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: var(--sol-size-spacing-xs) var(--sol-size-spacing-sm);
+  cursor: pointer;
+  font-family: var(--sol-typography-body-md-font-family);
+  font-size: var(--sol-typography-body-md-font-size);
+  line-height: var(--sol-typography-body-md-line-height);
+  color: var(--sol-color-text-default);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sol-breadcrumb-dropdown-item button:hover {
+  background: var(--sol-color-background-state-hover-neutral);
+}
+
+.sol-breadcrumb-dropdown-item button:focus-visible {
+  outline: var(--sol-size-border-medium) solid var(--sol-color-border-focus-default);
+  outline-offset: -2px;
+}

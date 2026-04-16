@@ -14,6 +14,9 @@ export type { AccordionGroupProps, AccordionGroupContextValue, AccordionItemProp
 export { ActionBar } from './components/ActionBar';
 export type { ActionBarProps } from './components/ActionBar';
 
+export { Breadcrumb } from './components/Breadcrumb';
+export type { BreadcrumbProps, BreadcrumbItem } from './components/Breadcrumb';
+
 export { Autocomplete, AutocompleteOption, SearchAutocompleteItem } from './components/Autocomplete';
 export type {
   AutocompleteProps,
