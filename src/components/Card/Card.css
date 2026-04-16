@@ -1,0 +1,28 @@
+/* Card component styles — compiled from card.component.scss */
+
+.sol-card {
+  padding: var(--sol-size-spacing-sm) var(--sol-size-spacing-md);
+  border-radius: var(--sol-size-radius-md);
+  border: 1px solid var(--sol-color-border-standard);
+  background-color: var(--sol-color-background-surface-overlay);
+  box-shadow: var(--sol-effect-cardshadow);
+  min-width: 9rem;
+}
+
+.sol-card.use-alternate-background-color {
+  background-color: var(--sol-color-background-surface-card);
+}
+
+.sol-card.hoverable:hover {
+  background-color: var(--sol-color-background-state-hover-neutral);
+}
+
+.sol-card .sol-card-footer {
+  margin-top: var(--sol-size-spacing-xxs);
+  padding-top: var(--sol-size-spacing-sm);
+}
+
+.sol-card.show-divider .sol-card-footer {
+  margin-top: var(--sol-size-spacing-sm);
+  border-top: 1px solid var(--sol-color-border-subtle);
+}

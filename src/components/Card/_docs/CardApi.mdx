@@ -1,0 +1,73 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Card/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Props](#props)
+  - [Slot Components](#slot-components)
+  - [Angular → React Migration](#angular--react-migration)
+</div>
+<div className="toc-left">
+
+## Card: API
+
+```ts
+import { Card, CardBody, CardFooter } from '@niceltd/sol-react/card';
+```
+
+---
+
+### Props
+
+<table>
+  <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+  <tr><td>useAlternativeBackgroundColor</td><td>boolean</td><td>false</td><td>Uses an alternative surface background colour.</td></tr>
+  <tr><td>divider</td><td>boolean</td><td>true</td><td>Shows a divider line between body and footer when both are present.</td></tr>
+  <tr><td>enableHover</td><td>boolean</td><td>false</td><td>Adds a hover background style. Only use when the whole card is interactive.</td></tr>
+  <tr><td>ariaLabelledby</td><td>string | null</td><td>null</td><td>Sets <code>aria-labelledby</code>. Prefer this over <code>aria-label</code>.</td></tr>
+  <tr><td>ariaDescribedby</td><td>string | null</td><td>null</td><td>Sets <code>aria-describedby</code> to reference additional context.</td></tr>
+  <tr><td>ariaLive</td><td>'polite' | 'assertive' | 'off' | null</td><td>null</td><td>Sets <code>aria-live</code> for dynamic content updates.</td></tr>
+  <tr><td>selectable</td><td>boolean</td><td>false</td><td>When true, exposes <code>aria-selected</code> based on <code>selected</code>.</td></tr>
+  <tr><td>selected</td><td>boolean</td><td>false</td><td>Selection state — reflected as <code>aria-selected</code> when <code>selectable</code> is true.</td></tr>
+  <tr><td>children</td><td>ReactNode</td><td></td><td>Accepts <code>&lt;CardBody&gt;</code> and <code>&lt;CardFooter&gt;</code> slot components.</td></tr>
+</table>
+
+---
+
+### Slot Components
+
+```tsx
+<Card>
+  <CardBody>Main content goes here</CardBody>
+  <CardFooter>Footer actions or secondary info</CardFooter>
+</Card>
+```
+
+Both `CardBody` and `CardFooter` accept `children: ReactNode`. Presence of either slot is detected automatically — if `CardBody` is omitted, no `.sol-card-body` wrapper is rendered; same for `CardFooter`.
+
+---
+
+### Angular → React Migration
+
+| Angular | React |
+| --- | --- |
+| `<sol-card>` | `<Card>` |
+| `<sol-card-body>` | `<CardBody>` |
+| `<sol-card-footer>` | `<CardFooter>` |
+| `[useAlternativeBackgroundColor]` | `useAlternativeBackgroundColor` |
+| `[divider]` | `divider` |
+| `[enableHover]` | `enableHover` |
+| `[ariaLabelledby]` | `ariaLabelledby` |
+| `[ariaDescribedby]` | `ariaDescribedby` |
+| `[ariaLive]` | `ariaLive` |
+| `[selectable]` | `selectable` |
+| `[selected]` | `selected` |
+
+**Migration to v16** — camelCase rename (already applied in React):
+
+- `aria-labelledby` → `ariaLabelledby`
+- `aria-describedby` → `ariaDescribedby`
+- `aria-live` → `ariaLive`
+
+</div>

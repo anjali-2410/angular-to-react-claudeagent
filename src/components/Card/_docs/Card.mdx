@@ -1,0 +1,65 @@
+import { Meta, Canvas } from '@storybook/blocks';
+import * as CardStories from '../_stories/Card.stories';
+
+<Meta title="Components/Card/Overview" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Guidelines](#guidelines)
+  - [Variants](#variants)
+  - [Do's and Don'ts](#dos-and-donts)
+  - [Use Cases](#use-cases)
+</div>
+<div className="toc-left">
+
+# Card
+
+The Card component is a container used to group related content and actions.
+It provides consistent spacing, border, background, and optional footer separation.
+
+---
+
+## Guidelines
+
+- Use `<CardBody>` for the main content.
+- Use `<CardFooter>` for secondary content or actions.
+- Enable `divider` when you want a visual separation between body and footer.
+- Use `enableHover` when the card itself is interactive (e.g. clickable list items). If the card contains multiple interactive controls, leave hover disabled to avoid implying the whole card is clickable.
+- Use `useAlternativeBackgroundColor` to match contexts that require a different surface colour.
+- For accessibility, prefer a visible heading/text and set `ariaLabelledby` on the card to reference that element's `id`.
+- Use `ariaDescribedby` only when you need to attach additional context (summary / status / help text) to the card.
+- If cards are selectable, set `selectable` and update `selected` so assistive tech receives `aria-selected` state changes.
+- Use `ariaLive="polite"` only for truly dynamic updates that need to be announced.
+
+## Variants
+
+#### Body and footer (with divider)
+
+<Canvas of={CardStories.CardWithBodyAndFooter} />
+
+---
+
+## Do's and Don'ts
+
+### Do
+
+- Use Cards to group related information into a single, scannable unit.
+- Keep card content focused; use clear hierarchy (title, supporting text, actions).
+- Use `divider` to separate body content from footer actions.
+- Use `enableHover` only when the whole card is intended to be interactive.
+
+### Don't
+
+- Don't nest Cards inside Cards unless there is a strong visual/structural reason.
+- Don't enable hover styling when only inner controls are clickable.
+- Don't overload a single Card with too many unrelated actions or dense content.
+- Don't use `aria-label` on cards; prefer `ariaLabelledby` so the accessible name comes from visible text.
+
+---
+
+## Use Cases
+
+- Grouping a small set of related information (summary panels, list items, preview blocks)
+- Presenting content with a clear visual boundary from the page background
+
+</div>

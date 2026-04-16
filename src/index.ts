@@ -20,6 +20,9 @@ export type { BreadcrumbProps, BreadcrumbItem } from './components/Breadcrumb';
 export { Calendar } from './components/Calendar';
 export type { CalendarProps, CalendarType, CalendarValue, DateRange, SpecialDates } from './components/Calendar';
 
+export { Card, CardBody, CardFooter } from './components/Card';
+export type { CardProps, CardBodyProps, CardFooterProps } from './components/Card';
+
 export { Autocomplete, AutocompleteOption, SearchAutocompleteItem } from './components/Autocomplete';
 export type {
   AutocompleteProps,
