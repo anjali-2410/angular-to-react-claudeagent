@@ -1,0 +1,81 @@
+import { Meta, Canvas } from '@storybook/blocks';
+import * as CalendarStory from '../_stories/Calendar.stories';
+import * as CalendarRangeStory from '../_stories/CalendarRange.stories';
+
+<Meta title="Components/Calendar/Overview" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Guidelines](#guidelines)
+  - [Variants](#variants)
+    - [Single Selection](#single-selection)
+    - [Multi Single Selection](#multi-single-selection)
+    - [Range Selection](#range-selection)
+    - [Week Selection](#week-selection)
+    - [Multi Week Selection](#multi-week-selection)
+  - [Use Cases](#use-cases)
+    - [Special Dates](#special-dates)
+</div>
+<div className="toc-left">
+
+# Calendar
+
+The Calendar component provides a versatile date selection interface. It supports multiple selection modes including single date, multiple dates, date ranges, and week-based selections.
+
+---
+
+## Guidelines
+
+Use the Calendar component when:
+
+- Users need to select one or more dates
+- You want to provide a visual calendar interface
+- Date range or week-based selections are required
+- You need to highlight special dates or disable specific days
+
+**Best Practices:**
+
+- Choose the appropriate `type` based on your use case
+- Use `specialDates` to highlight important events
+- Use `daysDisabled` when certain days-of-week should not be selectable
+- Set `min`/`max` to constrain the selectable date range
+
+---
+
+## Variants
+
+### Single Selection
+
+<Canvas of={CalendarStory.SingleSelection} />
+
+### Multi Single Selection
+
+<Canvas of={CalendarStory.MultiSingleSelection} />
+
+### Range Selection
+
+<Canvas of={CalendarRangeStory.RangeSelection} />
+
+### Week Selection
+
+<Canvas of={CalendarStory.WeekSelection} />
+
+### Multi Week Selection
+
+<Canvas of={CalendarStory.MultiWeekSelection} />
+
+---
+
+## Use Cases
+
+### Special Dates
+
+Highlight specific dates with a dot indicator (partial or full event):
+
+<Canvas of={CalendarStory.SpecialDates} />
+
+### Disabled Days
+
+Prevent selection of specific days of the week (e.g., weekends) using the `daysDisabled` prop with `[0, 6]`.
+
+</div>

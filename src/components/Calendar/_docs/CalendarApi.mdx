@@ -1,0 +1,115 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Calendar/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Props](#props)
+  - [Types](#types)
+  - [Angular → React Migration](#angular--react-migration)
+</div>
+<div className="toc-left">
+
+## Calendar: API
+
+```ts
+import { Calendar, type CalendarType, type CalendarValue, type DateRange, type SpecialDates } from '@niceltd/sol-react/calendar';
+```
+
+---
+
+### Props
+
+<table>
+  <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+  <tr>
+    <td>type</td>
+    <td>CalendarType</td>
+    <td>'single-selection'</td>
+    <td>Selection mode: <code>'single-selection'</code> | <code>'multi-single-selection'</code> | <code>'week-selection'</code> | <code>'multi-week-selection'</code> | <code>'range-selection'</code></td>
+  </tr>
+  <tr><td>daysDisabled</td><td>number[]</td><td>[]</td><td>Day-of-week numbers to disable (0=Sun … 6=Sat).</td></tr>
+  <tr><td>displayWeeks</td><td>boolean</td><td>false</td><td>Show ISO week numbers in the calendar.</td></tr>
+  <tr><td>startingDay</td><td>0–6</td><td>0</td><td>First day of the week (0=Sun, 1=Mon, …).</td></tr>
+  <tr><td>min</td><td>Date | null</td><td>null</td><td>Minimum selectable date. Dates before this are disabled.</td></tr>
+  <tr><td>max</td><td>Date | null</td><td>null</td><td>Maximum selectable date. Dates after this are disabled.</td></tr>
+  <tr><td>specialDates</td><td>SpecialDates[]</td><td>[]</td><td>Dates to highlight with a partial or full event dot indicator.</td></tr>
+  <tr><td>ariaDescribedby</td><td>string | null</td><td>null</td><td>ID of an external description element. Auto-generated if omitted.</td></tr>
+  <tr><td>value</td><td>CalendarValue</td><td></td><td>Controlled selected value. Type depends on <code>type</code>.</td></tr>
+  <tr><td>onChange</td><td>(v: CalendarValue) =&gt; void</td><td></td><td>Emitted when selection changes.</td></tr>
+  <tr><td>onDateSelected</td><td>(v: CalendarValue) =&gt; void</td><td></td><td>Alias for <code>onChange</code> — mirrors Angular's <code>(dateSelected)</code> output.</td></tr>
+  <tr><td>locale</td><td>string</td><td>browser default</td><td>Locale string for month/weekday formatting (e.g. <code>'en-US'</code>, <code>'de-DE'</code>).</td></tr>
+</table>
+
+---
+
+### Types
+
+```ts
+type CalendarType =
+  | 'single-selection'
+  | 'multi-single-selection'
+  | 'week-selection'
+  | 'multi-week-selection'
+  | 'range-selection';
+
+interface DateRange {
+  start: Date | null;
+  end: Date | null;
+}
+
+type CalendarValue = Date | Date[] | DateRange | DateRange[];
+
+interface SpecialDates {
+  date: Date;
+  status: 'partial' | 'full';  // 'partial' = dot, 'full' = filled dot
+}
+```
+
+**Value type by selection mode:**
+
+| `type` | `value` / `onChange` payload |
+| --- | --- |
+| `single-selection` | `Date` |
+| `multi-single-selection` | `Date[]` |
+| `week-selection` | `DateRange` |
+| `multi-week-selection` | `DateRange[]` |
+| `range-selection` | `DateRange` |
+
+---
+
+## Angular → React Migration
+
+| Angular `@Input` / `@Output` | React prop | Notes |
+| --- | --- | --- |
+| `[type]` | `type` | Same values |
+| `[daysDisabled]` | `daysDisabled` | Same |
+| `[displayWeeks]` | `displayWeeks` | Same |
+| `[startingDay]` | `startingDay` | Same |
+| `[min]` | `min` | Same |
+| `[max]` | `max` | Same |
+| `[specialDates]` | `specialDates` | Same |
+| `[ariaDescribedby]` | `ariaDescribedby` | Same |
+| `[(ngModel)]` | `value` + `onChange` | Controlled pattern |
+| `(dateSelected)` | `onDateSelected` | Same payload |
+
+**Angular `DateRange` vs React `DateRange`:**
+
+Angular used Angular Material's `DateRange<Date>` with `start` / `end`. React uses a plain object `{ start: Date | null, end: Date | null }` — same property names, no library dependency.
+
+**`ngModel` → controlled pattern:**
+
+```tsx
+// Angular
+<sol-calendar [(ngModel)]="selectedDate" type="single-selection" />
+
+// React
+const [date, setDate] = useState<Date | undefined>();
+<Calendar type="single-selection" value={date} onChange={v => setDate(v as Date)} />
+```
+
+## Migration to v16
+
+**SpecialDates interface:** Property `color` was renamed to `status` in v16. Use `'partial'` or `'full'`.
+
+</div>
