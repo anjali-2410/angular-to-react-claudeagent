@@ -1,0 +1,280 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Date Picker/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Import](#import)
+  - [Props](#props)
+  - [Page Object](#page-object)
+  - [Angular → React Migration](#angular--react-migration)
+</div>
+<div className="toc-left">
+
+## Date Picker: API
+
+```tsx
+import { DatePicker } from '@niceltd/sol-react';
+```
+
+### Props
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>id</td>
+    <td>string</td>
+    <td>—</td>
+    <td>The id attribute set on both the root element and the inner text input.</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>Date | null</td>
+    <td>—</td>
+    <td>Controlled date value.</td>
+  </tr>
+  <tr>
+    <td>onChange</td>
+    <td>(date: Date | null) =&gt; void</td>
+    <td>—</td>
+    <td>Called when the selected date changes.</td>
+  </tr>
+  <tr>
+    <td>label</td>
+    <td>string</td>
+    <td>—</td>
+    <td>Visible label text rendered above the input.</td>
+  </tr>
+  <tr>
+    <td>placeholder</td>
+    <td>string</td>
+    <td>''</td>
+    <td>Placeholder text shown inside the input when no date is selected.</td>
+  </tr>
+  <tr>
+    <td>dateFormat</td>
+    <td>string</td>
+    <td>'MMM d, y'</td>
+    <td>
+      Format used when displaying the selected date in the input.
+      If the format contains <code>h:mm</code>, the time picker is automatically activated.
+    </td>
+  </tr>
+  <tr>
+    <td>timeFormat</td>
+    <td>string</td>
+    <td>—</td>
+    <td>(Time picker only) Format used to display times in the time picker list.</td>
+  </tr>
+  <tr>
+    <td>steps</td>
+    <td>number</td>
+    <td>15</td>
+    <td>(Time picker only) Time interval between options in minutes.</td>
+  </tr>
+  <tr>
+    <td>displayFooter</td>
+    <td>boolean</td>
+    <td>true</td>
+    <td>Whether to display the footer with the Today button.</td>
+  </tr>
+  <tr>
+    <td>minDate</td>
+    <td>Date</td>
+    <td>—</td>
+    <td>Minimum selectable date.</td>
+  </tr>
+  <tr>
+    <td>maxDate</td>
+    <td>Date</td>
+    <td>—</td>
+    <td>Maximum selectable date.</td>
+  </tr>
+  <tr>
+    <td>specialDates</td>
+    <td>SpecialDates[]</td>
+    <td>[]</td>
+    <td>
+      Status indicators added below certain days. Each object has:
+      <br />date: Date (required)
+      <br />status: 'full' | 'partial'
+    </td>
+  </tr>
+  <tr>
+    <td>startDOW</td>
+    <td>0 | 1 | 2 | 3 | 4 | 5 | 6</td>
+    <td>0</td>
+    <td>Starting day of the week (0 = Sunday).</td>
+  </tr>
+  <tr>
+    <td>allowAnyValidTime</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>Allow the user to type any valid time into the time input.</td>
+  </tr>
+  <tr>
+    <td>daysDisabled</td>
+    <td>number[]</td>
+    <td>[]</td>
+    <td>Days of the week to disable (0 = Sunday).</td>
+  </tr>
+  <tr>
+    <td>prevNextButtons</td>
+    <td>boolean</td>
+    <td>true</td>
+    <td>Show previous/next day navigation buttons.</td>
+  </tr>
+  <tr>
+    <td>arrowPosition</td>
+    <td>'left' | 'right'</td>
+    <td>'right'</td>
+    <td>Position of the previous/next buttons.</td>
+  </tr>
+  <tr>
+    <td>disabled</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>Disable the date picker.</td>
+  </tr>
+  <tr>
+    <td>readonly</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>Make the date picker read-only.</td>
+  </tr>
+  <tr>
+    <td>allowTextInput</td>
+    <td>boolean</td>
+    <td>true</td>
+    <td>Allow users to manually type a date into the input.</td>
+  </tr>
+  <tr>
+    <td>required</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>Mark the field as required.</td>
+  </tr>
+  <tr>
+    <td>ariaLabel</td>
+    <td>string</td>
+    <td>''</td>
+    <td>Aria-label for the input element.</td>
+  </tr>
+  <tr>
+    <td>ariaLabelledby</td>
+    <td>string | null</td>
+    <td>null</td>
+    <td>Aria-labelledby for the input element.</td>
+  </tr>
+  <tr>
+    <td>errorMessage</td>
+    <td>string</td>
+    <td>—</td>
+    <td>External error message shown below the input.</td>
+  </tr>
+  <tr>
+    <td>className</td>
+    <td>string</td>
+    <td>—</td>
+    <td>Additional CSS class names applied to the root element.</td>
+  </tr>
+</table>
+
+### Page Object
+
+```ts
+import { DatePickerPage } from '@niceltd/sol-react/e2e';
+```
+
+#### Constructor
+
+```ts
+new DatePickerPage(page);
+new DatePickerPage(page, { id: 'myDatePickerId' });
+```
+
+#### Methods
+
+<table>
+  <tr>
+    <th>Method</th>
+    <th>Parameters</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>openCalendar()</td>
+    <td>—</td>
+    <td>Opens the calendar popover if not already open.</td>
+  </tr>
+  <tr>
+    <td>closeCalendar()</td>
+    <td>—</td>
+    <td>Closes the calendar popover via Escape key.</td>
+  </tr>
+  <tr>
+    <td>toggleCalendar()</td>
+    <td>—</td>
+    <td>Toggles the calendar open/closed.</td>
+  </tr>
+  <tr>
+    <td>pickDayOfMonth(day)</td>
+    <td>day: number</td>
+    <td>Clicks on the specified day in the currently visible month.</td>
+  </tr>
+  <tr>
+    <td>pickYearMonthDay(year, month, day)</td>
+    <td>year: number, month: string, day: number</td>
+    <td>Navigates to the given year/month and clicks the day.</td>
+  </tr>
+  <tr>
+    <td>getDate()</td>
+    <td>—</td>
+    <td>Returns the text value of the date input.</td>
+  </tr>
+  <tr>
+    <td>setDate(date, options?, locale?)</td>
+    <td>date: string | Date</td>
+    <td>Sets the text value in the date input.</td>
+  </tr>
+  <tr>
+    <td>clearDateInput()</td>
+    <td>—</td>
+    <td>Clears the date input.</td>
+  </tr>
+  <tr>
+    <td>goToNext()</td>
+    <td>—</td>
+    <td>Clicks the Next button.</td>
+  </tr>
+  <tr>
+    <td>goToPrev()</td>
+    <td>—</td>
+    <td>Clicks the Previous button.</td>
+  </tr>
+  <tr>
+    <td>isDisabled()</td>
+    <td>—</td>
+    <td>Returns true if the input is disabled.</td>
+  </tr>
+  <tr>
+    <td>pickTime(timeString)</td>
+    <td>time: string (e.g. '2:30 PM')</td>
+    <td>Opens the calendar and selects the given time.</td>
+  </tr>
+  <tr>
+    <td>isInputInvalid()</td>
+    <td>—</td>
+    <td>Returns true if an error message is visible.</td>
+  </tr>
+</table>
+
+### Angular → React Migration
+
+See the [Migration Guide](./DatePickerMigration.mdx) for full Angular-to-React migration instructions.
+
+</div>

@@ -1,0 +1,46 @@
+import { Canvas, Meta } from '@storybook/blocks';
+import * as DatePickerStories from '../_stories/DatePicker.stories';
+
+<Meta title="Components/Date Picker/Overview" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Guidelines](#guidelines)
+  - [Variants](#variants)
+    - [Basic Picker](#basic-picker)
+    - [Date Picker With Time](#date-picker-with-time)
+</div>
+<div className="toc-left">
+
+## Date Picker
+
+The `DatePicker` component is a versatile and flexible UI element that allows users to select a
+date from a floating calendar and (optionally) a time from a dropdown list. It can be configured
+to allow a user to select both a date and a time together in the same popover. It provides a
+robust date selection experience for your project.
+
+## Guidelines
+
+### Best Practices
+
+- **Provide Clear Labels**: Always use descriptive labels or `ariaLabel` props that clearly indicate the purpose of the date field (e.g., "Start Date", "Date of Birth").
+- **Set Appropriate Constraints**: Use `minDate` and `maxDate` to prevent users from selecting dates outside the valid range for your use case.
+- **Disable Irrelevant Days**: Use `daysDisabled` to block days of the week that are never valid (e.g., weekends for a business scheduling tool).
+- **Validate Input**: Enable `required` and provide clear error messages; use `errorMessage` to override default messages when needed.
+- **Handle Time Zones**: Be aware of time zone considerations when using the time selection feature.
+- **Accessibility**: Ensure keyboard navigation works smoothly and screen readers can interpret the component correctly by always providing a `label` or `ariaLabel`.
+
+## Variants
+
+The `DatePicker` component has two main variants: one with a floating calendar to select only a
+date and one with an additional time picker to select both date and time.
+
+### Basic Picker
+
+<Canvas of={DatePickerStories.BasicDatePicker} />
+
+### Date Picker with Time
+
+<Canvas of={DatePickerStories.DatePickerWithTime} />
+
+</div>

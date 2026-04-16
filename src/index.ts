@@ -41,3 +41,6 @@ export type { ChipGroupProps, SelectedTag } from './components/ChipGroup';
 
 export { ConversationPrompt } from './components/Conversation';
 export type { ConversationPromptProps, Suggestion } from './components/Conversation';
+
+export { DatePicker } from './components/DatePicker';
+export type { DatePickerProps } from './components/DatePicker';

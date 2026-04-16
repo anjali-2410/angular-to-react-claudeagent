@@ -1,0 +1,292 @@
+/* ── DatePicker wrapper ───────────────────────────────────────────────────── */
+
+.sol-date-picker {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ── Input row (matches Angular .sol-input-container-date-picker) ─────────── */
+
+.sol-input-container-date-picker {
+  display: flex;
+  gap: var(--sol-size-spacing-2xs);
+  width: 100%;
+}
+
+.sol-input-container-date-picker .input-text {
+  width: 100%;
+  display: flex;
+  gap: var(--sol-size-spacing-2xs);
+}
+
+.sol-input-container-date-picker .input-wrapper {
+  flex-grow: 1;
+  max-width: 45rem;
+}
+
+.sol-input-container-date-picker .input-wrapper .sol-input-container {
+  display: flex;
+  align-items: center;
+  border: var(--sol-size-border-default) solid var(--sol-color-border-standard);
+  border-radius: var(--sol-size-radius-sm);
+  background: var(--sol-color-background-surface-default);
+  padding: 0 var(--sol-size-spacing-xs);
+  gap: var(--sol-size-spacing-xs);
+  height: var(--sol-size-control-lg);
+  box-sizing: border-box;
+  width: 100%;
+  transition: border-color 0.15s ease;
+  padding-right: 0;
+}
+
+.sol-input-container-date-picker .input-wrapper .sol-input-container:has(.sol-icon-button) {
+  padding-right: var(--sol-size-spacing-xs);
+}
+
+.sol-input-container-date-picker .input-wrapper .sol-input-container:focus-within:not(.disabled):not(.error) {
+  border-color: var(--sol-color-border-focus);
+  outline: var(--sol-size-border-focus) solid var(--sol-color-border-focus);
+  outline-offset: 1px;
+}
+
+.sol-input-container-date-picker .input-wrapper .sol-input-container.error {
+  border-color: var(--sol-color-border-error);
+}
+
+.sol-input-container-date-picker .input-wrapper .sol-input-container.disabled {
+  background: var(--sol-color-background-disabled);
+  border-color: var(--sol-color-border-disabled);
+  cursor: not-allowed;
+}
+
+.sol-input-container-date-picker .sol-input-container sol-icon,
+.sol-input-container-date-picker .sol-input-container .sol-icon {
+  width: var(--sol-size-control-lg);
+  height: var(--sol-size-control-lg);
+  color: var(--sol-color-icon-action);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sol-input-container-date-picker .sol-input-container.disabled .sol-icon,
+.sol-input-container-date-picker .sol-input-container.disabled sol-icon {
+  color: var(--sol-color-icon-disabled);
+}
+
+.sol-input-container-date-picker .sol-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--sol-typography-body-md-font-family);
+  font-size: var(--sol-typography-body-md-font-size);
+  color: var(--sol-color-text-default);
+  padding: 0;
+  min-width: 0;
+}
+
+.sol-input-container-date-picker .sol-input::placeholder {
+  color: var(--sol-color-text-placeholder);
+}
+
+.sol-input-container-date-picker .sol-input:disabled {
+  color: var(--sol-color-text-disabled);
+  cursor: not-allowed;
+}
+
+/* ── Calendar icon button ─────────────────────────────────────────────────── */
+
+.sol-icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--sol-size-control-lg);
+  height: var(--sol-size-control-lg);
+  color: var(--sol-color-icon-action);
+  border-radius: var(--sol-size-radius-sm);
+  flex-shrink: 0;
+}
+
+.sol-icon-button:focus-visible {
+  outline: var(--sol-size-border-focus) solid var(--sol-color-border-focus);
+  outline-offset: 2px;
+}
+
+/* ── Prev/Next button container ───────────────────────────────────────────── */
+
+.button-container {
+  display: flex;
+  gap: var(--sol-size-spacing-2xs);
+  margin-top: 0;
+}
+
+.button-container svg {
+  fill: var(--sol-color-icon-action);
+}
+
+/* ── Visible label ────────────────────────────────────────────────────────── */
+
+.sol-date-picker .sol-label {
+  display: block;
+  font-family: var(--sol-typography-label-md-font-family);
+  font-size: var(--sol-typography-label-md-font-size);
+  font-weight: var(--sol-typography-label-md-font-weight);
+  color: var(--sol-color-text-default);
+  margin-bottom: var(--sol-size-spacing-2xs);
+}
+
+/* ── Error message ────────────────────────────────────────────────────────── */
+
+.sol-date-picker .sol-error-message {
+  font-family: var(--sol-typography-body-sm-font-family);
+  font-size: var(--sol-typography-body-sm-font-size);
+  color: var(--sol-color-text-error);
+  margin-top: var(--sol-size-spacing-2xs);
+  display: flex;
+  align-items: center;
+  gap: var(--sol-size-spacing-2xs);
+}
+
+/* ── Floating popover panel (.sol-datepicker-wrapper) ─────────────────────── */
+
+.sol-datepicker-wrapper {
+  background: var(--sol-color-background-surface-overlay);
+  border: var(--sol-size-border-default) solid var(--sol-color-border-standard);
+  box-shadow: var(--sol-effect-overlayshadow);
+  border-radius: var(--sol-size-radius-md);
+  overflow-x: auto;
+  overflow-y: auto;
+  margin: 0.25rem 0;
+  min-height: 26.75rem;
+  box-sizing: content-box;
+  z-index: 1000;
+}
+
+.sol-datepicker-wrapper .date-time-container {
+  display: flex;
+  position: relative;
+  width: 30.5rem;
+}
+
+.sol-datepicker-wrapper .date-time-container.no-time {
+  width: 20.5rem;
+}
+
+.sol-datepicker-wrapper .calendar-container {
+  width: 20.5rem;
+  height: 25.5rem;
+  position: relative;
+}
+
+.sol-datepicker-wrapper .calendar-container .sol-calender {
+  height: 90%;
+}
+
+/* ── Footer (Today button) ────────────────────────────────────────────────── */
+
+.sol-datepicker-wrapper .footer {
+  width: 100%;
+  border-top: var(--sol-size-border-default) solid var(--sol-color-border-standard);
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: var(--sol-size-spacing-md) var(--sol-size-spacing-sm) var(--sol-size-spacing-sm);
+}
+
+.sol-datepicker-wrapper .footer .sol-button.btn-tertiary-medium:focus-visible {
+  font-weight: var(--sol-base-typography-weight-semi-bold);
+  color: var(--sol-color-text-default);
+}
+
+/* ── Time picker ──────────────────────────────────────────────────────────── */
+
+.sol-datepicker-wrapper .timepicker-container {
+  box-sizing: border-box;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  border-left: var(--sol-size-border-default) solid var(--sol-color-border-standard);
+  width: 10rem;
+  padding: var(--sol-size-spacing-xs);
+}
+
+.sol-datepicker-wrapper .timepicker {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sol-size-spacing-xs);
+}
+
+.timepicker-input .sol-input-container {
+  display: flex;
+  align-items: center;
+  border: var(--sol-size-border-default) solid var(--sol-color-border-standard);
+  border-radius: var(--sol-size-radius-sm);
+  background: var(--sol-color-background-surface-default);
+  padding: 0 var(--sol-size-spacing-xs);
+  height: var(--sol-size-control-md);
+  box-sizing: border-box;
+}
+
+.timepicker-input .sol-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--sol-typography-body-sm-font-family);
+  font-size: var(--sol-typography-body-sm-font-size);
+  color: var(--sol-color-text-default);
+  padding: 0;
+  min-width: 0;
+}
+
+.time-options-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+  max-height: 18rem;
+}
+
+.time-option {
+  padding: var(--sol-size-spacing-xs) var(--sol-size-spacing-sm);
+  font-family: var(--sol-typography-body-sm-font-family);
+  font-size: var(--sol-typography-body-sm-font-size);
+  color: var(--sol-color-text-default);
+  cursor: pointer;
+  border-radius: var(--sol-size-radius-sm);
+  transition: background-color 0.1s ease;
+}
+
+.time-option:hover,
+.time-option:focus {
+  background: var(--sol-color-background-action-secondary-hover);
+  outline: none;
+}
+
+.time-option[aria-selected='true'] {
+  background: var(--sol-color-background-action-primary);
+  color: var(--sol-color-text-on-action-primary);
+}
+
+/* ── Screenreader only ────────────────────────────────────────────────────── */
+
+.sol-screenreader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

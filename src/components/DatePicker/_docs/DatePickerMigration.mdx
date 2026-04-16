@@ -1,0 +1,132 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Date Picker/Migration" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Overview](#overview)
+  - [Import Changes](#import-changes)
+  - [Input → Prop Mapping](#input--prop-mapping)
+  - [ngModel → Controlled Pattern](#ngmodel--controlled-pattern)
+  - [Validation](#validation)
+  - [Outputs → Callbacks](#outputs--callbacks)
+  - [Template Changes](#template-changes)
+</div>
+<div className="toc-left">
+
+## Date Picker: Angular → React Migration
+
+### Overview
+
+The SOL React `DatePicker` is a functional equivalent of the Angular `sol-date-picker` component.
+The API surface has been kept as close as possible to enable drop-in replacement.
+
+### Import Changes
+
+**Angular:**
+```ts
+import { DatePickerModule } from '@niceltd/sol/date-picker';
+```
+
+**React:**
+```ts
+import { DatePicker } from '@niceltd/sol-react';
+```
+
+### Input → Prop Mapping
+
+| Angular Input | React Prop | Notes |
+|---|---|---|
+| `id` | `id` | Same |
+| `dateFormat` | `dateFormat` | Same. If it contains `h:mm`, the time picker is activated. |
+| `timeFormat` | `timeFormat` | Same |
+| `steps` | `steps` | Same |
+| `displayFooter` | `displayFooter` | Same |
+| `minDate` | `minDate` | Same |
+| `maxDate` | `maxDate` | Same |
+| `specialDates` | `specialDates` | Same shape: `{ date: Date; status: 'full' | 'partial' }[]` |
+| `startDOW` | `startDOW` | Same |
+| `daysDisabled` | `daysDisabled` | Same |
+| `prevNextButtons` | `prevNextButtons` | Same |
+| `arrowPosition` | `arrowPosition` | Same |
+| `allowAnyValidTime` | `allowAnyValidTime` | Same |
+| `disabled` | `disabled` | Same |
+| `readonly` | `readonly` | Same |
+| `placeholder` | `placeholder` | Same |
+| `required` | `required` | Same |
+| `allowTextInput` | `allowTextInput` | Same |
+| `ariaLabel` | `ariaLabel` | Same |
+| `ariaLabelledby` | `ariaLabelledby` | Same |
+| `label` | `label` | Same |
+| `errorMessage` | `errorMessage` | Same |
+
+### ngModel → Controlled Pattern
+
+**Angular (two-way binding):**
+```html
+<sol-date-picker [(ngModel)]="date"></sol-date-picker>
+```
+
+**React (controlled component):**
+```tsx
+const [date, setDate] = useState<Date | null>(null);
+
+<DatePicker value={date} onChange={setDate} />
+```
+
+### Validation
+
+Angular's `ControlValueAccessor` + `Validator` integration is replaced by React-controlled state
+and the `errorMessage` prop.
+
+| Angular Validation Error | React Equivalent |
+|---|---|
+| `invalidDate` | Internal error state "Not a valid date" |
+| `disabledDate` | Internal error state "Entered date is disabled" |
+| `required` | Internal error state "This field is required" |
+| Custom external errors | Pass string to `errorMessage` prop |
+
+### Outputs → Callbacks
+
+| Angular Output | React Callback | Notes |
+|---|---|---|
+| `(ngModelChange)` | `onChange` | Called with `Date \| null` |
+
+### Template Changes
+
+**Angular:**
+```html
+<sol-date-picker
+  [id]="id"
+  [label]="label"
+  [ariaLabel]="ariaLabel"
+  [(ngModel)]="date"
+  [dateFormat]="dateFormat"
+  [minDate]="minDate"
+  [maxDate]="maxDate"
+  [daysDisabled]="daysDisabled"
+  [disabled]="disabled"
+  [required]="required"
+  [errorMessage]="errorMessage">
+</sol-date-picker>
+```
+
+**React:**
+```tsx
+<DatePicker
+  id={id}
+  label={label}
+  ariaLabel={ariaLabel}
+  value={date}
+  onChange={setDate}
+  dateFormat={dateFormat}
+  minDate={minDate}
+  maxDate={maxDate}
+  daysDisabled={daysDisabled}
+  disabled={disabled}
+  required={required}
+  errorMessage={errorMessage}
+/>
+```
+
+</div>
