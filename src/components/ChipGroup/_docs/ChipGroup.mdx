@@ -1,0 +1,41 @@
+import { Canvas, Meta } from '@storybook/blocks';
+import * as ChipGroupStories from '../_stories/ChipGroup.stories';
+
+<Meta title="Components/Chip Group/Overview" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Chip Group](#chip-group)
+  - [Guidelines](#guidelines)
+  - [Examples](#examples)
+    - [With Chips expansion](#with-chips-expansion)
+    - [With Popover](#with-popover)
+</div>
+<div className="toc-left">
+
+# Chip Group
+
+The `ChipGroup` component is a versatile and flexible UI element that allows users to display a list of tags.
+
+---
+
+## Guidelines
+
+- Use chip group for compact, removable tag collections where keyboard navigation is required.
+- Keep labels concise and use overflow behaviour (`inline` or `popover`) when all tags cannot be shown inline.
+- When chips are removable, keep `allowClearAll` enabled when users may need to quickly reset all tags.
+- Chips in the group use the same keyboard and remove behaviour as `Chip`.
+
+---
+
+## Examples
+
+### With Chips expansion
+
+<Canvas of={ChipGroupStories.withChipsExpansion} layout="padded" withToolbar />
+
+### With Popover
+
+<Canvas of={ChipGroupStories.withPopover} layout="padded" withToolbar />
+
+</div>

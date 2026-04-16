@@ -1,0 +1,76 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Chip Group/Migration" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Import](#import)
+  - [Limitations](#limitations)
+  - [Changes to Inputs](#changes-to-inputs)
+  - [Example](#example)
+</div>
+<div className="toc-left">
+
+## Chip Group — Migrating from Breeze
+
+### Import
+
+```ts
+// Breeze
+import { SelectedTagsModule } from '@niceltd/sol/selected-tags';
+
+// Angular SOL
+import { ChipGroupModule } from '@niceltd/sol/chip-group';
+
+// React SOL
+import { ChipGroup } from '@niceltd/sol-react/chip-group';
+```
+
+### Migrating from Breeze Selected Tags
+
+Change the component name from `cxone-selected-tags` to `ChipGroup`. Most common inputs and outputs remain the same.
+
+#### Limitations
+
+- If the number of items exceeds 10, the remaining chips are hidden by default.
+- Clicking Show More (+N) expands the container (inline mode) or opens a popover (popover mode).
+
+#### Changes to Inputs
+
+| Breeze Input | SOL / React Input | Notes |
+| --- | --- | --- |
+| `hasSquareElement` | — | Use the `icon` property on each tag item instead |
+| `popoverBackgroundColor` | — | Removed |
+| `popUpContainer` | — | Removed |
+| `tagsHeaderTemplate` | — | Removed |
+| `tagSize='large'` | — | Removed — only `'small'` and `'medium'` supported |
+| `subLabel` | — | Removed |
+| `popoverConfig` | — | Removed |
+
+#### Example
+
+```tsx
+// Old Breeze
+<cxone-selected-tags
+  id="myTags"
+  [maxTagsToDisplay]="3"
+  [removable]="true"
+  [tagsSource]="chipsData"
+  label="name"
+  (tagsChanged)="onTagsChanged($event)"
+  (tagDeleted)="onTagDeleted($event)"
+></cxone-selected-tags>
+
+// New React SOL
+<ChipGroup
+  id="myTags"
+  maxTagsToDisplay={3}
+  removable
+  tagsSource={chipsData}
+  label="name"
+  onTagsChanged={onTagsChanged}
+  onTagDeleted={onTagDeleted}
+/>
+```
+
+</div>

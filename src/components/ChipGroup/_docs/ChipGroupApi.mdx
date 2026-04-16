@@ -1,0 +1,111 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Chip Group/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Props](#props)
+  - [Outputs / Callbacks](#outputs--callbacks)
+  - [SelectedTag Interface](#selectedtag-interface)
+  - [Angular → React Migration](#angular--react-migration)
+  - [Keyboard Navigation](#keyboard-navigation)
+  - [Migrating to v16](#migrating-to-v16)
+</div>
+<div className="toc-left">
+
+## Chip Group: API
+
+```ts
+import { ChipGroup, type SelectedTag } from '@niceltd/sol-react/chip-group';
+```
+
+---
+
+### Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `id` | string | auto-generated | HTML id for the group root element |
+| `tagsSource` | `SelectedTag[]` | `[]` | Array of data objects to display as chips |
+| `removable` | boolean | false | Shows close button on each chip |
+| `tagSize` | `'small'` \| `'medium'` | `'small'` | Size applied to every chip |
+| `overflowMode` | `'inline'` \| `'popover'` | `'inline'` | How overflow chips are revealed |
+| `allowClearAll` | boolean | true | Shows a Clear All button |
+| `primaryKey` | string | `'id'` | Property name used as unique key from each tag object |
+| `label` | string | `'text'` | Property name used as display label from each tag object |
+| `maxTagsToDisplay` | number | 0 | Max chips to show regardless of container width (0 = auto) |
+| `clearAllLabel` | string | `'Clear'` | Label for the Clear All button |
+| `showLessLabel` | string | `'Show less'` | Label for the Show Less button |
+| `chipGroupLabel` | string | `'Chip group'` | Accessible label for the group region |
+
+---
+
+### Outputs / Callbacks
+
+| Callback | Type | Description |
+| --- | --- | --- |
+| `onTagsChanged` | `(e: { tags: SelectedTag[] }) => void` | Emitted after any chip is removed — provides updated tags array |
+| `onViewMoreClicked` | `() => void` | Emitted when the Show More (+N) button is clicked |
+| `onViewLessClicked` | `() => void` | Emitted when the Show Less button is clicked |
+| `onTagDeleted` | `(tag: SelectedTag) => void` | Emitted when an individual chip is removed |
+| `onDeleteAllClicked` | `() => void` | Emitted when Clear All is clicked |
+
+---
+
+### SelectedTag Interface
+
+```ts
+interface SelectedTag {
+  [key: string]: unknown;  // e.g. { id: '1', text: 'Iron Man' }
+  icon?: React.ReactNode;  // optional leading icon for the chip
+}
+```
+
+---
+
+### Angular → React Migration
+
+| Angular `@Input` / `@Output` | React prop | Notes |
+| --- | --- | --- |
+| `[tagsSource]` | `tagsSource` | Same |
+| `[removable]` | `removable` | Same |
+| `[tagSize]` | `tagSize` | Same |
+| `[overflowMode]` | `overflowMode` | Same |
+| `[allowClearAll]` | `allowClearAll` | Same |
+| `[primaryKey]` | `primaryKey` | Same |
+| `[label]` | `label` | Same |
+| `[maxTagsToDisplay]` | `maxTagsToDisplay` | Same |
+| `(tagsChanged)` | `onTagsChanged` | Same payload `{ tags }` |
+| `(viewMoreClicked)` | `onViewMoreClicked` | Same |
+| `(viewLessClicked)` | `onViewLessClicked` | Same |
+| `(tagDeleted)` | `onTagDeleted` | Same |
+| `(deleteAllClicked)` | `onDeleteAllClicked` | Same |
+| `TranslationService` | `clearAllLabel`, `showLessLabel`, `chipGroupLabel` | String props replace service |
+
+---
+
+### Keyboard Navigation
+
+- `Tab` into the group focuses the first visible chip.
+- `ArrowLeft` / `ArrowRight` move focus between visible chips.
+- `Home` focuses the first chip; `End` focuses the last.
+- `Enter` on a chip removes it when `removable` is enabled.
+- In popover mode, `Escape` closes the popover and returns focus to the Show More button.
+
+---
+
+### Migrating to v16
+
+#### Component Renamed
+
+- Module: `SelectedTagsModule` → `ChipGroupModule` → React `ChipGroup`
+- Component: `SelectedTagsComponent` → `ChipGroupComponent` → React `ChipGroup`
+- Selector: `sol-selected-tags` → `sol-chip-group` → React `<ChipGroup>`
+
+#### Removed Properties
+
+- `popoverConfig` — Popover dimensions are no longer configurable.
+- `subLabel` — Sub-labels are no longer supported.
+- `tagSize='large'` — Only `'small'` and `'medium'` are supported.
+
+</div>

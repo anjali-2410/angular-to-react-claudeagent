@@ -35,3 +35,6 @@ export type {
 
 export { Chip } from './components/Chip';
 export type { ChipProps, ChipSize, ChipVariant } from './components/Chip';
+
+export { ChipGroup } from './components/ChipGroup';
+export type { ChipGroupProps, SelectedTag } from './components/ChipGroup';

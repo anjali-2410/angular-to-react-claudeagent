@@ -1,0 +1,183 @@
+/* ChipGroup component styles — compiled from chip-group.component.scss
+ * @each $size in ('medium', 'small') expanded to flat CSS rules.
+ */
+
+/* ── Screenreader utility ─────────────────────────────────────────────────── */
+
+.sol-screenreader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Root ─────────────────────────────────────────────────────────────────── */
+
+.sol-chip-group {
+  max-width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* ── Tags wrapper ─────────────────────────────────────────────────────────── */
+
+.sol-chip-group .sol-tags-wrapper {
+  display: flex;
+  height: 100%;
+  gap: var(--sol-size-spacing-xs);
+}
+
+.sol-chip-group .sol-tags-wrapper.chip-group-show-all {
+  flex-wrap: wrap;
+}
+
+.sol-chip-group .sol-tags-wrapper > .sol-tag-horizontal {
+  align-items: center;
+  display: flex;
+  line-height: 1;
+}
+
+.sol-chip-group .sol-tags-wrapper > .sol-tag-horizontal:last-child {
+  margin-right: 0;
+}
+
+/* ── Action buttons ───────────────────────────────────────────────────────── */
+
+.sol-chip-group .sol-chip-group-buttons-container {
+  display: inline-flex;
+  gap: var(--sol-size-spacing-xs);
+  align-items: center;
+  line-height: 1;
+}
+
+.sol-chip-group .sol-chip-group-buttons-container .show-more .sol-button {
+  padding: 0 0.3rem;
+  min-width: unset;
+}
+
+.sol-chip-group .sol-chip-group-buttons-container .clear-all .sol-button {
+  min-width: unset;
+}
+
+/* ── Focusable chip (keyboard focus ring) ─────────────────────────────────── */
+
+.sol-chip-group .focusable-chip {
+  cursor: pointer;
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.sol-chip-group .focusable-chip:focus-visible {
+  outline: solid var(--sol-color-border-focus-default) var(--sol-size-border-default);
+}
+
+/* medium */
+.sol-chip-group .focusable-chip.medium {
+  height: var(--sol-size-control-md);
+  border-radius: 0.25rem;
+}
+.sol-chip-group .focusable-chip.medium:focus-visible {
+  outline-offset: 0.187rem;
+}
+
+/* small */
+.sol-chip-group .focusable-chip.small {
+  height: var(--sol-size-control-sm);
+  border-radius: 0.25rem;
+}
+.sol-chip-group .focusable-chip.small:focus-visible {
+  outline-offset: 0.125rem;
+}
+
+/* ── Remove icon button sizes (expanded @each) ────────────────────────────── */
+
+.sol-chip-group .sol-chip.medium .remove-icon button {
+  width: var(--sol-size-control-md);
+  min-width: var(--sol-size-control-md);
+}
+
+.sol-chip-group .sol-chip.small .remove-icon button {
+  width: var(--sol-size-control-sm);
+  min-width: var(--sol-size-control-sm);
+}
+
+/* ── Show less ────────────────────────────────────────────────────────────── */
+
+.sol-chip-group .show-less {
+  display: inline-block;
+}
+
+/* ── Invisible measurement container ─────────────────────────────────────── */
+
+.sol-chip-group .invisible {
+  visibility: hidden;
+  position: absolute;
+}
+
+/* ── Popover overlay ──────────────────────────────────────────────────────── */
+
+.sol-chip-group-popover {
+  box-sizing: border-box;
+  border-radius: var(--sol-size-radius-md);
+  border: 1px solid var(--sol-color-border-standard);
+  background: var(--sol-color-background-surface-overlay);
+  box-shadow: var(--sol-effect-overlayshadow);
+  font-family: var(--sol-typography-body-lg-font-family);
+  font-size: 0.875rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: var(--sol-size-spacing-xs) var(--sol-size-spacing-xs) 0;
+  z-index: 1000;
+  max-width: 12.5rem;
+}
+
+.sol-chip-group-popover .tag-row {
+  padding-bottom: var(--sol-size-spacing-xs);
+  max-width: 100%;
+}
+
+.sol-chip-group-popover .tag-row:first-child {
+  padding-top: 0;
+}
+
+/* Chip sizes in popover — expanded @each */
+.sol-chip-group-popover .sol-chip.medium {
+  display: block;
+  max-width: 100%;
+}
+
+.sol-chip-group-popover .sol-chip.small {
+  display: block;
+  max-width: 100%;
+}
+
+.sol-chip-group-popover .sol-chip.medium .remove-icon button {
+  width: var(--sol-size-control-md);
+  min-width: var(--sol-size-control-md);
+}
+
+.sol-chip-group-popover .sol-chip.small .remove-icon button {
+  width: var(--sol-size-control-sm);
+  min-width: var(--sol-size-control-sm);
+}
+
+/* Tooltip in popover */
+.sol-chip-group-popover .tippy-box[data-theme~='tooltip'] {
+  max-width: 100%;
+}
+
+.sol-chip-group-popover .tippy-box[data-theme~='tooltip'] .tippy-content {
+  max-width: 100%;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
