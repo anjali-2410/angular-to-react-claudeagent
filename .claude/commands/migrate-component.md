@@ -215,7 +215,70 @@ File types to fetch:
 - MDX docs (`.mdx`)
 - Enums (`enum/`)
 
-### Step 3 — Analyze and convert
+### Step 3 — Print analysis report
+
+After reading all source files, **print the following report in full before writing any React code**. This lets the user review and confirm the migration plan before any files are created.
+
+```text
+ANALYSIS REPORT — <ComponentName>
+Source : github.com/nice-cxone/sol-components → projects/ds-components/<kebabName>/src/lib/
+
+SOURCE FILES DISCOVERED
+  <count> files found across lib/, _docs/, _stories/
+
+COMPONENTS
+  | Component         | Selector               | Sub-component? |
+  | ----------------- | ---------------------- | -------------- |
+  | <ComponentName>   | sol-<kebab-name>       | No (primary)   |
+  | <SubComponent>    | sol-<kebab-sub>        | Yes            |
+
+PROPS (Inputs)
+  | Angular @Input / signal  | React prop       | Type            | Default  |
+  | ------------------------ | ---------------- | --------------- | -------- |
+  | showActionBar            | showActionBar    | boolean         | false    |
+  | actionBarTextContent     | actionBarText…   | string          | '…'      |
+  | ...                      | ...              | ...             | ...      |
+
+EVENTS (Outputs)
+  | Angular @Output          | React callback   | Payload         |
+  | ------------------------ | ---------------- | --------------- |
+  | buttonClicked            | onButtonClicked  | void            |
+  | ...                      | ...              | ...             |
+
+ANGULAR DEPENDENCIES TO CONVERT
+  | Angular dependency       | React equivalent            | Notes                     |
+  | ------------------------ | --------------------------- | ------------------------- |
+  | MatExpansionModule       | headless CSS + React state  | No Material in React      |
+  | solTooltip directive     | tippy.js (useEffect)        | Already in dependencies   |
+  | sol-button               | <Button> from our library   | Import from components/   |
+  | _IdGenerator + NgZone    | useId()                     | React 18 built-in         |
+  | ResizeObserver           | useEffect + useRef          | Same native API           |
+  | ...                      | ...                         | ...                       |
+
+FILES TO CREATE
+  | Angular source                      | React target                              |
+  | ----------------------------------- | ----------------------------------------- |
+  | component.ts / .html                | <ComponentName>.tsx                       |
+  | component.scss                      | <ComponentName>.css                       |
+  | component.spec.ts                   | <ComponentName>.test.tsx                  |
+  | component.page.ts                   | _e2e/<ComponentName>.page.ts              |
+  | _stories/component.stories.ts       | _stories/<ComponentName>.stories.tsx      |
+  | _docs/component-overview.mdx        | _docs/<ComponentName>.mdx                 |
+  | _docs/component-api.mdx             | _docs/<ComponentName>Api.mdx              |
+  | module.ts / ng-package.json         | — (N/A)                                   |
+
+STORY COUNT
+  | Angular file               | Count | React file                      |
+  | -------------------------- | ----- | ------------------------------- |
+  | component.stories.ts       |   2   | <ComponentName>.stories.tsx     |
+  | overview-component.stories |   5   | <ComponentName>Overview.stories |
+
+READY TO GENERATE: <total> React files
+```
+
+Fill every table row with the actual values from the source files. Omit rows/tables that have no entries (e.g. no sub-components → omit the sub-component row). **Wait for user confirmation or proceed immediately** based on context — if the user ran `/migrate-component` without any flags, proceed automatically after printing the report.
+
+### Step 3b — Analyze and convert
 
 Apply all Conversion Rules above. Pay special attention to:
 
@@ -338,7 +401,31 @@ Also add `src/vite-env.d.ts` so TypeScript accepts CSS side-effect imports:
 
 ---
 
-### Step 5 — Write target files
+### Step 5 — Pre-flight check
+
+Before writing any files, verify the working tree is clean so a rollback is safe:
+
+```bash
+git status --short
+```
+
+- If the output is **empty** → proceed.
+- If there are **uncommitted changes** → stop immediately and print:
+
+```text
+MIGRATION ABORTED — dirty working tree
+  The repository has uncommitted changes. Commit or stash them before migrating.
+  Run `git status` to see what is modified.
+```
+
+Record the pre-migration state for rollback:
+
+```bash
+# Snapshot which files currently exist in src/index.ts (used to restore on rollback)
+git stash list   # just for reference; do not stash
+```
+
+### Step 6 — Write target files
 
 Create all files in `src/components/<PascalName>/`. The exact set of files depends on what exists in the Angular source — use the tree below as a template and add/remove files to match the source 1-to-1:
 
@@ -365,15 +452,73 @@ src/components/<PascalName>/
     └── <SubComponentName>Api.mdx            ← from *-group-api.mdx (if exists)
 ```
 
-### Step 6 — Update barrel export
+### Step 7 — Update barrel export
 
 In `src/index.ts`, add:
+
 ```typescript
 export { <PascalName> } from './components/<PascalName>';
 export type { <PascalName>Props } from './components/<PascalName>';
 ```
 
-### Step 7 — Commit and push
+### Step 8 — Validate (build + tests)
+
+Run both checks. **If either fails, roll back immediately — do NOT commit.**
+
+```bash
+npm run build
+```
+
+```bash
+npm run test
+```
+
+#### If build fails
+
+```bash
+# Rollback: remove all generated files and restore src/index.ts
+rm -rf src/components/<PascalName>/
+git checkout src/index.ts
+```
+
+Then print the error report (see format below) and **stop**.
+
+#### If tests fail
+
+```bash
+# Rollback: same as build failure
+rm -rf src/components/<PascalName>/
+git checkout src/index.ts
+```
+
+Then print the error report and **stop**.
+
+#### Error report format
+
+```text
+MIGRATION FAILED — <PascalName>
+
+  Step that failed : <"TypeScript build" | "Tests">
+  Command run      : <npm run build | npm run test>
+
+  ERROR OUTPUT
+  ─────────────────────────────────────────────────────────────
+  <paste the full error / failing test output here>
+
+  ROLLBACK RESULT
+  ─────────────────────────────────────────────────────────────
+  ✅  src/components/<PascalName>/ deleted
+  ✅  src/index.ts restored to pre-migration state
+  ✅  Working tree is clean — no partial migration committed
+
+  NEXT STEPS
+  ─────────────────────────────────────────────────────────────
+  Fix the issue above and re-run /migrate-component <kebabName>
+```
+
+Only proceed to Step 9 when **both** `npm run build` and `npm run test` exit with code 0.
+
+### Step 9 — Commit and push
 
 ```bash
 cd /c/Users/anjsonawane/angular-to-react-claudeagent

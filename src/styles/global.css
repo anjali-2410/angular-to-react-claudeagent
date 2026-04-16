@@ -1,16 +1,12 @@
 /*
  * SOL Design System — Global Styles
- * Source: https://github.com/nice-cxone/sol-tokens  (@niceltd/sol-tokens)
+ * Source: https://github.com/nice-cxone/sol-tokens  (@niceltd/sol-tokens v2.1.0)
  *
- * Load order:
- *  1. sol-tokens.css          → Full v2 semantic + base tokens (primary source, local build)
- *  2. sol-tokens-v1-snapshot  → V1 token values (from @niceltd/sol-tokens package)
- *  3. sol-tokens-v1-aliases   → V1 name → V2 name bridge (from @niceltd/sol-tokens package)
+ * @niceltd/sol-tokens v2.1.0 ships a single sol-tokens.css file.
+ * The local copy in src/styles/sol-tokens.css is fetched via `npm run fetch-tokens`.
  */
 
 @import './sol-tokens.css';
-@import '@niceltd/sol-tokens/sol-tokens-v1-snapshot.css';
-@import '@niceltd/sol-tokens/sol-tokens-v1-with-v2-values.css';
 
 /* ─── Base resets ─────────────────────────────────────────────────────────── */
 
