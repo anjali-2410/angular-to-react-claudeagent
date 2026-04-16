@@ -32,3 +32,6 @@ export type {
   AutocompleteOptionData,
   SearchAutocompleteItemProps,
 } from './components/Autocomplete';
+
+export { Chip } from './components/Chip';
+export type { ChipProps, ChipSize, ChipVariant } from './components/Chip';
