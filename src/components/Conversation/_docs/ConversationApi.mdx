@@ -1,0 +1,59 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Conversation UI/API" />
+
+## Conversation UI: API
+
+```ts
+import { ConversationPrompt, type Suggestion } from '@niceltd/sol-react/conversation';
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `placeholder` | string | `''` | Textarea placeholder text |
+| `maxRows` | number | `4` | Maximum rows before textarea scrolls |
+| `showCharacterCount` | boolean | false | Show character count display |
+| `maxLength` | number | `200` | Max characters allowed |
+| `textAreaId` | string | `''` | id applied to the textarea element |
+| `suggestions` | `Suggestion[]` | `[]` | Static list of suggestion items |
+| `fetchSuggestions` | `() => Promise<Suggestion[]>` | — | Async callback to fetch suggestions when Pixie button is clicked |
+| `value` | string | `''` | Controlled textarea value |
+| `showPixieIcon` | boolean | true | Show/hide the AI (Pixie) icon button |
+| `clearLabel` | string | `'Clear'` | Aria-label for clear button |
+| `submitLabel` | string | `'Submit'` | Aria-label for submit button |
+| `pixieLabel` | string | `'Suggestions'` | Aria-label for Pixie button |
+| `suggestionTitle` | string | `'Suggestions'` | Title shown in the suggestions menu header |
+| `loadErrorMessage` | string | `'Failed to load suggestions'` | Error message when async fetch fails |
+| `retryLabel` | string | `'Retry'` | Label for the retry button in error state |
+| `onActionButtonClicked` | `(value: string) => void` | — | Emitted when submit is clicked — receives current value; value is cleared after emit |
+| `onChange` | `(value: string) => void` | — | Emitted on every textarea change |
+
+### Suggestion Interface
+
+```ts
+interface Suggestion {
+  label: string;       // Text displayed in the menu item
+  tooltipText?: string; // Optional tooltip text
+}
+```
+
+### Angular → React Migration
+
+| Angular `@Input` / `@Output` | React prop | Notes |
+| --- | --- | --- |
+| `[placeholder]` | `placeholder` | Same |
+| `[maxRows]` | `maxRows` | Same |
+| `[showCharacterCount]` | `showCharacterCount` | Same |
+| `[maxLength]` | `maxLength` | Same |
+| `[textAreaId]` | `textAreaId` | Same |
+| `[suggestions]` | `suggestions` | Same |
+| `[fetchSuggestions]` | `fetchSuggestions` | Same |
+| `[textInputValue]` | `value` | Renamed |
+| `[showPixieIcon]` | `showPixieIcon` | Same |
+| `(actionButtonClicked)` | `onActionButtonClicked` | Same payload |
+| `\| translate` pipe strings | `clearLabel`, `submitLabel`, `pixieLabel`, `suggestionTitle`, `loadErrorMessage`, `retryLabel` | String props with defaults |
+| `sol-text-area` dependency | Native `<textarea>` with auto-resize | sol-text-area not yet migrated |
+| `sol-spinner` dependency | Inline CSS spinner | sol-spinner not yet migrated |
+| `MatMenu` (Angular Material) | `@floating-ui/react` dropdown | Already in project deps |

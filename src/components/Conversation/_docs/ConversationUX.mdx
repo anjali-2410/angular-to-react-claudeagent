@@ -1,0 +1,121 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Conversation UI/UX Guidelines" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Intro](#intro)
+  - [Components Overview](#components-overview)
+  - [Prompt Input](#prompt-input)
+  - [Chat Bubble](#chat-bubble)
+  - [Chat Container](#chat-container)
+</div>
+<div className="toc-left">
+
+# Conversation UI — UX Guidelines
+
+## Intro
+
+Conversational UI is NICE's source-of-truth components specifically designed for AI conversations, such as Copilot panels and Enlighten Actions.
+It supports all types of interactions across all products and verticals.
+
+> ⚠️ **Please use these UX guidelines on all Conversational UI designs to maintain UX standards and unified usability.**
+
+---
+
+## Components Overview
+
+Conversational UI covers two essential components of an AI conversation: **prompt** and **bubble**.
+
+### Prompt Input
+
+- Text input with a clear button
+- Pixie button
+- Suggestion buttons / suggestion popover
+- Submit button
+
+### Chat Bubble
+
+- Question / response bubble
+  - Content box
+  - Loader spinner
+  - Follow-up buttons
+  - Bottom actions
+  - Timestamp
+
+### Chat Container — `EXCLUDED`
+
+Container, scroll fadeout, stop-generate, welcome screen, gap between bubbles.
+
+---
+
+## Chat Bubble
+
+```tsx
+<div className="sol-conversation" />
+```
+
+Two types: **question** (user's prompt, max 70% width, white) and **response** (AI reply, 100% width, grey).
+
+```tsx
+<div className="sol-conversation-question">
+  <Card><CardBody>…</CardBody></Card>
+</div>
+<div className="sol-conversation-response">
+  <Card><CardBody>…</CardBody></Card>
+</div>
+```
+
+### Loader Spinner
+
+Use the spinner inside `.sol-conversation-card-spinner`:
+
+```tsx
+<CardBody>
+  <div className="sol-conversation-card-spinner">
+    {/* Spinner component */}
+  </div>
+</CardBody>
+```
+
+Recommended: add a textual message 3–5 seconds after the spinner first appears.
+
+### Follow-Up Buttons
+
+Use up to 4 secondary buttons inside `.sol-conversation-card-button-block`:
+
+```tsx
+<div className="sol-conversation-card-button-block">
+  <Button size="medium" variant="secondary">View Chart</Button>
+</div>
+```
+
+### Bottom Actions
+
+Use icon-only tertiary small buttons inside `.sol-conversation-card-action-block`:
+
+```tsx
+<CardFooter>
+  <div className="sol-conversation-card-action-block">
+    <Button size="small" variant="tertiary" icon={<CopyIcon />} />
+  </div>
+  <div className="sol-conversation-card-timestamp">10:17</div>
+</CardFooter>
+```
+
+### Timestamp
+
+```tsx
+<div className="sol-conversation-card-timestamp">10:17</div>
+```
+
+---
+
+## Chat Container — `EXCLUDED`
+
+- **Width:** 40% of viewport
+- **Padding:** 12px left/right, 8px top/bottom
+- Use scroll fadeout at the bottom of the bubble container
+- Provide a Stop Generate button when AI is generating a response
+
+</div>
