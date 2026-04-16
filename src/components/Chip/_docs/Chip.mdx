@@ -1,0 +1,62 @@
+import { Canvas, Meta } from '@storybook/blocks';
+import * as ChipOverviewStories from '../_stories/ChipOverview.stories';
+
+<Meta title="Components/Chip/Overview" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Chip](#chip)
+  - [Guidelines](#guidelines)
+  - [Variants](#variants)
+    - [Simple Chip](#simple-chip)
+    - [Chip with Remove Button](#chip-with-remove-button)
+    - [Error State Chip](#error-state-chip)
+  - [Accessibility](#accessibility)
+</div>
+<div className="toc-left">
+
+# Chip
+
+The `Chip` component displays a compact element that represents an attribute, tag, or action. Chips can include an icon, a label, and an optional remove action.
+
+---
+
+## Guidelines
+
+- Use chips to represent short, discrete pieces of information such as tags, selected filters, or compact actions.
+- Keep chip labels short; when text is longer than available width the label will be truncated and a tooltip will expose the full text on hover and keyboard focus.
+- Use `errorState` to indicate validation or status problems.
+- Prefer `small` size for inline lists; `medium` is available when more visual prominence is required.
+
+---
+
+## Variants
+
+### Simple Chip
+
+Minimal chip without a remove button, suitable for displaying static information or tags. Available in medium and small sizes.
+
+<Canvas of={ChipOverviewStories.SimpleChip} />
+
+### Chip with Remove Button
+
+Interactive chip with a remove button for removable filters or selected tags.
+
+<Canvas of={ChipOverviewStories.ChipWithClose} />
+
+### Error State Chip
+
+Chip displaying error state styling for validation feedback.
+
+<Canvas of={ChipOverviewStories.ErrorStateChip} />
+
+---
+
+### Accessibility
+
+- The chip is keyboard-focusable via `chipTabIndex`.
+- `ArrowRight` from the chip body moves focus to the close button (when `allowClose` is true).
+- `ArrowLeft` from the close button returns focus to the chip body.
+- The close button has an accessible `aria-label` via `closeIconAriaLabel` (default: `'Remove'`).
+
+</div>

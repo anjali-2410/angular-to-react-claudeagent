@@ -1,0 +1,97 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Chip/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Props](#props)
+  - [Outputs / Callbacks](#outputs--callbacks)
+  - [Angular → React Migration](#angular--react-migration)
+  - [Migrating to v16](#migrating-to-v16)
+</div>
+<div className="toc-left">
+
+## Chip: API
+
+```ts
+import { Chip, type ChipSize, type ChipVariant } from '@niceltd/sol-react/chip';
+```
+
+---
+
+### Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `id` | string | auto-generated | Unique id for the chip root element |
+| `label` | string | `''` | Text displayed inside the chip |
+| `subLabel` | string | `''` | Secondary text below the label |
+| `icon` | ReactNode | null | Optional leading icon |
+| `size` | `'small'` \| `'medium'` | `'medium'` | Chip size |
+| `variant` | `'basic'` \| `'primary'` | `'basic'` | Visual variant |
+| `allowClose` | boolean | false | Shows a close button |
+| `closeIconAriaLabel` | string | `'Remove'` | Accessible label for the close button |
+| `labelEditable` | boolean | false | Enables double-click to edit the label |
+| `subLabelEditable` | boolean | false | Enables double-click to edit the subLabel |
+| `errorState` | boolean | false | Applies error styling |
+| `chipTabIndex` | string | `'0'` | `tabindex` on the chip root |
+| `chipRole` | string | `'none'` | `role` on the chip root |
+
+---
+
+### Outputs / Callbacks
+
+| Callback | Type | Description |
+| --- | --- | --- |
+| `onClosed` | `() => void` | Emitted when the close button is clicked |
+| `onChipClicked` | `(event: React.MouseEvent) => void` | Emitted when the chip body is clicked |
+| `onCloseButtonKeydown` | `(event: React.KeyboardEvent) => void` | Emitted on keydown from the close button |
+| `onChipKeydown` | `(event: React.KeyboardEvent) => void` | Emitted on keydown from the chip |
+| `onLabelChanged` | `(label: string) => void` | Emitted when an edited label is committed |
+| `onSubLabelChanged` | `(subLabel: string) => void` | Emitted when an edited subLabel is committed |
+
+---
+
+### Angular → React Migration
+
+| Angular `@Input` / `@Output` | React prop | Notes |
+| --- | --- | --- |
+| `[id]` | `id` | Same |
+| `[label]` | `label` | Same |
+| `[subLabel]` | `subLabel` | Same |
+| `[icon]="templateRef"` | `icon={<JSX>}` | Pass JSX directly |
+| `[size]` | `size` | Same |
+| `[allowClose]` | `allowClose` | **Renamed to `removable` in Angular v16** |
+| `[closeIconAriaLabel]` | `closeIconAriaLabel` | **Renamed to `removeIconAriaLabel` in Angular v16** |
+| `[labelEditable]` | `labelEditable` | **Removed in Angular v16** |
+| `[subLabelEditable]` | `subLabelEditable` | **Removed in Angular v16** |
+| `[errorState]` | `errorState` | Same |
+| `[chipTabIndex]` | `chipTabIndex` | Same |
+| `(closed)` | `onClosed` | **Renamed to `(removed)` in Angular v16** |
+| `(chipClicked)` | `onChipClicked` | Same |
+| `(closeButtonKeydown)` | `onCloseButtonKeydown` | **Renamed to `(removeButtonKeydown)` in Angular v16** |
+| `(chipKeydown)` | `onChipKeydown` | Same |
+| `(labelChanged)` | `onLabelChanged` | **Removed in Angular v16** |
+| `(subLabelChanged)` | `onSubLabelChanged` | **Removed in Angular v16** |
+
+---
+
+### Migrating to v16
+
+The following breaking changes were introduced in Angular SOL v16. The React component currently reflects the pre-v16 API — align props when upgrading:
+
+| Pre-v16 | v16 | Notes |
+| --- | --- | --- |
+| `allowClose` | `removable` | Renamed for semantic clarity |
+| `closeIconAriaLabel` | `removeIconAriaLabel` | Renamed for semantic clarity |
+| `(closed)` | `(removed)` | Output renamed |
+| `(closeButtonKeydown)` | `(removeButtonKeydown)` | Output renamed |
+| `.close-icon` CSS class | `.remove-icon` | CSS class renamed |
+| `labelEditable` | — | Removed |
+| `subLabel` / `subLabelEditable` / `(subLabelChanged)` | — | Removed |
+| `(labelChanged)` | — | Removed |
+| `size='large'` | — | Removed — only `'small'` and `'medium'` supported |
+| `ChipVariant` | — | Removed — single design, no variant input |
+| `chipRole` | — | Removed |
+
+</div>
