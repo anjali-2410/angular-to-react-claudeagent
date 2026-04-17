@@ -43,5 +43,3 @@ export type { ChipGroupProps, SelectedTag } from './components/ChipGroup';
 export { DatePicker } from './components/DatePicker';
 export type { DatePickerProps } from './components/DatePicker';
 
-export { Grid, GridPagination, AccessibilityCheckboxCellRenderer, NoResultsOverlay, RootCellRender, CellWithSpinnerRender, RowWithSpinnerRender, SpinnerRender, GridEventUtils } from './components/Grid';
-export type { GridProps, GridPaginationProps, GridOptionsCellSpinnerProp, ICompatibleDatasource, ICompatibleServerSideDatasource, ColDefWithCustomProperties, ColGroupDefWithCustomProperties, ICellRenderParamsCustomColDef, GridI18n } from './components/Grid';
