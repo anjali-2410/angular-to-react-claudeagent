@@ -1,5 +1,7 @@
 import type { Preview } from '@storybook/react';
 import '../src/styles/global.css';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-balham.css';
 
 // ─── Global Storybook preview configuration ──────────────────────────────────
 // Mirrors the Angular SOL Storybook preview.js setup:
