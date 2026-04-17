@@ -45,3 +45,6 @@ export type { DatePickerProps } from './components/DatePicker';
 
 export { Label } from './components/Label';
 export type { LabelProps } from './components/Label';
+
+export { Switch } from './components/Switch';
+export type { SwitchProps, SwitchSize, SwitchChangeEvent } from './components/Switch';

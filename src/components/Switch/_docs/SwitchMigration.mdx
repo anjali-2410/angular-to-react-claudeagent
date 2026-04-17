@@ -1,0 +1,106 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Switch/Migrate from Breeze"/>
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Imports](#imports)
+  - [Angular → React Migration](#angular--react-migration)
+  - [Changed Props](#changed-props)
+  - [Migrate from Breeze](#migrate-from-breeze)
+</div>
+
+<div className="toc-left">
+
+## Switch: Migration Guide
+
+### Imports
+
+**Angular:**
+```ts
+import { SwitchModule } from '@niceltd/sol/switch';
+```
+
+**React:**
+```tsx
+import { Switch } from '@niceltd/sol-react';
+```
+
+### Angular → React Migration
+
+Replace `<sol-switch>` with `<Switch>` and convert Angular bindings to React props:
+
+<div className="container-flex-direction-row">
+  <div className="col-left">
+
+**Angular:**
+```html
+<sol-switch
+  [name]="name"
+  [label]="label"
+  [checked]="checked"
+  [disabled]="disabled"
+  [readonly]="readonly"
+  [symbol]="symbol"
+  [size]="size"
+  [required]="required"
+  [ariaLabel]="ariaLabel"
+  [toggleId]="toggleId"
+  (checkedChange)="onChangeEvent($event)"
+>
+</sol-switch>
+```
+
+  </div>
+  <div className="col-right">
+
+**React:**
+```tsx
+<Switch
+  name={name}
+  label={label}
+  checked={checked}
+  disabled={disabled}
+  readonly={readonly}
+  symbol={symbol}
+  size={size}
+  required={required}
+  ariaLabel={ariaLabel}
+  toggleId={toggleId}
+  onCheckedChange={(e) => onChangeEvent(e)}
+/>
+```
+
+  </div>
+</div>
+
+### Changed Props
+
+| Angular Input    | React Prop        | Notes |
+| ---------------- | ----------------- | ----- |
+| `[checked]`      | `checked`         | Same — controlled boolean |
+| `[disabled]`     | `disabled`        | Same |
+| `[readonly]`     | `readonly`        | Same |
+| `[symbol]`       | `symbol`          | Same |
+| `[size]`         | `size`            | Same — `'small' \| 'large'` |
+| `[ariaLabel]`    | `ariaLabel`       | Same |
+| `[ariaLabelledby]` | `ariaLabelledby` | Same |
+| `[ariaDescribedby]` | `ariaDescribedby` | Same |
+| `(checkedChange)` | `onCheckedChange` | Renamed with `on` prefix; payload is `{ checked: boolean }` |
+| `ngModel` / `formControl` | `checked` + `onCheckedChange` | Use controlled pattern |
+| `mat-slide-toggle` (internal) | native `<button role="switch">` | No Angular Material dependency |
+
+### Migrate from Breeze
+
+| Breeze Input        | React Prop       | Notes |
+| ------------------- | ---------------- | ----- |
+| `value`             | `checked`        | Boolean `true` / `false` |
+| `onLabel`           | `label`          | React uses `label` prop |
+| `offLabel`          | (removed)        | Not supported |
+| `slideOnColor`      | (removed)        | Use CSS tokens |
+| `styleClass`        | (removed)        | Not supported |
+| `accessLabel`       | `ariaLabel`      | Renamed |
+| `accessLabelledby`  | `ariaLabelledby` | Renamed |
+| `clicked` (output)  | `onCheckedChange`| Renamed — payload is `{ checked: boolean }` |
+
+</div>

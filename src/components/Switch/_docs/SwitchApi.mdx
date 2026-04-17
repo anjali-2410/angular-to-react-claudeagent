@@ -1,0 +1,67 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Switch/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Props](#props)
+  - [Events](#events)
+  - [Page Object](#page-object)
+</div>
+<div className="toc-left">
+
+# Switch: API
+
+```tsx
+import { Switch } from '@niceltd/sol-react';
+```
+
+<hr/>
+
+## Props
+
+| Name              | Type                  | Default   | Description |
+| ----------------- | --------------------- | --------- | ----------- |
+| `toggleId`        | `string`              | auto      | Sets the `id` on the root element. The inner button gets `{toggleId}-button`. |
+| `disabled`        | `boolean`             | `false`   | Disables the switch. |
+| `readonly`        | `boolean`             | `false`   | Makes the switch non-interactive while showing its state (adds `sol-readonly` class). |
+| `name`            | `string`              | —         | Sets the `name` attribute on the button. |
+| `label`           | `string`              | —         | Text label displayed next to the switch. Also used as `aria-label` fallback. |
+| `required`        | `boolean`             | `false`   | Marks the switch as required (`aria-required`). |
+| `checked`         | `boolean`             | `false`   | Controlled checked state. |
+| `symbol`          | `boolean`             | `false`   | Shows check/dash icons inside the thumb. |
+| `size`            | `'small' \| 'large'`  | `'large'` | Controls the size of the switch. |
+| `ariaLabel`       | `string \| null`      | —         | Explicit `aria-label`. Falls back to `label` prop when not set. |
+| `ariaLabelledby`  | `string`              | —         | `aria-labelledby` attribute on the button. |
+| `ariaDescribedby` | `string \| null`      | —         | `aria-describedby` attribute (combined with internal interaction hint id). |
+| `interactionHint` | `string`              | `'Press Space to toggle'` | Screen-reader-only hint shown when the switch is interactive. |
+
+<hr/>
+
+## Events
+
+| Name              | Payload             | Description |
+| ----------------- | ------------------- | ----------- |
+| `onCheckedChange` | `SwitchChangeEvent` | Fired when the switch is toggled. `SwitchChangeEvent = { checked: boolean }` |
+| `onBlur`          | `void`              | Fired when the button loses focus. |
+
+<hr/>
+
+## Page Object
+
+```ts
+import { SwitchPage } from '@niceltd/sol-react';
+```
+
+| Method / Property      | Type       | Description |
+| ---------------------- | ---------- | ----------- |
+| `switch`               | `Locator`  | Root `.sol-switch` element. |
+| `switchButton`         | `Locator`  | The `<button role="switch">` element. |
+| `switchLabel`          | `Locator`  | The `.sol-switch-label` element. |
+| `clickSwitch()`        | `Promise<void>` | Clicks the switch button. |
+| `isChecked()`          | `Promise<boolean>` | Returns whether the switch is checked. |
+| `isDisabled()`         | `Promise<boolean>` | Returns whether the switch is disabled. |
+| `isReadonly()`         | `Promise<boolean>` | Returns whether the switch has the `sol-readonly` class. |
+| `getSwitchButtonIdSelector(id)` | `string` | Returns selector for switch button by id. |
+
+</div>

@@ -1,0 +1,55 @@
+import { Meta, Canvas } from '@storybook/blocks';
+import * as VariantsStories from '../_stories/SwitchVariants.stories';
+import * as SwitchStories from '../_stories/Switch.stories';
+
+<Meta title="Components/Switch/Overview" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Guidelines](#guidelines)
+  - [Variants](#variants)
+    - [Large Size](#large-size)
+    - [Small Size](#small-size)
+    - [With Symbol](#with-symbol)
+    - [Without Symbol](#without-symbol)
+    - [All States](#all-states)
+</div>
+<div className="toc-left">
+
+# Switch
+
+A Switch is a visual toggle control that can be turned on or off. Switches are used to enable or disable features, settings, or states in your application.
+
+<hr/>
+
+## Guidelines
+
+- Use a Switch for binary on/off decisions that take effect immediately
+- Always associate a descriptive label with every Switch using the `label` prop or `ariaLabel`
+- Use the `symbol` prop to add check/dash icons inside the thumb for improved visual clarity
+- Choose `size="small"` in compact UIs; `size="large"` (default) for standard contexts
+- Mark required switches with `required={true}`
+- Use `readonly={true}` when showing state that cannot be changed in the current context
+
+<hr/>
+
+## Variants
+
+### Large Size
+<Canvas of={VariantsStories.Large}/>
+
+### Small Size
+<Canvas of={VariantsStories.Small}/>
+
+### All States
+<Canvas of={SwitchStories.AllStates}/>
+
+### With Symbol
+<Canvas of={VariantsStories.WithSymbol}/>
+
+### Without Symbol
+<Canvas of={VariantsStories.WithoutSymbol}/>
+
+<hr/>
+
+</div>

@@ -1,0 +1,220 @@
+/* ─── SOL Switch ─────────────────────────────────────────────────── */
+
+.sol-switch {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+.sol-switch-control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sol-size-spacing-xs);
+}
+
+/* ─── Label ──────────────────────────────────────────────────────── */
+
+.sol-switch-label {
+  font-family: var(--sol-typography-body-md-font-family);
+  font-size: var(--sol-typography-body-md-font-size);
+  font-weight: var(--sol-typography-body-md-font-weight);
+  line-height: var(--sol-typography-body-md-line-height);
+  color: var(--sol-color-text-default);
+  cursor: pointer;
+}
+
+/* ─── Button (the toggle) ────────────────────────────────────────── */
+
+.sol-switch-button {
+  position: relative;
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  border-radius: 999px;
+}
+
+.sol-switch-button:focus-visible {
+  outline: var(--sol-size-border-medium) solid var(--sol-color-border-focus-default);
+  outline-offset: var(--sol-size-spacing-3xs);
+}
+
+.sol-switch-button:disabled {
+  cursor: default;
+}
+
+.sol-switch-button:disabled + .sol-switch-label {
+  color: var(--sol-color-text-disabled);
+  cursor: default;
+}
+
+/* ─── Track ──────────────────────────────────────────────────────── */
+
+.sol-switch-track {
+  display: flex;
+  align-items: center;
+  position: relative;
+  border-radius: 999px;
+  border: 1px solid var(--sol-color-border-strong);
+  background-color: var(--sol-color-background-control-default);
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+  box-sizing: border-box;
+}
+
+/* checked track */
+.sol-switch-button.checked .sol-switch-track {
+  background-color: var(--sol-color-background-selected-strong);
+  border-color: transparent;
+}
+
+/* hover */
+.sol-switch-button:not(:disabled):not(.sol-readonly):hover .sol-switch-track {
+  background-color: var(--sol-color-background-state-hover-neutral);
+}
+
+.sol-switch-button.checked:not(:disabled):not(.sol-readonly):hover .sol-switch-track {
+  background-color: var(--sol-color-background-state-hover-selected-strong);
+}
+
+/* active */
+.sol-switch-button:not(:disabled):not(.sol-readonly):active .sol-switch-track {
+  background-color: var(--sol-color-background-state-pressed-neutral);
+}
+
+.sol-switch-button.checked:not(:disabled):not(.sol-readonly):active .sol-switch-track {
+  background-color: var(--sol-color-background-state-pressed-selected-strong);
+}
+
+/* disabled */
+.sol-switch-button:disabled .sol-switch-track {
+  border: 1px solid var(--sol-color-border-disabled);
+  background-color: var(--sol-color-background-control-disabled);
+}
+
+/* ─── Thumb ──────────────────────────────────────────────────────── */
+
+.sol-switch-thumb {
+  position: absolute;
+  border-radius: 50%;
+  background-color: var(--sol-color-icon-default);
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 16%);
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.6, 1), background-color 150ms ease-out;
+  pointer-events: none;
+}
+
+/* checked thumb */
+.sol-switch-button.checked .sol-switch-thumb {
+  background-color: var(--sol-color-icon-inverse);
+}
+
+/* disabled thumb */
+.sol-switch-button:disabled .sol-switch-thumb {
+  background-color: var(--sol-color-background-control-disabled);
+  border: 1px solid var(--sol-color-border-disabled);
+  box-shadow: none;
+}
+
+/* ─── Icon pseudo-element (symbol mode) ──────────────────────────── */
+
+.sol-switch.icon .sol-switch-thumb::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--sol-color-icon-inverse);
+  /* dash icon */
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 11H5v2h14v-2z'/%3E%3C/svg%3E") 50% 50% / contain no-repeat;
+  z-index: 1;
+}
+
+.sol-switch.icon .sol-switch-button.checked .sol-switch-thumb::before {
+  background-color: var(--sol-color-icon-on-selected);
+  /* check icon */
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E") 50% 50% / contain no-repeat;
+}
+
+.sol-switch.icon .sol-switch-button:disabled .sol-switch-thumb::before {
+  background: none;
+}
+
+/* ─── Size: large ────────────────────────────────────────────────── */
+
+.sol-switch.large .sol-switch-track {
+  width: 3rem;
+  height: var(--sol-size-control-sm);
+}
+
+.sol-switch.large .sol-switch-thumb {
+  width: 1.125rem;
+  height: 1.125rem;
+  transform: translate3d(0.1875rem, 0, 0);
+}
+
+.sol-switch.large .sol-switch-button.checked .sol-switch-thumb {
+  transform: translate3d(calc(3rem - 1.125rem - 0.1875rem), 0, 0);
+}
+
+.sol-switch.large.icon .sol-switch-thumb::before {
+  width: 14px;
+  height: 14px;
+}
+
+/* ─── Size: small ────────────────────────────────────────────────── */
+
+.sol-switch.small .sol-switch-track {
+  width: 2rem;
+  height: var(--sol-size-control-xs, 1.25rem);
+}
+
+.sol-switch.small .sol-switch-thumb {
+  width: 0.75rem;
+  height: 0.75rem;
+  transform: translate3d(0.125rem, 0, 0);
+}
+
+.sol-switch.small .sol-switch-button.checked .sol-switch-thumb {
+  transform: translate3d(calc(2rem - 0.75rem - 0.125rem), 0, 0);
+}
+
+.sol-switch.small.icon .sol-switch-thumb::before {
+  width: 10px;
+  height: 10px;
+}
+
+/* ─── Readonly state ─────────────────────────────────────────────── */
+
+.sol-switch-button.sol-readonly {
+  cursor: default;
+}
+
+.sol-switch-button.sol-readonly .sol-switch-track {
+  border: 1px solid var(--sol-color-border-disabled);
+  background-color: var(--sol-color-background-control-disabled);
+}
+
+.sol-switch-button.checked.sol-readonly .sol-switch-thumb {
+  background-color: var(--sol-color-icon-default);
+}
+
+.sol-switch-button:not(.checked).sol-readonly .sol-switch-thumb {
+  background-color: transparent;
+  border: 1px solid var(--sol-color-border-strong);
+}
+
+/* ─── Screen-reader utility ──────────────────────────────────────── */
+
+.sol-screenreader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
