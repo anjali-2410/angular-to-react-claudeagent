@@ -39,8 +39,6 @@ export type { ChipProps, ChipSize, ChipVariant } from './components/Chip';
 export { ChipGroup } from './components/ChipGroup';
 export type { ChipGroupProps, SelectedTag } from './components/ChipGroup';
 
-export { ConversationPrompt } from './components/Conversation';
-export type { ConversationPromptProps, Suggestion } from './components/Conversation';
 
 export { DatePicker } from './components/DatePicker';
 export type { DatePickerProps } from './components/DatePicker';
