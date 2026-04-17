@@ -1,0 +1,217 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Grid/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Props](#props)
+  - [Events (Callbacks)](#events-callbacks)
+  - [Page Object](#page-object)
+</div>
+<div className="toc-left">
+
+## Grid: API
+
+```tsx
+import { Grid } from '@niceltd/sol-react';
+```
+
+### Component API Description
+
+#### Props
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>dataSource</td>
+    <td>IDatasource | ICompatibleDatasource | IServerSideDatasource | ICompatibleServerSideDatasource | undefined</td>
+    <td>Defines the data source for the ag-grid. The types are specific to ag-grid.</td>
+  </tr>
+  <tr>
+    <td>maxAmountOfPages</td>
+    <td>number</td>
+    <td>Specifies the maximum number of pages that the grid can display.</td>
+  </tr>
+  <tr>
+    <td>rangeOfDisplayedItems</td>
+    <td>string</td>
+    <td>Specifies the range of items to be displayed in the pager. This is a string value.</td>
+  </tr>
+  <tr>
+    <td>columnDefs</td>
+    <td>(ColDef | ColGroupDef)[] | null | undefined</td>
+    <td>Defines the column definitions for the ag-grid.</td>
+  </tr>
+  <tr>
+    <td>defaultColDef</td>
+    <td>ColDef</td>
+    <td>Defines the default column definitions for the ag-grid.</td>
+  </tr>
+  <tr>
+    <td>rowData</td>
+    <td>any[]</td>
+    <td>Specifies the data to be displayed in the grid.</td>
+  </tr>
+  <tr>
+    <td>gridOptions</td>
+    <td>GridOptionsCellSpinnerProp</td>
+    <td>Defines the options for the ag-grid including row selection, sorting, and filtering. For checkbox-selection columns, sol-grid applies a default accessible checkbox cell renderer when no custom `cellRenderer` is provided.</td>
+  </tr>
+  <tr>
+    <td>pagination</td>
+    <td>boolean</td>
+    <td>Enables or disables pagination in the grid. If true, a pager will be displayed.</td>
+  </tr>
+  <tr>
+    <td>maxItemsPerPage</td>
+    <td>number</td>
+    <td>Sets the maximum number of items to be displayed per page when pagination is enabled.</td>
+  </tr>
+  <tr>
+    <td>gridState</td>
+    <td>unknown</td>
+    <td>Sets the initial state of the grid including column visibility and order.</td>
+  </tr>
+  <tr>
+    <td>gridSort</td>
+    <td>ColumnState[] | any</td>
+    <td>Sets the initial sort order of the grid.</td>
+  </tr>
+  <tr>
+    <td>frameworkComponents</td>
+    <td>any</td>
+    <td>Register custom cell renderer, editor, or header components for use in column definitions.</td>
+  </tr>
+  <tr>
+    <td>pageNumber</td>
+    <td>number</td>
+    <td>Controls the current page programmatically (1-based). Defaults to 0 (no navigation).</td>
+  </tr>
+  <tr>
+    <td>selectRowEnabled</td>
+    <td>boolean</td>
+    <td>Enables visual single-row selection highlighting on click. Defaults to true.</td>
+  </tr>
+  <tr>
+    <td>ariaLabel</td>
+    <td>string</td>
+    <td>Accessible name for the grid when no external label element is provided.</td>
+  </tr>
+  <tr>
+    <td>ariaLabelledby</td>
+    <td>string | null</td>
+    <td>ID of an external element that labels the grid.</td>
+  </tr>
+  <tr>
+    <td>i18n</td>
+    <td>GridI18n</td>
+    <td>Optional i18n overrides for all grid labels and announcements.</td>
+  </tr>
+</table>
+
+#### Events (Callbacks)
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>onChangePageClick</td>
+    <td>(page: number) =&gt; void</td>
+    <td>Fired when pagination page changes.</td>
+  </tr>
+  <tr>
+    <td>onSaveState</td>
+    <td>(state: ColumnState[]) =&gt; void</td>
+    <td>Fired when column state should be saved (after drag, resize, visibility change).</td>
+  </tr>
+  <tr>
+    <td>onSaveSort</td>
+    <td>(sort: ColumnState[]) =&gt; void</td>
+    <td>Fired when sort state should be saved.</td>
+  </tr>
+</table>
+
+### Page Object
+
+```ts
+import { GridPage } from '@niceltd/sol-react';
+```
+
+#### Methods
+
+<table>
+  <tr>
+    <th>Method Name</th>
+    <th>Parameters</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>getGridHeaders</td>
+    <td>—</td>
+    <td>Returns an array containing the headers of the Grid.</td>
+  </tr>
+  <tr>
+    <td>selectRowCheckboxByIndex</td>
+    <td>index: number</td>
+    <td>Selects the checkbox of a row at the given index.</td>
+  </tr>
+  <tr>
+    <td>selectAllCheckbox</td>
+    <td>—</td>
+    <td>Selects all checkboxes in the Grid.</td>
+  </tr>
+  <tr>
+    <td>clickOnRowByIndex</td>
+    <td>index: number</td>
+    <td>Simulates a click event on the row at the given index.</td>
+  </tr>
+  <tr>
+    <td>clickOnRowByName</td>
+    <td>name: string</td>
+    <td>Simulates a click event on the row with the given name.</td>
+  </tr>
+  <tr>
+    <td>getCellText</td>
+    <td>row: number, col: string</td>
+    <td>Returns the text content of the cell at the specified row and column.</td>
+  </tr>
+  <tr>
+    <td>getVisibleRowCount</td>
+    <td>—</td>
+    <td>Returns the count of currently visible rows.</td>
+  </tr>
+  <tr>
+    <td>getColumnHeaderTextByNumber</td>
+    <td>columnNumber: number</td>
+    <td>Returns the text from the header at the specified index.</td>
+  </tr>
+  <tr>
+    <td>isColumnSortByStatus</td>
+    <td>columnTitle: string, status: 'asc' | 'desc' | 'none'</td>
+    <td>Checks if the specified column is sorted in a particular order.</td>
+  </tr>
+  <tr>
+    <td>getColumnSortStatus</td>
+    <td>columnTitle: string</td>
+    <td>Returns the current sort status of the specified column.</td>
+  </tr>
+  <tr>
+    <td>setColumnSortByStatus</td>
+    <td>columnTitle: string, status: 'asc' | 'desc' | 'none'</td>
+    <td>Sets the sort status of the specified column.</td>
+  </tr>
+  <tr>
+    <td>moveColumn</td>
+    <td>columnTitle: string, toColumnNumber: number</td>
+    <td>Moves the column to a new position in the grid.</td>
+  </tr>
+</table>
+
+</div>
