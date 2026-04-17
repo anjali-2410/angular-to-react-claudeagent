@@ -5,16 +5,22 @@ Migrate an Angular SOL component from the source repo into this React target rep
 ## Usage
 
 ```
-/migrate-component <component-name>
+/migrate-component <component-name> [--target <framework>] [--no-validate]
 ```
 
 **Examples:**
 ```
-/migrate-component checkbox
-/migrate-component text-input
-/migrate-component radio-button
-/migrate-component spinner
+/migrate-component checkbox                          ← React 18 (default)
+/migrate-component text-input --target next.js       ← Next.js
+/migrate-component spinner --target vue              ← Vue 3
+/migrate-component radio-button --target svelte      ← Svelte 5
+/migrate-component tabs --target next.js --no-validate
 ```
+
+**Flags:**
+
+- `--target <framework>` — Target framework. Accepted values: `react` (default), `next.js` / `nextjs`, `vue`, `svelte`. Omitting the flag defaults to `react`.
+- `--no-validate` — Skip `npm run build` and `npm run test` after writing files. Commits and pushes immediately. Use when iterating quickly or when you plan to validate manually.
 
 ---
 
@@ -172,11 +178,124 @@ Given a component name (e.g. `checkbox`), this agent will:
 
 ---
 
+## Framework-Specific Conversion Rules
+
+Apply the section that matches the `framework` variable resolved in Step 1. React rules are the default and already covered by the Conversion Rules section above — the sections below document only the **differences**.
+
+### React 18
+
+No changes — apply the Conversion Rules section above as-is.
+
+---
+
+### Next.js
+
+Identical to React 18, with one addition:
+
+**`'use client'` directive** — add `'use client'` as the very first line of any component file that uses:
+
+- `useState`, `useReducer`, `useEffect`, `useRef`, or any other hook
+- Event handler props (`onClick`, `onChange`, `onFocus`, etc.)
+- `forwardRef` with an imperative handle
+- Browser-only APIs (`window`, `document`, `localStorage`, etc.)
+
+Omit `'use client'` for props-only components with no hooks and no event handlers — these become React Server Components automatically.
+
+**Build command:** use `npm run build` unless `next.config.*` exists at the repo root, in which case use `next build`.
+
+---
+
+### Vue 3 (Composition API)
+
+**Component syntax — `.vue` Single File Component:**
+
+```vue
+<script setup lang="ts">
+// imports, defineProps, defineEmits, refs, computed, effects
+</script>
+
+<template>
+  <!-- template content -->
+</template>
+
+<style>
+/* CSS — same --sol-* custom properties, same class names */
+</style>
+```
+
+**Angular → Vue 3 mapping:**
+
+- `input<T>(default)` → `const props = defineProps<{ prop?: T }>()`
+- `output<T>()` → `const emit = defineEmits<{ event: [val: T] }>()`
+- `@HostBinding('class.foo')` → `:class="{ foo: condition }"` on root element
+- `@ViewChild` / `viewChild()` → `const el = useTemplateRef('el')`
+- `ng-content` → `<slot />`
+- Named `ng-content select="[x]"` → `<slot name="x" />`
+- `*ngIf` / `@if` → `v-if` / `v-else`
+- `*ngFor` / `@for` → `v-for="item in items" :key="item.id"`
+- `[class.foo]="cond"` → `:class="{ foo: cond }"`
+- `(click)="handler($event)"` → `@click="handler"`
+- `@HostListener` → `onMounted` + `addEventListener`
+- Angular `EventEmitter` → `emit('eventName', payload)`
+- `useId()` → `useId()` from `vue` (Vue 3.5+)
+
+**CSS:** styles go inside the `<style>` block in the `.vue` file — no separate `.css` file.
+
+**Tests:** use `@testing-library/vue` with `vitest`. Replace `render` import from `@testing-library/react` with `@testing-library/vue`.
+
+**Stories:** use `@storybook/vue3-vite`. `Meta` and `StoryObj` import from `@storybook/vue3`.
+
+---
+
+### Svelte 5 (Runes)
+
+**Component syntax — `.svelte` file:**
+
+```svelte
+<script lang="ts">
+  // $props, $state, $derived, $effect
+</script>
+
+<!-- template content -->
+
+<style>
+  /* CSS — same --sol-* custom properties */
+  /* Svelte scopes styles by default; use :global(.sol-foo) to keep Angular class names unscoped */
+</style>
+```
+
+**Angular → Svelte 5 mapping:**
+
+- `input<T>(default)` → `let { prop = default }: { prop?: T } = $props()`
+- `output<T>()` → `let { onEvent }: { onEvent?: (v: T) => void } = $props()`
+- `@HostBinding` → `class` / `id` attributes on root element
+- `@ViewChild` → `let el: HTMLElement` + `bind:this={el}`
+- `ng-content` → `{@render children?.()}`
+- `*ngIf` / `@if` → `{#if condition}...{/if}`
+- `*ngFor` / `@for` → `{#each items as item (item.id)}...{/each}`
+- `[class.foo]="cond"` → `class:foo={cond}`
+- `(click)="handler($event)"` → `onclick={handler}`
+- `@HostListener` → `$effect` + `addEventListener`
+- Angular `EventEmitter` → callback prop: `onEvent?.(payload)`
+- `useState` / Angular signal → `let value = $state(initial)`
+- `useMemo` / `computed` → `let derived = $derived(expression)`
+- `useEffect` / `ngOnInit` → `$effect(() => { ... })`
+
+**CSS:** styles go inside the `<style>` block — no separate `.css` file. Wrap Angular class selectors with `:global()` to prevent Svelte from scoping them (e.g., `:global(.sol-button) { }`).
+
+**Tests:** use `@testing-library/svelte` with `vitest`. Requires `@sveltejs/vite-plugin-svelte` in `vite.config.ts`.
+
+**Stories:** use `@storybook/svelte-vite`. `Meta` and `StoryObj` import from `@storybook/svelte`.
+
+**Build validation:** use `npm run check` (runs `svelte-check`) instead of `npm run build`.
+
+---
+
 ## Step-by-Step Execution
 
 When the user runs `/migrate-component <name>`:
 
-### Step 1 — Resolve component name
+### Step 1 — Resolve component name and target framework
 
 Convert `<name>` to:
 
@@ -187,6 +306,18 @@ Convert `<name>` to:
 - `githubApiBase` = `https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib`
 - `rawBase` = `https://raw.githubusercontent.com/nice-cxone/sol-components/main/projects/ds-components/<kebabName>/src/lib`
 - `targetPath` = `src/components/<PascalName>/`
+
+**Resolve `--target` flag into framework variables:**
+
+| `--target` value      | `framework` | `fileExt`  | `testExt`    | `storiesExt`    | `buildCmd`      | `testCmd`      |
+| --------------------- | ----------- | ---------- | ------------ | --------------- | --------------- | -------------- |
+| _(omitted)_           | `react`     | `.tsx`     | `.test.tsx`  | `.stories.tsx`  | `npm run build` | `npm run test` |
+| `react`               | `react`     | `.tsx`     | `.test.tsx`  | `.stories.tsx`  | `npm run build` | `npm run test` |
+| `next.js` / `nextjs`  | `nextjs`    | `.tsx`     | `.test.tsx`  | `.stories.tsx`  | `npm run build` | `npm run test` |
+| `vue`                 | `vue`       | `.vue`     | `.test.ts`   | `.stories.ts`   | `npm run build` | `npm run test` |
+| `svelte`              | `svelte`    | `.svelte`  | `.test.ts`   | `.stories.ts`   | `npm run check` | `npm run test` |
+
+Use these variables in all subsequent steps wherever file extensions or commands are referenced.
 
 ### Step 2 — Read ALL source files
 
@@ -214,6 +345,8 @@ File types to fetch:
 - Specs (`.spec.ts`)
 - MDX docs (`.mdx`)
 - Enums (`enum/`)
+
+> **Performance:** Read all files **in parallel** — issue every file fetch concurrently rather than sequentially. Do not wait for one file to finish before starting the next.
 
 ### Step 3 — Print analysis report
 
@@ -276,7 +409,7 @@ STORY COUNT
 READY TO GENERATE: <total> React files
 ```
 
-Fill every table row with the actual values from the source files. Omit rows/tables that have no entries (e.g. no sub-components → omit the sub-component row). **Wait for user confirmation or proceed immediately** based on context — if the user ran `/migrate-component` without any flags, proceed automatically after printing the report.
+Fill every table row with the actual values from the source files. Omit rows/tables that have no entries (e.g. no sub-components → omit the sub-component row). **Always proceed automatically** — print the report and immediately continue to Step 3b without waiting for user input.
 
 ### Step 3b — Analyze and convert
 
@@ -290,7 +423,7 @@ Apply all Conversion Rules above. Pay special attention to:
 
 ### Step 4 — Sync package.json with Angular source
 
-Before writing any component files, compare the Angular source `package.json` with the React target `package.json` and add any missing `@niceltd/*` packages.
+Before writing any component files, read the React target `package.json`. If **all four** required packages below are already present (in any version), **skip this step entirely** — do not fetch the Angular source `package.json`. Only proceed with the sync when at least one package is missing.
 
 #### Required packages (always check these)
 
@@ -425,32 +558,52 @@ Record the pre-migration state for rollback:
 git stash list   # just for reference; do not stash
 ```
 
+> **Failure rule (applies to Steps 6–9):** If anything fails for any reason after this point — file write error, TypeScript error, test failure, git error — execute the Rollback Procedure immediately, print the Migration Failure Report, and stop. Do not commit partial work under any circumstances.
+
+#### Rollback Procedure
+
+Run these three commands in order whenever any failure occurs after Step 5:
+
+```bash
+rm -rf src/components/<PascalName>/
+git checkout src/index.ts
+git status --short
+```
+
+Expected result: empty output from `git status --short`. If the working tree is still dirty after rollback, list every remaining file and ask the user to resolve manually.
+
+---
+
 ### Step 6 — Write target files
 
-Create all files in `src/components/<PascalName>/`. The exact set of files depends on what exists in the Angular source — use the tree below as a template and add/remove files to match the source 1-to-1:
+Create all files in `src/components/<PascalName>/`. The exact set of files depends on what exists in the Angular source — use the tree below as a template and add/remove files to match the source 1-to-1.
+
+> **Framework note:** Replace `.tsx` with `fileExt` resolved in Step 1 (`.tsx` for react/nextjs, `.vue` for vue, `.svelte` for svelte). For Vue and Svelte, styles are embedded in the component file — **do not create a separate `.css` file**. Test files use `testExt`; story files use `storiesExt`.
 
 ```text
 src/components/<PascalName>/
-├── <PascalName>.tsx                          ← primary component
-├── <SubComponentName>.tsx                    ← one per sub-component (if any)
-├── <PascalName>.css                          ← all component styles in one file
-├── <PascalName>.test.tsx                     ← covers all specs (primary + sub)
-├── index.ts                                  ← barrel export for everything
+├── <PascalName><fileExt>                          ← primary component
+├── <SubComponentName><fileExt>                    ← one per sub-component (if any)
+├── <PascalName>.css                               ← React/Next.js only; Vue/Svelte embed styles
+├── <PascalName><testExt>                          ← covers all specs (primary + sub)
+├── index.ts                                       ← barrel export for everything
 ├── _e2e/
-│   └── <PascalName>.page.ts                 ← only if .page.ts exists in source
+│   └── <PascalName>.page.ts                      ← only if .page.ts exists in source
 ├── _stories/
-│   ├── <PascalName>.stories.tsx             ← one per Angular .stories.ts
-│   ├── <PascalName>Overview.stories.tsx     ← from overview-*.stories.ts
-│   ├── <SubComponentName>.stories.tsx       ← from *-group.stories.ts (if exists)
-│   ├── <PascalName>Forms.stories.tsx        ← from *-reactive-forms.stories.ts (if exists)
-│   └── <SubComponentName>Forms.stories.tsx  ← from *-group-forms.stories.ts (if exists)
+│   ├── <PascalName><storiesExt>                  ← one per Angular .stories.ts
+│   ├── <PascalName>Overview<storiesExt>          ← from overview-*.stories.ts
+│   ├── <SubComponentName><storiesExt>            ← from *-group.stories.ts (if exists)
+│   ├── <PascalName>Forms<storiesExt>             ← from *-reactive-forms.stories.ts (if exists)
+│   └── <SubComponentName>Forms<storiesExt>       ← from *-group-forms.stories.ts (if exists)
 └── _docs/
-    ├── <PascalName>.mdx                     ← from *-overview.mdx
-    ├── <PascalName>Api.mdx                  ← from *-api.mdx
-    ├── <PascalName>Migration.mdx            ← from *-migrate-from-*.mdx
-    ├── <SubComponentName>.mdx               ← from *-group-overview.mdx (if exists)
-    └── <SubComponentName>Api.mdx            ← from *-group-api.mdx (if exists)
+    ├── <PascalName>.mdx                          ← from *-overview.mdx
+    ├── <PascalName>Api.mdx                       ← from *-api.mdx
+    ├── <PascalName>Migration.mdx                 ← from *-migrate-from-*.mdx
+    ├── <SubComponentName>.mdx                    ← from *-group-overview.mdx (if exists)
+    └── <SubComponentName>Api.mdx                 ← from *-group-api.mdx (if exists)
 ```
+
+If any file write fails mid-way, run the Rollback Procedure and print the Migration Failure Report before stopping.
 
 ### Step 7 — Update barrel export
 
@@ -461,62 +614,79 @@ export { <PascalName> } from './components/<PascalName>';
 export type { <PascalName>Props } from './components/<PascalName>';
 ```
 
+If editing `src/index.ts` fails, run the Rollback Procedure and print the Migration Failure Report before stopping.
+
 ### Step 8 — Validate (build + tests)
 
-Run both checks. **If either fails, roll back immediately — do NOT commit.**
+Run both checks using the `buildCmd` and `testCmd` from Step 1. If either exits non-zero, run the Rollback Procedure and print the Migration Failure Report — do not proceed to Step 9.
 
 ```bash
-npm run build
+<buildCmd>   # npm run build (react/nextjs/vue) or npm run check (svelte)
 ```
 
 ```bash
-npm run test
+<testCmd>    # npm run test (all frameworks)
 ```
 
-#### If build fails
+#### Migration Failure Report
 
-```bash
-# Rollback: remove all generated files and restore src/index.ts
-rm -rf src/components/<PascalName>/
-git checkout src/index.ts
-```
-
-Then print the error report (see format below) and **stop**.
-
-#### If tests fail
-
-```bash
-# Rollback: same as build failure
-rm -rf src/components/<PascalName>/
-git checkout src/index.ts
-```
-
-Then print the error report and **stop**.
-
-#### Error report format
+Print this report for **every failure** in Steps 6–9, regardless of cause (file write error, TypeScript error, test failure, git error). Fill every field with actual values — do not leave placeholders.
 
 ```text
-MIGRATION FAILED — <PascalName>
+MIGRATION FAILED — <PascalName>  [target: <framework>]
+══════════════════════════════════════════════════════════════════
 
-  Step that failed : <"TypeScript build" | "Tests">
-  Command run      : <npm run build | npm run test>
+  FAILURE SUMMARY
+  ──────────────────────────────────────────────────────────────
+  Step that failed  : <Step 6 – File write | Step 7 – Barrel export |
+                       Step 8 – Build | Step 8 – Tests | Step 9 – Git>
+  Command / action  : <exact command run, or "write <filename>" for file errors>
+  Framework target  : <react | nextjs | vue | svelte>
+  Component         : <PascalName> (<kebabName>)
 
-  ERROR OUTPUT
-  ─────────────────────────────────────────────────────────────
-  <paste the full error / failing test output here>
+  ERROR DETAILS
+  ──────────────────────────────────────────────────────────────
+  <Paste the full, untruncated error output here.
+   TypeScript errors  → list every TS error code and file:line (e.g. TS2345 at Spinner.tsx:14).
+   Test failures      → list each failing test name and the assertion that failed.
+   Git errors         → include the full stderr output.
+   File write errors  → include the filename and OS error.>
+
+  ROOT CAUSE
+  ──────────────────────────────────────────────────────────────
+  <One or two sentences explaining WHY the failure occurred. Examples:
+   "The Angular component imports MatDialogRef which was carried over
+    into the React file unchanged — it is not a valid React import."
+   "Test asserts data-testid='spinner' but the component renders data-sol-id='spinner'."
+   "git push rejected: remote has commits not present locally — needs a pull first.">
+
+  FILES WRITTEN BEFORE FAILURE
+  ──────────────────────────────────────────────────────────────
+  <List every file that was successfully written before the failure, e.g.:
+   - src/components/Spinner/Spinner.tsx
+   - src/components/Spinner/Spinner.css
+   - src/components/Spinner/index.ts
+   (none) — if the failure happened before any file was written>
 
   ROLLBACK RESULT
-  ─────────────────────────────────────────────────────────────
+  ──────────────────────────────────────────────────────────────
   ✅  src/components/<PascalName>/ deleted
   ✅  src/index.ts restored to pre-migration state
   ✅  Working tree is clean — no partial migration committed
+  (Replace ✅ with ❌ and describe what remains if the rollback itself failed)
 
   NEXT STEPS
-  ─────────────────────────────────────────────────────────────
-  Fix the issue above and re-run /migrate-component <kebabName>
+  ──────────────────────────────────────────────────────────────
+  <Specific, actionable fix instructions based on the root cause. Examples:
+   "Remove the MatDialogRef import from Spinner.tsx and replace it with
+    a useRef + onClose callback prop, then re-run /migrate-component spinner."
+   "Change data-sol-id to data-testid at Spinner.tsx:42, then re-run."
+   "Run git pull origin main to sync the branch, then re-run /migrate-component spinner.">
+
+══════════════════════════════════════════════════════════════════
 ```
 
-Only proceed to Step 9 when **both** `npm run build` and `npm run test` exit with code 0.
+Only proceed to Step 9 when **both** commands exit with code 0.
 
 ### Step 9 — Commit and push
 
@@ -526,6 +696,12 @@ git add src/components/<PascalName>/ src/index.ts
 git commit -m "feat(<kebabName>): migrate Angular SOL <PascalName> to React"
 git push origin main
 ```
+
+If `git commit` or `git push` fails, run the Rollback Procedure and print the Migration Failure Report with `Step 9 – Git` as the failed step. Common causes and their fixes:
+
+- **push rejected (non-fast-forward)** → run `git pull --rebase origin main` then retry the push
+- **commit hook failure** → fix the hook error reported, then re-stage and retry the commit
+- **authentication error** → ask the user to check their git credentials, then retry
 
 ---
 
