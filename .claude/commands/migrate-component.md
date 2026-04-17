@@ -303,8 +303,7 @@ Convert `<name>` to:
 - `PascalName` = PascalCase (e.g., `TextInput`)
 - `sourceRepo` = `https://github.com/nice-cxone/sol-components`
 - `sourcePath` = `projects/ds-components/<kebabName>/src/lib` (path within the repo)
-- `githubApiBase` = `https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib`
-- `rawBase` = `https://raw.githubusercontent.com/nice-cxone/sol-components/main/projects/ds-components/<kebabName>/src/lib`
+- `ghApiBase` = `repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib` (used with `gh api <ghApiBase>`)
 - `targetPath` = `src/components/<PascalName>/`
 
 **Resolve `--target` flag into framework variables:**
@@ -321,19 +320,21 @@ Use these variables in all subsequent steps wherever file extensions or commands
 
 ### Step 2 — Read ALL source files
 
-**Discover files** by fetching the GitHub Contents API (returns a JSON array of file/dir entries):
+> **Source rule:** ALL source files must be fetched from `https://github.com/nice-cxone/sol-components`. Never read from the local filesystem. Use `gh api` (authenticated gh CLI) for all GitHub access — it works for private repos and avoids unauthenticated 404 errors.
 
-```text
-GET https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib
-GET https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/_docs
-GET https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/_stories
-GET https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/enum  (if present)
+**Discover files** using `gh api` in parallel for all four directories:
+
+```bash
+gh api repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib --jq '.[].name'
+gh api repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/_docs --jq '.[].name'
+gh api repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/_stories --jq '.[].name'
+gh api repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/enum --jq '.[].name'  # skip if 404
 ```
 
-**Read each file** by fetching its raw content URL:
+**Read each file's content** using `gh api` with base64 decode:
 
-```text
-https://raw.githubusercontent.com/nice-cxone/sol-components/main/projects/ds-components/<kebabName>/src/lib/<filename>
+```bash
+gh api repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/<filename> --jq '.content' | base64 -d
 ```
 
 File types to fetch:
@@ -346,7 +347,7 @@ File types to fetch:
 - MDX docs (`.mdx`)
 - Enums (`enum/`)
 
-> **Performance:** Read all files **in parallel** — issue every file fetch concurrently rather than sequentially. Do not wait for one file to finish before starting the next.
+> **Performance:** Run all `gh api` calls **in parallel** — issue every fetch concurrently. Do not wait for one file to finish before starting the next.
 
 ### Step 3 — Print analysis report
 
