@@ -43,5 +43,3 @@ export type { ChipGroupProps, SelectedTag } from './components/ChipGroup';
 export { DatePicker } from './components/DatePicker';
 export type { DatePickerProps } from './components/DatePicker';
 
-export { Dropdown, DropdownTrigger } from './components/Dropdown';
-export type { DropdownProps, DropdownHandle, DropdownOption, DropdownTriggerProps, ExternalSearchOptions, SortOrder } from './components/Dropdown';
