@@ -143,14 +143,43 @@ Given a component name (e.g. `checkbox`), this agent will:
 - `date-picker` → `DatePicker`
 - etc. (kebab-case → PascalCase)
 
-### CSS Conversion Rules
+### CSS & SOL Token Rules
 
-1. **SCSS variables** → CSS custom properties (`--sol-*` design tokens)
-2. **SCSS `@mixin`** → Keep the compiled output as flat CSS rules
-3. **SCSS `@each`** → Expand all iterations into explicit CSS rules
-4. **`sol-*` Angular element selectors** → Equivalent class selectors (`.sol-icon`)
-5. **Keep all class names identical** to Angular source (e.g., `.sol-button`, `.btn-primary-large`)
-6. **`:host` selector** → Wrapper element class or direct component root class
+**Token source:** `@niceltd/sol-tokens` — repo at `https://github.com/nice-cxone/sol-tokens.git`, already cloned at `C:/Users/anjsonawane/sol-tokens/`. Tokens are imported via `src/styles/sol-tokens.css` which re-exports from the package. Before using a token, verify it exists:
+
+```bash
+grep "sol-my-token-name" C:/Users/anjsonawane/sol-tokens/sol-tokens-v1-with-v2-values.css
+```
+
+**SCSS → CSS conversion:**
+
+1. SCSS variables → `--sol-*` CSS custom properties (never hardcode `#hex`, `px`, `rem` values that have a token)
+2. SCSS `@mixin` → Expand to flat CSS rules
+3. SCSS `@each` → Expand all iterations into explicit rules
+4. `sol-*` Angular element selectors → class selectors (e.g. `sol-dropdown` → `.sol-dropdown`)
+5. Keep all class names **identical** to Angular source (e.g. `.sol-button`, `.sol-dropdown-trigger`)
+6. `:host` → wrapper element class or component root class
+7. Vue/Svelte: embed all styles inside `<style>` block; use `:global(.sol-foo)` to prevent scoping
+
+**Use semantic tokens — never base tokens:**
+
+| Category | Tokens in use across this project |
+| -------- | --------------------------------- |
+| Text | `--sol-color-text-default` · `--sol-color-text-secondary` · `--sol-color-text-disabled` · `--sol-color-text-placeholder` · `--sol-color-text-error` · `--sol-color-text-on-action-primary` |
+| Background | `--sol-color-background-primary` · `--sol-color-background-disabled` · `--sol-color-background-hover` · `--sol-color-background-selected` · `--sol-color-background-surface-overlay` · `--sol-color-background-field-default` |
+| Border | `--sol-color-border-default` · `--sol-color-border-strong` · `--sol-color-border-subtle` · `--sol-color-border-focus-default` · `--sol-color-border-status-critical` · `--sol-color-border-state-hover-neutral` |
+| Icon | `--sol-color-icon-default` · `--sol-color-icon-disabled` |
+| Radius | `--sol-size-radius-sm` · `--sol-size-radius-md` · `--sol-size-radius-round` |
+| Spacing | `--sol-size-spacing-3xs` · `--sol-size-spacing-xs` · `--sol-size-spacing-sm` · `--sol-size-spacing-md` |
+| Control size | `--sol-size-control-sm` · `--sol-size-control-md` · `--sol-size-control-lg` |
+| Border width | `--sol-size-border-default` · `--sol-size-border-medium` · `--sol-size-border-focus` |
+| Typography | `--sol-typography-body-md-font-family` · `--sol-typography-body-md-font-size` · `--sol-typography-body-md-line-height` · `--sol-typography-body-sm-font-size` · `--sol-typography-label-md-font-size` |
+| Elevation | `--sol-shadow-md` · `--sol-effect-overlayshadow` |
+
+**Strict rules:**
+- Do **not** add fallback values: `var(--sol-size-radius-sm)` not `var(--sol-size-radius-sm, 4px)` — fallbacks hide missing tokens
+- Do **not** use base tokens like `--sol-base-color-gray-90`; always use semantic aliases above
+- Tokens already in the package with the same name flow through automatically — no bridge alias needed
 
 ### Storybook Stories Rules
 
@@ -181,13 +210,7 @@ Given a component name (e.g. `checkbox`), this agent will:
 
 ## Framework-Specific Conversion Rules
 
-Apply the section that matches the `framework` variable resolved in Step 1. React rules are the default and already covered by the Conversion Rules section above — the sections below document only the **differences**.
-
-### React 18
-
-No changes — apply the Conversion Rules section above as-is.
-
----
+Apply the section matching the `framework` variable from Step 1. The base Conversion Rules above cover React 18. The sections below document **differences only**.
 
 ### Next.js
 
@@ -296,49 +319,80 @@ Omit `'use client'` for props-only components with no hooks and no event handler
 
 When the user runs `/migrate-component <name>`:
 
-### Step 1 — Resolve component name and target framework
+### Step 1 — Resolve component name, target framework, and clone source repo
 
-Convert `<name>` to:
+**Resolve variables:**
 
 - `kebabName` = `<name>` as-is (e.g., `text-input`)
 - `PascalName` = PascalCase (e.g., `TextInput`)
 - `sourceRepo` = `https://github.com/nice-cxone/sol-components`
-- `sourcePath` = `projects/ds-components/<kebabName>/src/lib` (path within the repo)
-- `ghApiBase` = `repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib` (used with `gh api <ghApiBase>`)
-- `targetPath` = `src/components/<PascalName>/`
+
+**Derive all paths dynamically** — never hardcode usernames or machine-specific directories:
+
+```bash
+# Root of the React target repo (where this command runs)
+TARGET_REPO_DIR=$(git rev-parse --show-toplevel)
+
+# Source repo cloned as a sibling of the target repo
+SOURCE_CLONE_DIR="$(dirname "$TARGET_REPO_DIR")/sol-components"
+
+# Component source path inside the clone
+LOCAL_SOURCE_PATH="$SOURCE_CLONE_DIR/projects/ds-components/<kebabName>/src/lib"
+```
+
+**Clone or update the source repo:**
+
+```bash
+if [ -d "$SOURCE_CLONE_DIR/.git" ]; then
+  # Repo already cloned — pull latest
+  git -C "$SOURCE_CLONE_DIR" pull --ff-only origin main 2>/dev/null \
+    || echo "Warning: pull failed — proceeding with existing local clone"
+else
+  # First time on this machine — clone the source repo
+  git clone https://github.com/nice-cxone/sol-components.git "$SOURCE_CLONE_DIR"
+fi
+```
+
+- Pull succeeds → source files are up to date. Proceed.
+- Pull fails (no network, expired token) → log a warning and proceed with the existing clone.
+- Clone fails → stop immediately. Ask the user to check their git credentials or network access.
 
 **Resolve `--target` flag into framework variables:**
 
-| `--target` value      | `framework` | `fileExt`  | `testExt`    | `storiesExt`    | `buildCmd`      | `testCmd`      |
-| --------------------- | ----------- | ---------- | ------------ | --------------- | --------------- | -------------- |
-| _(omitted)_           | `react`     | `.tsx`     | `.test.tsx`  | `.stories.tsx`  | `npm run build` | `npm run test` |
-| `react`               | `react`     | `.tsx`     | `.test.tsx`  | `.stories.tsx`  | `npm run build` | `npm run test` |
-| `next.js` / `nextjs`  | `nextjs`    | `.tsx`     | `.test.tsx`  | `.stories.tsx`  | `npm run build` | `npm run test` |
-| `vue`                 | `vue`       | `.vue`     | `.test.ts`   | `.stories.ts`   | `npm run build` | `npm run test` |
-| `svelte`              | `svelte`    | `.svelte`  | `.test.ts`   | `.stories.ts`   | `npm run check` | `npm run test` |
+| `--target` value | `framework` | `fileExt` | `testExt` | `storiesExt` | `buildCmd` | `testCmd` |
+| --- | --- | --- | --- | --- | --- | --- |
+| _(omitted)_ / `react` / `next.js` / `nextjs` | `react` or `nextjs` | `.tsx` | `.test.tsx` | `.stories.tsx` | `npm run build` | `npm run test` |
+| `vue` | `vue` | `.vue` | `.test.ts` | `.stories.ts` | `npm run build` | `npm run test` |
+| `svelte` | `svelte` | `.svelte` | `.test.ts` | `.stories.ts` | `npm run check` | `npm run test` |
 
 Use these variables in all subsequent steps wherever file extensions or commands are referenced.
 
 ### Step 2 — Read ALL source files
 
-> **Source rule:** ALL source files must be fetched from `https://github.com/nice-cxone/sol-components`. Never read from the local filesystem. Use `gh api` (authenticated gh CLI) for all GitHub access — it works for private repos and avoids unauthenticated 404 errors.
+> **Source rule:** ALL source files are read from the local clone at `$SOURCE_CLONE_DIR`. Use standard filesystem tools — the Read tool (preferred), `ls`, or `cat`. No GitHub API calls, no `gh` CLI, no `curl`.
 
-**Discover files** using `gh api` in parallel for all four directories:
-
-```bash
-gh api repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib --jq '.[].name'
-gh api repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/_docs --jq '.[].name'
-gh api repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/_stories --jq '.[].name'
-gh api repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/enum --jq '.[].name'  # skip if 404
-```
-
-**Read each file's content** using `gh api` with base64 decode:
+**Discover files** by listing all directories in parallel:
 
 ```bash
-gh api repos/nice-cxone/sol-components/contents/projects/ds-components/<kebabName>/src/lib/<filename> --jq '.content' | base64 -d
+ls "$LOCAL_SOURCE_PATH/"
+ls "$LOCAL_SOURCE_PATH/_docs/"     2>/dev/null   # skip if absent
+ls "$LOCAL_SOURCE_PATH/_stories/"  2>/dev/null   # skip if absent
+ls "$LOCAL_SOURCE_PATH/enum/"      2>/dev/null   # skip if absent
 ```
 
-File types to fetch:
+Also check for nested subdirectories (e.g. `components/`, `interfaces/`, `configurator/`) — list them too if they exist.
+
+**Read each file's content** using the Read tool or `cat`:
+
+```bash
+# Preferred — Read tool with absolute path:
+# Read: $LOCAL_SOURCE_PATH/<filename>
+
+# Alternative:
+cat "$LOCAL_SOURCE_PATH/<filename>"
+```
+
+File types to read:
 
 - TypeScript (`.ts`)
 - HTML template (`.html`)
@@ -348,7 +402,7 @@ File types to fetch:
 - MDX docs (`.mdx`)
 - Enums (`enum/`)
 
-> **Performance:** Run all `gh api` calls **in parallel** — issue every fetch concurrently. Do not wait for one file to finish before starting the next.
+> **Performance:** Issue all directory listing calls at once. Once the file lists are returned, read all individual file contents in parallel. Do not wait for one file to complete before starting the next.
 
 ### Step 3 — Print analysis report
 
@@ -411,7 +465,7 @@ STORY COUNT
 READY TO GENERATE: <total> <framework> files
 ```
 
-Fill every table row with the actual values from the source files. Omit rows/tables that have no entries (e.g. no sub-components → omit the sub-component row). **Always proceed automatically** — print the report and immediately continue to Step 3b without waiting for user input.
+Fill every table row with actual values from the source files. Omit rows/tables with no entries. Print the report then **immediately continue to Step 3b** — do not wait for user input.
 
 ### Step 3b — Analyze and convert
 
@@ -446,7 +500,7 @@ Before writing any component files, read the React target `package.json`. If **a
 
 > **Note:** All `@niceltd/*` packages are hosted on the private AWS CodeArtifact registry. They cannot be installed until the registry token is configured (see registry setup below). Add them to `package.json` now so the lockfile stays accurate — actual `npm install` happens at the end.
 
-### Step 5 — Design Tokens & Styling
+### Step 4b — Design Tokens & Styling
 
 #### Registry setup (do this first)
 
@@ -527,12 +581,6 @@ Also add `src/vite-env.d.ts` so TypeScript accepts CSS side-effect imports:
 ```ts
 /// <reference types="vite/client" />
 ```
-
-#### Component CSS rules
-
-- Use Angular token names directly where known (e.g. `--sol-size-radius-sm`, `--sol-typography-body-md-font-size`).
-- Do **not** include fallback values in `var()` calls — `var(--sol-size-radius-sm)` not `var(--sol-size-radius-sm, 0.25rem)`. Fallbacks hide missing tokens.
-- Tokens already defined in the package with the same name (e.g. `--sol-color-text-default`, `--sol-color-background-primary`) do not need a bridge alias — they flow through automatically.
 
 ---
 
@@ -778,164 +826,129 @@ Before committing, verify:
 ## Example: Running the Agent
 
 ```text
-User: /migrate-component checkbox
+/migrate-component checkbox --target next.js
 
--- Step 1: Resolve names --
-kebabName     = checkbox
-PascalName    = Checkbox
-sourceRepo    = https://github.com/nice-cxone/sol-components
-sourcePath    = projects/ds-components/checkbox/src/lib
-githubApiBase = https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/checkbox/src/lib
-rawBase       = https://raw.githubusercontent.com/nice-cxone/sol-components/main/projects/ds-components/checkbox/src/lib
-
--- Step 2: Discover & read ALL source files via GitHub --
-Fetches API : https://api.github.com/repos/nice-cxone/sol-components/contents/projects/ds-components/checkbox/src/lib
-Fetches API : .../src/lib/_docs
-Fetches API : .../src/lib/_stories
-
-Reads (raw) : .../src/lib/checkbox.component.ts              ← primary component
-Reads: checkbox.component.html
-Reads: checkbox.component.scss
-Reads: checkbox-group.component.ts        ← sub-component discovered
-Reads: checkbox-group.component.scss
-Reads: checkbox.types.ts
-Reads: checkbox.module.ts                 ← read to discover sub-components; not ported
-Reads: checkbox.component.spec.ts
-Reads: checkbox-group.component.spec.ts   ← sub-component spec
-Reads: checkbox.page.ts                   ← Playwright page object
-Reads: checkbox-group.page.ts
-Reads: _stories/checkbox.stories.ts
-Reads: _stories/checkbox-group.stories.ts ← separate story file for sub-component
-Reads: _stories/checkbox-reactive-forms.stories.ts
-Reads: _stories/checkbox-group-forms.stories.ts
-Reads: _stories/overview-checkbox.stories.ts
-Reads: _docs/checkbox-overview.mdx
-Reads: _docs/checkbox-api.mdx
-Reads: _docs/checkbox-group-overview.mdx  ← sub-component doc
-Reads: _docs/checkbox-group-api.mdx
-Reads: _docs/checkbox-migrate-from-breeze.mdx
-
--- Step 5: Write target files (one React file per Angular file) --
-Creates: src/components/Checkbox/Checkbox.tsx
-Creates: src/components/Checkbox/CheckboxGroup.tsx          ← sub-component
-Creates: src/components/Checkbox/Checkbox.css
-Creates: src/components/Checkbox/Checkbox.test.tsx          ← covers both specs
-Creates: src/components/Checkbox/index.ts
-Creates: src/components/Checkbox/_e2e/Checkbox.page.ts      ← page object
-Creates: src/components/Checkbox/_stories/Checkbox.stories.tsx
-Creates: src/components/Checkbox/_stories/CheckboxGroup.stories.tsx       ← sub-component stories
-Creates: src/components/Checkbox/_stories/CheckboxForms.stories.tsx       ← reactive forms → controlled
-Creates: src/components/Checkbox/_stories/CheckboxGroupForms.stories.tsx  ← group forms stories
-Creates: src/components/Checkbox/_stories/CheckboxOverview.stories.tsx
-Creates: src/components/Checkbox/_docs/Checkbox.mdx
-Creates: src/components/Checkbox/_docs/CheckboxApi.mdx
-Creates: src/components/Checkbox/_docs/CheckboxGroup.mdx                  ← sub-component overview
-Creates: src/components/Checkbox/_docs/CheckboxGroupApi.mdx               ← sub-component API
-Creates: src/components/Checkbox/_docs/CheckboxMigration.mdx
-
--- Step 6: Update barrel --
-Updates: src/index.ts (adds Checkbox + CheckboxGroup exports)
-
--- Step 7: Commit & push --
-Runs: git add + commit + push
+Step 1  kebabName=checkbox  PascalName=Checkbox  framework=nextjs  fileExt=.tsx
+        SOURCE_CLONE_DIR=$(dirname $(git rev-parse --show-toplevel))/sol-components
+        git pull → up to date (or cloned fresh)
+Step 2  ls $LOCAL_SOURCE_PATH: lib/ _docs/ _stories/ (parallel) → 21 files discovered and read in parallel
+Step 3  Analysis report printed → proceed immediately
+Step 4  package.json: all 4 @niceltd/* packages present → skipped
+Step 4b tokens.css: @niceltd/sol-tokens already imported → no changes needed
+Step 5  git status --short → clean → proceed
+Step 6  Write 16 files to src/components/Checkbox/
+Step 7  src/index.ts updated
+Step 8  npm run build ✅  |  npx vitest run Checkbox ✅ (32 passed)
+Step 9  git commit + push → feat(checkbox): migrate Angular SOL Checkbox to nextjs
+Post    Migration report printed → 100% coverage ✅  |  Total time: 8m 36s
 ```
+
+See Steps 1–9 above for full details on each phase.
 
 ---
 
-## Step 8 — Post-migration verification report
+## Post-migration verification report
 
-After committing, glob both directories and print a structured report showing every Angular source file, its React counterpart, and overall stats. Run this step every time a migration completes.
+After committing, produce a structured report showing every Angular source file, its React counterpart, timing, and overall stats. Run this step every time a migration completes.
 
 ### How to produce the report
 
-1. Fetch the GitHub Contents API for the Angular source path and collect every file entry.
-2. Glob the React target path (`src/components/<PascalName>/`) and collect every file.
-3. For each Angular file apply the mapping rules below to determine its expected React equivalent (or mark it N/A).
-4. Check whether the expected React file exists in the target.
-5. Print the full table and summary block shown in the output format.
-
-### Mapping rules (Angular → React)
-
-| Angular file pattern | React equivalent | Notes |
-|---|---|---|
-| `*.component.ts` + `*.component.html` | `<PascalName>.tsx` | Merged into one TSX |
-| `*.component.scss` | `<PascalName>.css` | All SCSS files merge into one CSS |
-| `*-group.component.ts` | `<PascalName>Group.tsx` | Sub-component |
-| `*-group.component.scss` | `<PascalName>.css` | Merged |
-| `*.component.spec.ts` | `<PascalName>.test.tsx` | All specs merge into one test file |
-| `*-group.component.spec.ts` | `<PascalName>.test.tsx` | Merged |
-| `*.types.ts` | `<PascalName>.tsx` (inline types) | Merged |
-| `*.page.ts` | `_e2e/<PascalName>.page.ts` | All page objects merge into one |
-| `*-group.page.ts` | `_e2e/<PascalName>.page.ts` | Merged |
-| `public_api.ts` / `index.ts` | `index.ts` | Barrel export |
-| `_stories/<component>.stories.ts` | `_stories/<PascalName>.stories.tsx` | |
-| `_stories/overview-<component>.stories.ts` | `_stories/<PascalName>Overview.stories.tsx` | |
-| `_stories/*-group.stories.ts` | `_stories/<PascalName>Group.stories.tsx` | |
-| `_stories/*-reactive-forms.stories.ts` | `_stories/<PascalName>Forms.stories.tsx` | |
-| `_stories/*-group-forms.stories.ts` | `_stories/<PascalName>GroupForms.stories.tsx` | |
-| `_docs/*-overview.mdx` | `_docs/<PascalName>.mdx` | |
-| `_docs/*-api.mdx` | `_docs/<PascalName>Api.mdx` | |
-| `_docs/*-group-overview.mdx` | `_docs/<PascalName>Group.mdx` | |
-| `_docs/*-group-api.mdx` | `_docs/<PascalName>GroupApi.mdx` | |
-| `_docs/*-migrate-from-*.mdx` | `_docs/<PascalName>Migration.mdx` | |
-| `*.module.ts` | — | N/A — Angular module system |
-| `ng-package.json` | — | N/A — Angular build config |
-| `*-required-validator.ts` | — | N/A — Angular NG_VALIDATORS directive |
+1. Record `startTime` at the very beginning of Step 1 (before the clone/pull). Record `endTime` just before printing this report. Compute `duration = endTime - startTime`.
+2. List all files under `$LOCAL_SOURCE_PATH` recursively from the local clone.
+3. Glob `src/components/<PascalName>/` in the target repo and collect every generated file.
+4. For each Angular source file, determine its expected React target using the mapping rules from Step 6. Mark Angular-only files (modules, validators, ng-package) as `N/A`.
+5. Check whether each expected target file actually exists on disk.
+6. Print the report below, replacing all example values with real data.
 
 ### Output format
 
-Print the report in this structure (replace the Checkbox example values with the actual component's data):
-
 ```text
-MIGRATION REPORT — Checkbox
-Source : github.com/nice-cxone/sol-components → projects/ds-components/checkbox/src/lib/
-Target : src/components/Checkbox/
+╔══════════════════════════════════════════════════════════════════╗
+║           MIGRATION REPORT — Checkbox                            ║
+║           Framework : nextjs    Date : 2026-04-17                ║
+╚══════════════════════════════════════════════════════════════════╝
 
-FILE MAPPING
-  ✅  checkbox.component.ts / .html   → Checkbox.tsx
-  ✅  checkbox.component.scss         → Checkbox.css
-  ✅  checkbox-group.component.ts     → CheckboxGroup.tsx  (sub-component)
-  ✅  checkbox-group.component.scss   → Checkbox.css  (merged)
-  ✅  checkbox.types.ts               → Checkbox.tsx  (inline types)
-  ✅  checkbox.component.spec.ts      → Checkbox.test.tsx
-  ✅  checkbox-group.component.spec.ts → Checkbox.test.tsx  (merged)
-  ✅  checkbox.page.ts                → _e2e/Checkbox.page.ts
-  ✅  checkbox-group.page.ts          → _e2e/Checkbox.page.ts  (merged)
-  ✅  _stories/checkbox.stories.ts    → _stories/Checkbox.stories.tsx
-  ✅  _stories/checkbox-group.stories.ts → _stories/CheckboxGroup.stories.tsx
-  ✅  _stories/checkbox-reactive-forms.stories.ts → _stories/CheckboxForms.stories.tsx
-  ✅  _stories/checkbox-group-forms.stories.ts    → _stories/CheckboxGroupForms.stories.tsx
-  ✅  _stories/overview-checkbox.stories.ts       → _stories/CheckboxOverview.stories.tsx
-  ✅  _docs/checkbox-overview.mdx      → _docs/Checkbox.mdx
-  ✅  _docs/checkbox-api.mdx           → _docs/CheckboxApi.mdx
-  ✅  _docs/checkbox-group-overview.mdx → _docs/CheckboxGroup.mdx
-  ✅  _docs/checkbox-group-api.mdx     → _docs/CheckboxGroupApi.mdx
-  ✅  _docs/checkbox-migrate-from-breeze.mdx → _docs/CheckboxMigration.mdx
-  ✅  public_api.ts                    → index.ts
-  ⬜  checkbox.module.ts               → N/A  (Angular module)
-  ⬜  ng-package.json                  → N/A  (Angular build config)
-  ⬜  checkbox-required-validator.ts   → N/A  (Angular NG_VALIDATORS)
+  Source  →  sol-components/projects/ds-components/checkbox/src/lib/
+  Target  →  src/components/Checkbox/
+  Commit  →  feat(checkbox): migrate Angular SOL Checkbox to nextjs
 
-STORY COUNT
-  checkbox.stories.ts (1)                → Checkbox.stories.tsx (1)            ✅
-  checkbox-group.stories.ts (2)          → CheckboxGroup.stories.tsx (2)       ✅
-  checkbox-reactive-forms.stories.ts (1) → CheckboxForms.stories.tsx (1)       ✅
-  checkbox-group-forms.stories.ts (2)    → CheckboxGroupForms.stories.tsx (2)  ✅
-  overview-checkbox.stories.ts (9)       → CheckboxOverview.stories.tsx (9)    ✅
+──────────────────────────────────────────────────────────────────
+  TIMING
+──────────────────────────────────────────────────────────────────
+  Started          : 2026-04-17  14:03:11
+  Finished         : 2026-04-17  14:11:47
+  Total duration   : 8m 36s
+    ├─ Clone / pull source repo   : 0m 12s
+    ├─ Read & analyse source files : 1m 04s
+    ├─ Write target files          : 4m 55s
+    ├─ Build (tsc)                 : 1m 18s
+    └─ Tests (vitest)              : 1m 07s
 
-SUMMARY
-  Angular source : 26 files  (21 ported → 16 <framework> files, 3 N/A)
-  <framework> target : 16 files  (2 components, 1 CSS, 1 test, 5 stories, 5 docs, 1 e2e, 1 barrel)
-  Missing        : 0
-  Coverage       : 100% ✅
+──────────────────────────────────────────────────────────────────
+  FILE MAPPING
+──────────────────────────────────────────────────────────────────
+  Category          Angular source file                       →  React target file
+  ─────────────     ──────────────────────────────────────    ───────────────────────────────────
+  Component    ✅   checkbox.component.ts / .html             →  Checkbox.tsx
+  Styles       ✅   checkbox.component.scss                   →  Checkbox.css
+  Sub-comp     ✅   checkbox-group.component.ts               →  CheckboxGroup.tsx
+  Styles       ✅   checkbox-group.component.scss             →  Checkbox.css          (merged)
+  Types        ✅   checkbox.types.ts                         →  Checkbox.tsx          (inline)
+  Tests        ✅   checkbox.component.spec.ts                →  Checkbox.test.tsx
+  Tests        ✅   checkbox-group.component.spec.ts          →  Checkbox.test.tsx     (merged)
+  E2E          ✅   checkbox.page.ts                          →  _e2e/Checkbox.page.ts
+  E2E          ✅   checkbox-group.page.ts                    →  _e2e/Checkbox.page.ts (merged)
+  Story        ✅   _stories/checkbox.stories.ts              →  _stories/Checkbox.stories.tsx
+  Story        ✅   _stories/checkbox-group.stories.ts        →  _stories/CheckboxGroup.stories.tsx
+  Story        ✅   _stories/checkbox-reactive-forms.stories  →  _stories/CheckboxForms.stories.tsx
+  Story        ✅   _stories/checkbox-group-forms.stories.ts  →  _stories/CheckboxGroupForms.stories.tsx
+  Story        ✅   _stories/overview-checkbox.stories.ts     →  _stories/CheckboxOverview.stories.tsx
+  Docs         ✅   _docs/checkbox-overview.mdx               →  _docs/Checkbox.mdx
+  Docs         ✅   _docs/checkbox-api.mdx                    →  _docs/CheckboxApi.mdx
+  Docs         ✅   _docs/checkbox-group-overview.mdx         →  _docs/CheckboxGroup.mdx
+  Docs         ✅   _docs/checkbox-group-api.mdx              →  _docs/CheckboxGroupApi.mdx
+  Docs         ✅   _docs/checkbox-migrate-from-breeze.mdx    →  _docs/CheckboxMigration.mdx
+  Barrel       ✅   public_api.ts                             →  index.ts
+  N/A          ⬜   checkbox.module.ts                        →  —  (Angular module, not ported)
+  N/A          ⬜   ng-package.json                           →  —  (Angular build config)
+  N/A          ⬜   checkbox-required-validator.ts            →  —  (Angular NG_VALIDATORS)
+
+──────────────────────────────────────────────────────────────────
+  STORY COUNT
+──────────────────────────────────────────────────────────────────
+  Angular file                            Stories   React file                          Match
+  ─────────────────────────────────────   ───────   ─────────────────────────────────   ─────
+  checkbox.stories.ts                        1   →  Checkbox.stories.tsx (1)              ✅
+  checkbox-group.stories.ts                  2   →  CheckboxGroup.stories.tsx (2)         ✅
+  checkbox-reactive-forms.stories.ts         1   →  CheckboxForms.stories.tsx (1)         ✅
+  checkbox-group-forms.stories.ts            2   →  CheckboxGroupForms.stories.tsx (2)    ✅
+  overview-checkbox.stories.ts               9   →  CheckboxOverview.stories.tsx (9)      ✅
+
+──────────────────────────────────────────────────────────────────
+  VALIDATION
+──────────────────────────────────────────────────────────────────
+  Build (npm run build)          ✅  clean — 0 errors
+  Tests (npx vitest run)         ✅  32 / 32 passed
+
+──────────────────────────────────────────────────────────────────
+  SUMMARY
+──────────────────────────────────────────────────────────────────
+  Angular source files    :  26  total  (21 ported,  3 N/A,  2 Angular-only)
+  React files generated   :  16  (2 components · 1 CSS · 1 test · 5 stories · 5 docs · 1 e2e · 1 barrel)
+  Missing files           :   0
+  Coverage                : 100% ✅
+  Migration time          :  8m 36s  ⚡
+══════════════════════════════════════════════════════════════════
 ```
 
-If any file is missing, add a section at the end:
+**If any file is missing**, insert this block before the final `═══` line:
 
 ```text
-ACTION REQUIRED — 2 missing files
-  ❌  _docs/CheckboxGroup.mdx         ← from checkbox-group-overview.mdx
-  ❌  _stories/CheckboxGroupForms.stories.tsx  ← from checkbox-group-forms.stories.ts
+──────────────────────────────────────────────────────────────────
+  ACTION REQUIRED — 2 missing files
+──────────────────────────────────────────────────────────────────
+  ❌  _docs/CheckboxGroup.mdx              ← expected from checkbox-group-overview.mdx
+  ❌  _stories/CheckboxGroupForms.stories.tsx  ← expected from checkbox-group-forms.stories.ts
 ```
 
-Adjust the SUMMARY numbers to reflect actual missing count and coverage percentage.
+Replace all example values (file names, counts, timings, dates) with actual data from the current migration run. Omit table rows for file categories that have no entries.
