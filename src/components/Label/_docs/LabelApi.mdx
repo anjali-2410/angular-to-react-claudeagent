@@ -1,0 +1,45 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Label/API" />
+
+# Label API
+
+## Import
+
+```tsx
+import { Label } from '@niceltd/sol-react';
+```
+
+## Props
+
+| Name            | Type      | Default | Description                                                                                  |
+| --------------- | --------- | ------- | -------------------------------------------------------------------------------------------- |
+| `label`         | `string`  | `''`    | The label text to display                                                                    |
+| `labelHelpText` | `string`  | `''`    | Help text shown in a tooltip on the help icon                                                |
+| `labelFor`      | `string`  | `''`    | Associates the label with a form control via the HTML `for` attribute                        |
+| `required`      | `boolean` | `false` | Shows a required indicator (*). Automatically hidden when `disabled` or `readonly` is true   |
+| `disabled`      | `boolean` | `false` | Applies disabled styling and hides both the required indicator and help text                 |
+| `readonly`      | `boolean` | `false` | Applies read-only styling and hides the required indicator (help text remains visible)       |
+
+## Behavior
+
+### State Management
+
+The label component automatically manages the visibility of required indicators and help text based on the component's state:
+
+- **Normal State**: Both required indicators and help text are displayed when their respective props are set
+- **Disabled State**: When `disabled` is `true`, both required indicators and help text are hidden
+- **ReadOnly State**: When `readonly` is `true`, required indicators are hidden but help text remains visible
+- **State Restoration**: When `disabled` or `readonly` changes back to `false`, indicators are automatically restored based on the original prop values
+
+## Usage Example
+
+```tsx
+<Label
+  label="Email Address"
+  labelFor="email-input"
+  required={true}
+  labelHelpText="We will never share your email"
+/>
+<input id="email-input" type="email" />
+```

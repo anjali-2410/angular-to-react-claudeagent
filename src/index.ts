@@ -43,3 +43,5 @@ export type { ChipGroupProps, SelectedTag } from './components/ChipGroup';
 export { DatePicker } from './components/DatePicker';
 export type { DatePickerProps } from './components/DatePicker';
 
+export { Label } from './components/Label';
+export type { LabelProps } from './components/Label';

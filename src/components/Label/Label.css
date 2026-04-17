@@ -1,0 +1,85 @@
+.readonly .sol-label-asterisk {
+  color: var(--sol-color-text-disabled);
+}
+
+.sol-label {
+  font-size: var(--sol-typography-body-md-font-size);
+  font-style: normal;
+  font-weight: var(--sol-typography-body-md-font-weight);
+  font-family: var(--sol-typography-body-md-font-family);
+  line-height: var(--sol-typography-body-md-line-height);
+  color: var(--sol-color-text-default);
+  display: block;
+  margin-bottom: var(--sol-size-spacing-xs);
+  margin-right: var(--sol-size-spacing-xs);
+  white-space: nowrap;
+}
+
+.sol-label span {
+  display: inline-flex;
+  vertical-align: top;
+}
+
+.sol-label .sol-label-text {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.sol-label .sol-label-help {
+  margin-left: var(--sol-size-spacing-2xs);
+  height: var(--sol-typography-body-md-line-height);
+  display: flex;
+  align-items: center;
+}
+
+.sol-label .sol-label-help-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.sol-label .sol-label-help-icon {
+  width: var(--sol-size-icon-xs);
+  height: var(--sol-size-icon-xs);
+  color: var(--sol-color-icon-action);
+}
+
+.sol-label .sol-label-help-button:focus {
+  outline: var(--sol-size-border-medium) solid var(--sol-color-border-focus-default);
+  outline-offset: var(--sol-size-spacing-3xs);
+  border-radius: var(--sol-size-radius-sm);
+}
+
+.sol-label.required .sol-label-asterisk {
+  color: var(--sol-color-text-status-critical);
+  margin-left: var(--sol-size-spacing-2xs);
+  height: var(--sol-typography-body-md-line-height);
+  font-size: var(--sol-size-icon-xs);
+}
+
+.sol-label.disabled {
+  color: var(--sol-color-text-disabled);
+}
+
+.sol-label.disabled .sol-label-help {
+  color: var(--sol-color-icon-disabled);
+}
+
+.sol-label.disabled .sol-label-asterisk {
+  color: var(--sol-color-text-disabled);
+}
+
+.sol-screenreader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
