@@ -20,7 +20,8 @@ Migrate an Angular SOL component from the source repo into this React target rep
 **Flags:**
 
 - `--target <framework>` — Target framework. Accepted values: `react` (default), `next.js` / `nextjs`, `vue`, `svelte`. Omitting the flag defaults to `react`.
-- `--no-validate` — Skip `npm run build` and `npm run test` after writing files. Commits and pushes immediately. Use when iterating quickly or when you plan to validate manually.
+- `--no-validate` — Skip tests only (build always runs). Commits and pushes immediately after a clean build. Use when iterating quickly or when you plan to run tests manually.
+- `--full-test` — After the component-scoped tests pass, also run the entire test suite and print a full suite report. Omitting this flag runs only the new component's tests.
 
 ---
 
@@ -354,7 +355,7 @@ File types to fetch:
 After reading all source files, **print the following report in full before writing any React code**. This lets the user review and confirm the migration plan before any files are created.
 
 ```text
-ANALYSIS REPORT — <ComponentName>
+ANALYSIS REPORT — <ComponentName>  [target: <framework>]
 Source : github.com/nice-cxone/sol-components → projects/ds-components/<kebabName>/src/lib/
 
 SOURCE FILES DISCOVERED
@@ -367,47 +368,47 @@ COMPONENTS
   | <SubComponent>    | sol-<kebab-sub>        | Yes            |
 
 PROPS (Inputs)
-  | Angular @Input / signal  | React prop       | Type            | Default  |
+  | Angular @Input / signal  | <framework> prop | Type            | Default  |
   | ------------------------ | ---------------- | --------------- | -------- |
   | showActionBar            | showActionBar    | boolean         | false    |
   | actionBarTextContent     | actionBarText…   | string          | '…'      |
   | ...                      | ...              | ...             | ...      |
 
 EVENTS (Outputs)
-  | Angular @Output          | React callback   | Payload         |
-  | ------------------------ | ---------------- | --------------- |
-  | buttonClicked            | onButtonClicked  | void            |
-  | ...                      | ...              | ...             |
+  | Angular @Output          | <framework> callback | Payload     |
+  | ------------------------ | -------------------- | ----------- |
+  | buttonClicked            | onButtonClicked      | void        |
+  | ...                      | ...                  | ...         |
 
 ANGULAR DEPENDENCIES TO CONVERT
-  | Angular dependency       | React equivalent            | Notes                     |
+  | Angular dependency       | <framework> equivalent      | Notes                     |
   | ------------------------ | --------------------------- | ------------------------- |
-  | MatExpansionModule       | headless CSS + React state  | No Material in React      |
+  | MatExpansionModule       | headless CSS + state        | No Material equivalent    |
   | solTooltip directive     | tippy.js (useEffect)        | Already in dependencies   |
   | sol-button               | <Button> from our library   | Import from components/   |
-  | _IdGenerator + NgZone    | useId()                     | React 18 built-in         |
+  | _IdGenerator + NgZone    | useId() / built-in          | Framework built-in        |
   | ResizeObserver           | useEffect + useRef          | Same native API           |
   | ...                      | ...                         | ...                       |
 
 FILES TO CREATE
-  | Angular source                      | React target                              |
+  | Angular source                      | <framework> target                        |
   | ----------------------------------- | ----------------------------------------- |
-  | component.ts / .html                | <ComponentName>.tsx                       |
-  | component.scss                      | <ComponentName>.css                       |
-  | component.spec.ts                   | <ComponentName>.test.tsx                  |
+  | component.ts / .html                | <ComponentName><fileExt>                  |
+  | component.scss                      | <ComponentName>.css (React/Next.js only)  |
+  | component.spec.ts                   | <ComponentName><testExt>                  |
   | component.page.ts                   | _e2e/<ComponentName>.page.ts              |
-  | _stories/component.stories.ts       | _stories/<ComponentName>.stories.tsx      |
+  | _stories/component.stories.ts       | _stories/<ComponentName><storiesExt>      |
   | _docs/component-overview.mdx        | _docs/<ComponentName>.mdx                 |
   | _docs/component-api.mdx             | _docs/<ComponentName>Api.mdx              |
   | module.ts / ng-package.json         | — (N/A)                                   |
 
 STORY COUNT
-  | Angular file               | Count | React file                      |
+  | Angular file               | Count | <framework> file                |
   | -------------------------- | ----- | ------------------------------- |
-  | component.stories.ts       |   2   | <ComponentName>.stories.tsx     |
-  | overview-component.stories |   5   | <ComponentName>Overview.stories |
+  | component.stories.ts       |   2   | <ComponentName><storiesExt>     |
+  | overview-component.stories |   5   | <ComponentName>Overview<storiesExt> |
 
-READY TO GENERATE: <total> React files
+READY TO GENERATE: <total> <framework> files
 ```
 
 Fill every table row with the actual values from the source files. Omit rows/tables that have no entries (e.g. no sub-components → omit the sub-component row). **Always proceed automatically** — print the report and immediately continue to Step 3b without waiting for user input.
@@ -619,15 +620,43 @@ If editing `src/index.ts` fails, run the Rollback Procedure and print the Migrat
 
 ### Step 8 — Validate (build + tests)
 
-Run both checks using the `buildCmd` and `testCmd` from Step 1. If either exits non-zero, run the Rollback Procedure and print the Migration Failure Report — do not proceed to Step 9.
+**Phase 1 — TypeScript build (ALWAYS runs — cannot be skipped):**
 
 ```bash
 <buildCmd>   # npm run build (react/nextjs/vue) or npm run check (svelte)
 ```
 
+If build fails → run Rollback Procedure + print Migration Failure Report. Stop.
+
+**Phase 2 — Component-scoped tests (skipped only if `--no-validate`):**
+
 ```bash
-<testCmd>    # npm run test (all frameworks)
+npx vitest run <PascalName>
 ```
+
+Run only the newly migrated component's test file. Completes in ~5 seconds regardless of how many other components exist in the repo. If these tests fail → run Rollback Procedure + print Migration Failure Report. Stop.
+
+**Phase 3 — Full suite (only if `--full-test` flag was passed):**
+
+```bash
+<testCmd>
+```
+
+Run the entire test suite to check for regressions across all components. After it completes, print the full suite report:
+
+```text
+FULL SUITE REPORT
+  Total test files : <N>
+  Passed           : <N>
+  Failed           : <N>  (list each failing test file and test name)
+  Duration         : <Xs>
+
+  <PascalName> component : <N>/<N> passed ✅  (or ❌ with details)
+```
+
+If any tests fail → run Rollback Procedure + print Migration Failure Report. Stop.
+
+Only proceed to Step 9 when all phases that ran exit with code 0.
 
 #### Migration Failure Report
 
@@ -694,7 +723,7 @@ Only proceed to Step 9 when **both** commands exit with code 0.
 ```bash
 cd /c/Users/anjsonawane/angular-to-react-claudeagent
 git add src/components/<PascalName>/ src/index.ts
-git commit -m "feat(<kebabName>): migrate Angular SOL <PascalName> to React"
+git commit -m "feat(<kebabName>): migrate Angular SOL <PascalName> to <framework>"
 git push origin main
 ```
 
@@ -895,8 +924,8 @@ STORY COUNT
   overview-checkbox.stories.ts (9)       → CheckboxOverview.stories.tsx (9)    ✅
 
 SUMMARY
-  Angular source : 26 files  (21 ported → 16 React files, 3 N/A)
-  React target   : 16 files  (2 components, 1 CSS, 1 test, 5 stories, 5 docs, 1 e2e, 1 barrel)
+  Angular source : 26 files  (21 ported → 16 <framework> files, 3 N/A)
+  <framework> target : 16 files  (2 components, 1 CSS, 1 test, 5 stories, 5 docs, 1 e2e, 1 barrel)
   Missing        : 0
   Coverage       : 100% ✅
 ```
