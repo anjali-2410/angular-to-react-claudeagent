@@ -44,3 +44,6 @@ export type { ConversationPromptProps, Suggestion } from './components/Conversat
 
 export { DatePicker } from './components/DatePicker';
 export type { DatePickerProps } from './components/DatePicker';
+
+export { Dropdown, DropdownTrigger } from './components/Dropdown';
+export type { DropdownProps, DropdownHandle, DropdownOption, DropdownTriggerProps, ExternalSearchOptions, SortOrder } from './components/Dropdown';

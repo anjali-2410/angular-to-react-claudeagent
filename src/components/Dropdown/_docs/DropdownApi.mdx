@@ -1,0 +1,83 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Dropdown/API" />
+
+# Dropdown API
+
+## Dropdown Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `string` | — | HTML id for the container element |
+| `name` | `string` | — | data-name attribute for test targeting |
+| `options` | `DropdownOption[]` | `[]` | Array of options to display |
+| `value` | `DropdownOption \| DropdownOption[] \| null` | — | Selected value(s) — controlled |
+| `placeholder` | `string` | `''` | Placeholder text when nothing is selected |
+| `multiple` | `boolean` | `false` | Enable multi-select mode |
+| `disabled` | `boolean` | `false` | Disable the dropdown |
+| `readOnly` | `boolean` | `false` | Read-only (single-select cannot open; multi-select can view) |
+| `required` | `boolean` | `false` | Mark as required for validation |
+| `searchEnabled` | `boolean` | `false` | Show search input inside the dropdown panel |
+| `showFooter` | `boolean` | `false` | Show footer in the dropdown panel |
+| `loading` | `boolean` | `false` | Show loading state |
+| `sortEnabled` | `boolean` | `true` | Enable automatic sorting of options |
+| `sortKey` | `string` | `'name'` | Object key to sort by |
+| `sortOrder` | `'asc' \| 'desc'` | `'asc'` | Sort direction |
+| `maxItemsLimit` | `number` | `2500` | Maximum number of options to render |
+| `maxSelectionLimit` | `number` | `1` | Maximum number of selections in multi-select |
+| `optionsLabel` | `string` | `'name'` | Object key to use as option display label |
+| `optionsValue` | `string` | `'value'` | Object key to use as option value |
+| `optionsIcon` | `string` | `'icon'` | Object key to use as option icon |
+| `externalSearchOptions` | `ExternalSearchOptions` | — | Configuration for server-side search |
+| `externalSearchError` | `boolean` | `false` | Show error state for external search |
+| `tooltipPlacement` | `string` | `'auto'` | Tooltip placement for overflow text |
+| `optionTemplate` | `(opt) => ReactNode` | — | Custom render function for each option |
+| `selectedOptionTemplate` | `(val) => ReactNode` | — | Custom render for the selected value in the trigger |
+
+## Dropdown Events
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `onSelectionChange` | `(value) => void` | Fired when selection changes |
+| `onOpenStateChange` | `(isOpen: boolean) => void` | Fired when dropdown opens/closes |
+| `onSearchChanged` | `(query: string) => void` | Fired when search input changes |
+| `onExternalSearch` | `(payload) => void` | Fired for external/server-side search |
+| `onSelectAllToggled` | `(allSelected: boolean) => void` | Fired when select-all is toggled |
+| `onChange` | `(value) => void` | Alias for `onSelectionChange` (form compatibility) |
+| `onBlur` | `() => void` | Fired when dropdown loses focus |
+
+## DropdownHandle (forwardRef)
+
+| Method | Description |
+|--------|-------------|
+| `open()` | Programmatically open the dropdown |
+| `close()` | Programmatically close the dropdown |
+| `focus()` | Focus the trigger element |
+
+## ExternalSearchOptions
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `enabled` | `boolean` | Enable external search mode |
+| `keyStrokeDelay` | `number` | Debounce delay in ms |
+| `resultsCount` | `number` | Total results count (used for "All selected" display) |
+
+## DropdownTrigger Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `placeholder` | `string` | `''` | Placeholder text |
+| `displayText` | `string` | `''` | Selected value display text |
+| `placeHolderIcon` | `string \| null` | `null` | Icon to show next to display text |
+| `isOpen` | `boolean` | `false` | Open state |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `readOnly` | `boolean` | `false` | Read-only state |
+| `errorState` | `boolean` | `false` | Error/invalid state |
+| `isMultiSelect` | `boolean` | `false` | Multi-select mode (affects chevron visibility) |
+| `ariaLabel` | `string` | — | Accessible label |
+| `ariaControlsId` | `string` | — | ID of the controlled listbox |
+| `ariaDescriptionId` | `string \| null` | — | ID of the description element |
+| `selectedOptionTemplate` | `ReactNode` | — | Custom selected value content |
+| `onClick` | `() => void` | — | Click handler |
+| `onKeyDown` | `(e) => void` | — | Keydown handler |
+| `onBlur` | `() => void` | — | Blur handler |

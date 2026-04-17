@@ -1,0 +1,161 @@
+.sol-dropdown {
+  width: 100%;
+}
+
+.sol-dropdown-options-panel {
+  width: 100%;
+  max-width: var(--dropdown-max-width, 45rem);
+  background: var(--sol-color-background-primary);
+  border: 1px solid var(--sol-color-border-default);
+  border-radius: var(--sol-size-radius-sm);
+  box-shadow: var(--sol-shadow-md);
+  overflow: hidden;
+}
+
+.sol-select-cls {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Trigger */
+.sol-dropdown-trigger {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.sol-dropdown-trigger.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.sol-dropdown-trigger.readonly {
+  cursor: pointer;
+  border-color: var(--sol-color-border-strong);
+}
+
+.sol-dropdown-trigger:hover {
+  border-color: var(--sol-color-border-state-hover-neutral);
+}
+
+.sol-dropdown-trigger:focus-visible {
+  outline: solid var(--sol-size-border-medium) var(--sol-color-border-focus-default);
+  outline-offset: var(--sol-size-spacing-3xs);
+  border-color: var(--sol-color-border-strong);
+}
+
+.sol-dropdown-trigger.error {
+  border-color: var(--sol-color-border-status-critical);
+}
+
+.sol-dropdown-inside {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.sol-option-icon {
+  padding-left: 0.625rem;
+  display: flex;
+}
+
+.sol-dropdown-content {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sol-dropdown-content.display-text {
+  color: var(--sol-color-text-default);
+}
+
+.sol-dropdown-content.placeholder-text {
+  color: var(--sol-color-text-secondary);
+}
+
+.placeholder-template {
+  display: flex;
+  gap: 0.313rem;
+}
+
+.sol-dropdown-icon {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  margin: 0 0.5rem 0 auto;
+  height: 1rem;
+  width: 1rem;
+}
+
+.sol-dropdown-icon svg {
+  fill: var(--sol-color-icon-default);
+}
+
+/* Options list */
+.sol-dropdown-options-panel ul[role='listbox'] {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 18rem;
+  overflow-y: auto;
+}
+
+.sol-option {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: var(--sol-color-text-default);
+}
+
+.sol-option:hover {
+  background: var(--sol-color-background-hover);
+}
+
+.sol-option.option-selected {
+  background: var(--sol-color-background-selected);
+  color: var(--sol-color-text-selected);
+}
+
+.sol-option-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Search */
+.sol-dropdown-search-item {
+  padding: 0.5rem;
+  list-style: none;
+}
+
+.sol-dropdown-search {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Loading */
+.sol-dropdown-loading {
+  padding: 1rem;
+  text-align: center;
+  color: var(--sol-color-text-secondary);
+}
+
+/* Screenreader */
+.sol-screenreader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
