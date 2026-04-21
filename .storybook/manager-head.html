@@ -19,56 +19,26 @@
     font-weight: 700;
     border-radius: 1rem;
     padding: 0 0.4rem;
-    border: 0.0625rem solid;
+    border: 0.0625rem solid green;
+    color: green;
     position: absolute;
     top: 0.4375rem;
     right: 0;
   }
 
-  /* ── React 18 badge (blue) ────────────────────────────────────────────────
-     Components migrated to React 18                                          */
-  div > [data-item-id='components-accordion']::after,
-  div > [data-item-id='components-action-bar']::after,
-  div > [data-item-id='components-autocomplete']::after,
-  div > [data-item-id='components-breadcrumb']::after,
-  div > [data-item-id='components-button']::after,
-  div > [data-item-id='components-calendar']::after,
-  div > [data-item-id='components-card']::after,
-  div > [data-item-id='components-checkbox']::after,
-  div > [data-item-id='components-checkbox-group']::after,
-  div > [data-item-id='components-chip']::after,
-  div > [data-item-id='components-chip-group']::after,
-  div > [data-item-id='components-date-picker']::after,
-  div > [data-item-id='components-label']::after,
-  div > [data-item-id='components-progress-bar']::after {
-    content: 'React 18';
-    color: #0a7a8f;
-    border-color: #20b8d4;
-    background-color: #e0f7fc;
-  }
-
-  /* ── Next.js badge (dark) ─────────────────────────────────────────────────
-     Components migrated to Next.js (include 'use client' directives)        */
-  div > [data-item-id='components-switch']::after {
-    content: 'Next.js';
-    color: #ffffff;
-    border-color: #444444;
-    background-color: #000000;
-  }
-
-  /* ── Vue 3 badge (green) — add selectors here when Vue components exist ── */
-  /* div > [data-item-id='components-example']::after {
-    content: 'Vue 3';
-    color: #ffffff;
-    border-color: #369870;
-    background-color: #42b883;
-  } */
-
-  /* ── Svelte 5 badge (orange) — add selectors here when Svelte exists ───── */
-  /* div > [data-item-id='components-example']::after {
-    content: 'Svelte 5';
-    color: #ffffff;
-    border-color: #cc3200;
-    background-color: #ff3e00;
-  } */
+  div > [data-item-id='components-accordion']::after { content: 'React 18'; }
+  div > [data-item-id='components-action-bar']::after { content: 'React 18'; }
+  div > [data-item-id='components-autocomplete']::after { content: 'React 18'; }
+  div > [data-item-id='components-breadcrumb']::after { content: 'React 18'; }
+  div > [data-item-id='components-button']::after { content: 'React 18'; }
+  div > [data-item-id='components-calendar']::after { content: 'React 18'; }
+  div > [data-item-id='components-card']::after { content: 'React 18'; }
+  div > [data-item-id='components-checkbox']::after { content: 'React 18'; }
+  div > [data-item-id='components-checkbox-group']::after { content: 'React 18'; }
+  div > [data-item-id='components-chip']::after { content: 'React 18'; }
+  div > [data-item-id='components-chip-group']::after { content: 'React 18'; }
+  div > [data-item-id='components-date-picker']::after { content: 'React 18'; }
+  div > [data-item-id='components-label']::after { content: 'React 18'; }
+  div > [data-item-id='components-progress-bar']::after { content: 'React 18'; }
+  div > [data-item-id='components-switch']::after { content: 'Next.js'; }
 </style>
