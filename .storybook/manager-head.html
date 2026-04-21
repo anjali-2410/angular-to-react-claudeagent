@@ -41,4 +41,18 @@
   div > [data-item-id='components-label']::after { content: 'React 18'; }
   div > [data-item-id='components-progress-bar']::after { content: 'React 18'; }
   div > [data-item-id='components-switch']::after { content: 'Next.js'; }
+  div > [data-item-id='components-textarea']::after { content: 'Vue 3'; }
+
+  /* Vue 3 badge shares the same green styles — add to common block above for future Vue components */
+  div > [data-item-id='components-textarea']::after {
+    font-size: xx-small;
+    font-weight: 700;
+    border-radius: 1rem;
+    padding: 0 0.4rem;
+    border: 0.0625rem solid green;
+    color: green;
+    position: absolute;
+    top: 0.4375rem;
+    right: 0;
+  }
 </style>

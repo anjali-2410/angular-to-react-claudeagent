@@ -51,3 +51,6 @@ export type { SwitchProps, SwitchSize, SwitchChangeEvent } from './components/Sw
 
 export { ProgressBar } from './components/ProgressBar';
 export type { ProgressBarProps } from './components/ProgressBar';
+
+export { TextArea } from './components/TextArea';
+export type { TextAreaProps } from './components/TextArea';

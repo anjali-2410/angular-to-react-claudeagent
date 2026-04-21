@@ -71,6 +71,7 @@
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.0.0",
+    "@testing-library/vue": "^8.1.0",
     "@types/node": "^20.9.0",
     "@types/nouislider": "^15.0.0",
     "@types/react": "^18",
@@ -78,6 +79,7 @@
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "@vitejs/plugin-react": "^4.0.0",
+    "@vitejs/plugin-vue": "^6.0.6",
     "@vitest/coverage-v8": "^1.0.0",
     "copyfiles": "^2.4.1",
     "cpy-cli": "2.0.0",
@@ -107,7 +109,8 @@
     "ts-log": "^2.2.4",
     "typescript": "5.2.2",
     "util": "^0.12.5",
-    "vitest": "^1.0.0"
+    "vitest": "^1.0.0",
+    "vue": "^3.5.32"
   },
   "cxonePeerDependencyOverrides": {
     "ag-grid-react": {

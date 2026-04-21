@@ -1,0 +1,100 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Textarea/API" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Props](#props)
+  - [Events](#events)
+  - [Page Object](#page-object)
+  - [Migration from Angular](#migration-from-angular)
+</div>
+<div className="toc-left">
+
+# TextArea: API
+
+```ts
+import { TextArea } from '@niceltd/sol-vue/text-area';
+```
+
+<hr/>
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `modelValue` | `string` | `''` | The current value (use with `v-model`) |
+| `placeholder` | `string` | `''` | Placeholder text when the textarea is empty |
+| `name` | `string` | — | Name attribute of the textarea element |
+| `cols` | `number` | — | Number of columns |
+| `minLength` | `number` | — | Minimum character length |
+| `maxLength` | `number` | — | Maximum character length — shows counter when set |
+| `minRows` | `number` | — | Minimum number of visible rows |
+| `maxRows` | `number` | — | Maximum number of visible rows |
+| `autocomplete` | `string` | `'off'` | Autocomplete attribute |
+| `disabled` | `boolean` | `false` | Disables the textarea |
+| `required` | `boolean` | `false` | Marks the textarea as required |
+| `readonly` | `boolean` | `false` | Makes the textarea read-only |
+| `resizeTextarea` | `boolean` | `false` | Allows the user to resize the textarea |
+| `fontSize` | `'small' \| 'large'` | `'small'` | Font size variant |
+| `wrap` | `string` | `'on'` | Text wrapping behavior |
+| `ariaLabel` | `string` | `''` | Accessibility label |
+| `ariaLabelledby` | `string \| null` | `null` | ID of element that labels the textarea |
+| `errorState` | `boolean` | `false` | Whether the textarea is in an error state |
+| `preventEnterKey` | `boolean` | `false` | Prevents Enter key from adding new lines |
+| `hideCharacterCounter` | `boolean` | `false` | Hides the character counter even when maxLength is set |
+| `label` | `string` | — | Label text displayed above the textarea |
+| `labelHelpText` | `string` | — | Help text displayed alongside the label |
+| `errorMessage` | `string` | — | Error message shown when `errorState` is true |
+| `infoMessage` | `string` | — | Info message shown below the textarea |
+| `id` | `string` | `''` | ID for the textarea element — auto-generated if not provided |
+
+<hr/>
+
+## Events
+
+| Event | Payload | Description |
+| --- | --- | --- |
+| `update:modelValue` | `string` | Emitted on every input — use with `v-model` |
+| `valueChange` | `string` | Emitted on every input — same payload as `update:modelValue` |
+
+<hr/>
+
+## Page Object
+
+```ts
+import { TextAreaPage } from '@niceltd/sol-vue/pageobjects';
+```
+
+| Property | Selector | Description |
+| --- | --- | --- |
+| `textareaid` | `textarea.sol-input` | The textarea input element |
+| `textlabel` | `.sol-text-area` | The textarea container |
+| `templatemsgreqid` | `.sol-error-message` | Error message element |
+| `infoMessage` | `.sol-info-message` | Info message element |
+| `characterCounter` | `.sol-text-counter-text` | Character counter text element |
+
+<hr/>
+
+## Migration from Angular
+
+| Angular | Vue 3 |
+| --- | --- |
+| `[(ngModel)]="value"` | `v-model="value"` |
+| `(valueChange)="handler($event)"` | `@valueChange="handler"` |
+| `[disabled]="true"` | `:disabled="true"` |
+| `[errorState]="true"` | `:errorState="true"` |
+| `[maxLength]="100"` | `:maxLength="100"` |
+
+**Breaking changes from v14:**
+- `errorMessageText` → `errorMessage`
+- `labelText` → `label`
+
+**Breaking changes from v16:**
+- `showCharacterCounter` removed — counter shows automatically when `maxLength` is set
+- `minlength` → `minLength` (camelCase)
+- `maxlength` → `maxLength` (camelCase)
+- `aria-label` → `ariaLabel` (camelCase)
+- `aria-labelledby` → `ariaLabelledby` (camelCase)
+
+</div>

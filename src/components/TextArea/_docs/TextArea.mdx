@@ -1,0 +1,74 @@
+import { Meta, Canvas } from '@storybook/blocks';
+import * as TextAreaStories from '../_stories/TextArea.stories';
+
+<Meta title="Components/Textarea/Overview" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Guidelines](#guidelines)
+  - [Variants](#variants)
+    - [Default Textarea with Value](#default-textarea-with-value)
+    - [Textarea with Error Message](#textarea-with-error-message)
+  - [Do's and Don'ts](#dos-and-donts)
+  - [Use Cases](#use-cases)
+</div>
+<div className="toc-left">
+
+# Textarea
+
+Textarea provides a multi-line text input field that allows users to enter longer form content. The component offers flexibility with options for resizing, character limits, and various styling configurations to fit different use cases.
+
+<hr/>
+
+## Guidelines
+
+Use Textarea when collecting information that may require multiple lines or paragraphs. Textarea is ideal for comments, descriptions, feedback, or any other long-form text input where users need more space than a standard input field provides.
+
+Key considerations:
+- Provide clear labels and placeholder text to guide users
+- Use character limits when necessary to prevent overly long submissions
+- Consider auto-resizing for better user experience
+- Include helpful validation messages when content doesn't meet requirements
+
+<hr/>
+
+## Variants
+
+### Default Textarea with Value
+
+<Canvas of={TextAreaStories.WithValue} layout="centered" withToolbar />
+
+### Textarea with Error Message
+
+<Canvas of={TextAreaStories.withErrorMessage} layout="centered" withToolbar />
+
+<hr/>
+
+## Do's and Don'ts
+
+### Do's
+- Use clear, descriptive labels that explain what information is needed
+- Provide character counters when there are length restrictions
+- Set appropriate minimum and maximum row limits based on expected content
+- Use placeholder text to provide examples or formatting guidance
+- Include validation messages to help users correct errors
+
+### Don'ts
+- Don't use Textarea for single-line inputs — use TextInput instead
+- Don't set overly restrictive character limits that prevent users from providing complete information
+- Don't forget to mark required fields appropriately
+- Don't use vague labels like "Comments" — be specific about what type of feedback you're seeking
+
+<hr/>
+
+## Use Cases
+
+**Feedback Collection**: Use Textarea for user feedback, reviews, or survey responses where detailed input is expected.
+
+**Content Creation**: Ideal for blog posts, descriptions, or any content that requires multiple paragraphs.
+
+**Form Comments**: Perfect for additional information fields in forms where users might need to explain their responses.
+
+**Message Composition**: Use for email composition, chat messages, or any communication that might require multiple lines.
+
+</div>
