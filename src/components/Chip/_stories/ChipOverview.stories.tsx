@@ -10,8 +10,7 @@ import { Chip } from '../Chip';
 const meta: Meta<typeof Chip> = {
   title: 'Components/Chip/OverviewExamples',
   component: Chip,
-  parameters: {
-    controls: { disable: true },
+  parameters: { controls: { disable: true },
     actions: { disable: false },
     docs: { disable: false },
   },

@@ -6,8 +6,7 @@ import type { SpecialDates } from '../../Calendar/Calendar';
 const meta: Meta<typeof DatePicker> = {
   title: 'Components/Date Picker/Examples',
   component: DatePicker,
-  parameters: {
-    layout: 'padded',
+  parameters: { layout: 'padded',
   },
   argTypes: {
     value: { control: 'date', description: 'Selected date value' },

@@ -31,8 +31,7 @@ const meta: Meta<typeof Button> = {
   component: Button,
   // Hide from sidebar — used only in MDX Canvas blocks
   tags: ['hidden', 'docs-only'],
-  parameters: {
-    controls: { disable: true },
+  parameters: { controls: { disable: true },
     actions:  { disable: true },
     layout:   'padded',
   },

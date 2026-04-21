@@ -8,8 +8,7 @@ const meta: Meta<typeof Switch> = {
   title: 'Components/Switch/OverviewExamples',
   component: Switch,
   tags: ['hidden', 'docs-only'],
-  parameters: {
-    controls: { disable: true },
+  parameters: { controls: { disable: true },
     actions: { disable: true },
   },
 };

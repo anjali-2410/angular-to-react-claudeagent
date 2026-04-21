@@ -5,8 +5,7 @@ import { Label } from '../Label';
 const meta: Meta<typeof Label> = {
   title: 'Components/Label/OverviewExamples',
   component: Label,
-  parameters: {
-    controls: { disable: true },
+  parameters: { controls: { disable: true },
     actions: { disable: true },
     docs: { disable: false },
   },

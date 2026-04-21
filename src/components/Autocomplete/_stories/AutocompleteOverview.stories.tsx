@@ -6,8 +6,7 @@ import type { Meta } from '@storybook/react';
  */
 const meta: Meta = {
   title: 'Components/Autocomplete/Overview',
-  parameters: {
-    docs: {
+  parameters: { docs: {
       page: () => null,
     },
   },

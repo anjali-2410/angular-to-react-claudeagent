@@ -10,8 +10,7 @@ const meta: Meta<typeof DatePicker> = {
   title: 'Components/Date Picker/OverviewExamples',
   component: DatePicker,
   tags: ['hidden', 'docs-only'],
-  parameters: {
-    controls: { disable: true },
+  parameters: { controls: { disable: true },
     actions: { disable: true },
     layout: 'padded',
   },

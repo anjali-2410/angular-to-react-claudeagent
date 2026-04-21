@@ -27,65 +27,7 @@ Migrate an Angular SOL component from the source repo into this React target rep
 
 ## What This Agent Does
 
-Given a component name (e.g. `checkbox`), this agent will:
-
-1. **Read all source files** from the Angular source repo on GitHub:
-   `https://github.com/nice-cxone/sol-components/tree/main/projects/ds-components/<component-name>/src/lib/`
-
-2. **Analyze** the Angular component — read **every** file in the source directory:
-   - `*.component.ts` — inputs, outputs, logic (primary component)
-   - `*.component.html` — template structure
-   - `*.component.scss` — styles (converted to CSS custom properties)
-   - `*.module.ts` — imports/dependencies (not ported, but used to discover sub-components)
-   - `enum/*.enum.ts` — TypeScript enums
-   - `_docs/*.mdx` — **all** documentation files (there may be more than one per sub-component)
-   - `_stories/*.stories.ts` — **all** story files (there may be 3–5)
-   - `*.spec.ts` — unit tests (there may be one per sub-component)
-   - `*.types.ts` — shared types and enums
-   - `*.page.ts` — Playwright page objects (E2E test utilities)
-   - `*-group.component.ts` etc. — **sub-components** (e.g. `CheckboxGroup`, `ChipGroup`, `RadioGroup`) that live alongside the primary component
-
-3. **Generate React equivalents** in `src/components/<ComponentName>/`.
-
-   **Primary component files (always created):**
-
-   - `<ComponentName>.tsx` — React component (TypeScript, forwardRef where needed)
-   - `<ComponentName>.css` — CSS (Angular SCSS → CSS custom properties, same class names)
-   - `<ComponentName>.test.tsx` — Vitest + @testing-library/react tests
-   - `index.ts` — barrel export for all components and types in this directory
-
-   **Sub-component files (create for each companion component found in source):**
-
-   - `<SubComponentName>.tsx` — React sub-component (e.g. `CheckboxGroup.tsx`)
-   - Tests go into the primary `<ComponentName>.test.tsx` (or a separate `<SubComponentName>.test.tsx` if the spec file is large)
-
-   **Storybook stories — one file per Angular story file:**
-
-   - `_stories/<ComponentName>.stories.tsx` ← from `<component>.stories.ts`
-   - `_stories/<ComponentName>Overview.stories.tsx` ← from `overview-<component>.stories.ts`
-   - `_stories/<SubComponentName>.stories.tsx` ← from `<component>-group.stories.ts` (if exists)
-   - `_stories/<ComponentName>Forms.stories.tsx` ← from `<component>-reactive-forms.stories.ts` or `<component>-forms.stories.ts` (if exists); show React controlled-component / React Hook Form equivalents
-   - `_stories/<SubComponentName>Forms.stories.tsx` ← from `<component>-group-forms.stories.ts` (if exists)
-
-   > **Rule:** count the Angular story files and produce the same number of React story files, one-to-one.
-
-   **Docs — one file per Angular MDX doc:**
-
-   - `_docs/<ComponentName>.mdx` ← from `<component>-overview.mdx`
-   - `_docs/<ComponentName>Api.mdx` ← from `<component>-api.mdx`
-   - `_docs/<ComponentName>Migration.mdx` ← from `<component>-migrate-from-*.mdx`
-   - `_docs/<SubComponentName>.mdx` ← from `<component>-group-overview.mdx` (if exists)
-   - `_docs/<SubComponentName>Api.mdx` ← from `<component>-group-api.mdx` (if exists)
-
-   > **Rule:** count the Angular MDX files and produce the same number of React MDX files, one-to-one.
-
-   **Page objects (optional — create only when `.page.ts` exists in source):**
-
-   - `_e2e/<ComponentName>.page.ts` — Playwright page-object selectors (CSS class names stay the same as Angular)
-
-4. **Update** `src/index.ts` to export the new component.
-
-5. **Commit and push** all changes to the target GitHub repo.
+Reads every Angular source file (`.ts`, `.html`, `.scss`, `.spec.ts`, `.mdx`, `.stories.ts`, `enum/`, `.page.ts`, and any sub-components) from the local clone, generates React equivalents 1-to-1, updates `src/index.ts`, validates (build + tests), then commits and pushes. File mapping rules and step-by-step execution are defined below.
 
 ---
 
@@ -98,24 +40,18 @@ Given a component name (e.g. `checkbox`), this agent will:
 | `@Component({ selector: 'sol-foo' })` | `export const Foo: React.FC<FooProps>` |
 | `input<T>(default)` | `prop?: T` in interface |
 | `output<T>()` | `onEvent?: (val: T) => void` |
-| `@HostBinding` | inline `className`, `id`, etc. |
+| `@HostBinding` | inline `className`, `id`, etc. on root element |
 | `@ViewChild` / `viewChild()` | `useRef()` |
-| `ChangeDetectionStrategy.OnPush` | React's default (re-render on prop/state change) |
 | `ViewEncapsulation.None` | Plain CSS (no scoping) |
 | `ng-content` | `children: React.ReactNode` |
+| Named `ng-content select="[x]"` | render prop or named slot pattern |
 | `ngModel` / `ControlValueAccessor` | controlled component pattern |
-| `@Optional() @Self()` | not needed, pass as props |
-| Angular `*ngIf` | `{condition && <Element />}` |
-| Angular `*ngFor` | `{array.map(item => <Element />)}` |
-| Angular `[class.foo]="cond"` | `className={cond ? 'foo' : ''}` |
-| `(click)="handler($event)"` | `onClick={handler}` |
+| `@Optional() @Self()` | not needed — pass as props |
 | `@HostListener` | `useEffect` + `addEventListener` |
-| Angular `EventEmitter` | callback prop function |
-| `@Input() disabled = false` | `disabled?: boolean` |
+| Angular `[class.foo]="cond"` | `className={cond ? 'foo' : ''}` |
 | Angular Material components | headless React equivalents using CSS |
 | AG Grid Angular | `ag-grid-react` (`AgGridReact`) |
 | `ngx-toastr` | `react-toastify` |
-| `tippy.js` | `tippy.js` (same, framework-agnostic) |
 | `nouislider` | `nouislider` (vanilla JS, use `useEffect`) |
 
 ### File Naming
@@ -135,13 +71,7 @@ Given a component name (e.g. `checkbox`), this agent will:
 
 ### Component Name Casing
 
-- `button` → `Button`
-- `text-input` → `TextInput`
-- `radio-button` → `RadioButton`
-- `check-box` → `Checkbox`
-- `chip-group` → `ChipGroup`
-- `date-picker` → `DatePicker`
-- etc. (kebab-case → PascalCase)
+Convert `kebab-case` → `PascalCase` (e.g. `text-input` → `TextInput`, `chip-group` → `ChipGroup`).
 
 ### CSS & SOL Token Rules
 
@@ -189,6 +119,7 @@ grep "sol-my-token-name" C:/Users/anjsonawane/sol-tokens/sol-tokens-v1-with-v2-v
 4. Overview story title: `'Components/<ComponentName>/Overview'` (docs-only)
 5. Include all `argTypes` from Angular stories
 6. Convert Angular template syntax to JSX in story `render()` functions
+7. **After writing component files**, add the framework badge for the new component in `.storybook/manager-head.html` by inserting its `data-item-id` selector into the correct badge group. The `data-item-id` is the story title path lowercased with spaces replaced by hyphens (e.g. `Components/Text Input` → `components-text-input`). Add to the React 18, Next.js, Vue 3, or Svelte 5 section based on `framework`.
 
 ### Test Rules
 
@@ -406,66 +337,19 @@ File types to read:
 
 ### Step 3 — Print analysis report
 
-After reading all source files, **print the following report in full before writing any React code**. This lets the user review and confirm the migration plan before any files are created.
+After reading all source files, print a report with these fields before writing any React code, then **immediately continue to Step 3b** — do not wait for user input.
 
-```text
-ANALYSIS REPORT — <ComponentName>  [target: <framework>]
-Source : github.com/nice-cxone/sol-components → projects/ds-components/<kebabName>/src/lib/
+- **Header:** `ANALYSIS REPORT — <ComponentName> [target: <framework>]`
+- **Source files discovered:** total count across `lib/`, `_docs/`, `_stories/`
+- **Components:** each component/sub-component with its selector and whether it is primary or sub
+- **Props:** Angular input → framework prop, type, default
+- **Events:** Angular output → framework callback, payload type
+- **Angular dependencies to convert:** Angular dep → framework equivalent + notes
+- **Files to create:** Angular source → framework target (one row per file; mark modules/ng-package as N/A)
+- **Story count:** Angular story file → React file, story count per file (must match 1-to-1)
+- **Footer:** `READY TO GENERATE: <total> <framework> files`
 
-SOURCE FILES DISCOVERED
-  <count> files found across lib/, _docs/, _stories/
-
-COMPONENTS
-  | Component         | Selector               | Sub-component? |
-  | ----------------- | ---------------------- | -------------- |
-  | <ComponentName>   | sol-<kebab-name>       | No (primary)   |
-  | <SubComponent>    | sol-<kebab-sub>        | Yes            |
-
-PROPS (Inputs)
-  | Angular @Input / signal  | <framework> prop | Type            | Default  |
-  | ------------------------ | ---------------- | --------------- | -------- |
-  | showActionBar            | showActionBar    | boolean         | false    |
-  | actionBarTextContent     | actionBarText…   | string          | '…'      |
-  | ...                      | ...              | ...             | ...      |
-
-EVENTS (Outputs)
-  | Angular @Output          | <framework> callback | Payload     |
-  | ------------------------ | -------------------- | ----------- |
-  | buttonClicked            | onButtonClicked      | void        |
-  | ...                      | ...                  | ...         |
-
-ANGULAR DEPENDENCIES TO CONVERT
-  | Angular dependency       | <framework> equivalent      | Notes                     |
-  | ------------------------ | --------------------------- | ------------------------- |
-  | MatExpansionModule       | headless CSS + state        | No Material equivalent    |
-  | solTooltip directive     | tippy.js (useEffect)        | Already in dependencies   |
-  | sol-button               | <Button> from our library   | Import from components/   |
-  | _IdGenerator + NgZone    | useId() / built-in          | Framework built-in        |
-  | ResizeObserver           | useEffect + useRef          | Same native API           |
-  | ...                      | ...                         | ...                       |
-
-FILES TO CREATE
-  | Angular source                      | <framework> target                        |
-  | ----------------------------------- | ----------------------------------------- |
-  | component.ts / .html                | <ComponentName><fileExt>                  |
-  | component.scss                      | <ComponentName>.css (React/Next.js only)  |
-  | component.spec.ts                   | <ComponentName><testExt>                  |
-  | component.page.ts                   | _e2e/<ComponentName>.page.ts              |
-  | _stories/component.stories.ts       | _stories/<ComponentName><storiesExt>      |
-  | _docs/component-overview.mdx        | _docs/<ComponentName>.mdx                 |
-  | _docs/component-api.mdx             | _docs/<ComponentName>Api.mdx              |
-  | module.ts / ng-package.json         | — (N/A)                                   |
-
-STORY COUNT
-  | Angular file               | Count | <framework> file                |
-  | -------------------------- | ----- | ------------------------------- |
-  | component.stories.ts       |   2   | <ComponentName><storiesExt>     |
-  | overview-component.stories |   5   | <ComponentName>Overview<storiesExt> |
-
-READY TO GENERATE: <total> <framework> files
-```
-
-Fill every table row with actual values from the source files. Omit rows/tables with no entries. Print the report then **immediately continue to Step 3b** — do not wait for user input.
+Omit any section that has no entries.
 
 ### Step 3b — Analyze and convert
 
@@ -708,63 +592,20 @@ Only proceed to Step 9 when all phases that ran exit with code 0.
 
 #### Migration Failure Report
 
-Print this report for **every failure** in Steps 6–9, regardless of cause (file write error, TypeScript error, test failure, git error). Fill every field with actual values — do not leave placeholders.
+Print this for **every failure** in Steps 6–9. Fill all fields with actual values — no placeholders.
 
 ```text
-MIGRATION FAILED — <PascalName>  [target: <framework>]
-══════════════════════════════════════════════════════════════════
-
-  FAILURE SUMMARY
-  ──────────────────────────────────────────────────────────────
-  Step that failed  : <Step 6 – File write | Step 7 – Barrel export |
-                       Step 8 – Build | Step 8 – Tests | Step 9 – Git>
-  Command / action  : <exact command run, or "write <filename>" for file errors>
-  Framework target  : <react | nextjs | vue | svelte>
-  Component         : <PascalName> (<kebabName>)
-
-  ERROR DETAILS
-  ──────────────────────────────────────────────────────────────
-  <Paste the full, untruncated error output here.
-   TypeScript errors  → list every TS error code and file:line (e.g. TS2345 at Spinner.tsx:14).
-   Test failures      → list each failing test name and the assertion that failed.
-   Git errors         → include the full stderr output.
-   File write errors  → include the filename and OS error.>
-
-  ROOT CAUSE
-  ──────────────────────────────────────────────────────────────
-  <One or two sentences explaining WHY the failure occurred. Examples:
-   "The Angular component imports MatDialogRef which was carried over
-    into the React file unchanged — it is not a valid React import."
-   "Test asserts data-testid='spinner' but the component renders data-sol-id='spinner'."
-   "git push rejected: remote has commits not present locally — needs a pull first.">
-
-  FILES WRITTEN BEFORE FAILURE
-  ──────────────────────────────────────────────────────────────
-  <List every file that was successfully written before the failure, e.g.:
-   - src/components/Spinner/Spinner.tsx
-   - src/components/Spinner/Spinner.css
-   - src/components/Spinner/index.ts
-   (none) — if the failure happened before any file was written>
-
-  ROLLBACK RESULT
-  ──────────────────────────────────────────────────────────────
-  ✅  src/components/<PascalName>/ deleted
-  ✅  src/index.ts restored to pre-migration state
-  ✅  Working tree is clean — no partial migration committed
-  (Replace ✅ with ❌ and describe what remains if the rollback itself failed)
-
-  NEXT STEPS
-  ──────────────────────────────────────────────────────────────
-  <Specific, actionable fix instructions based on the root cause. Examples:
-   "Remove the MatDialogRef import from Spinner.tsx and replace it with
-    a useRef + onClose callback prop, then re-run /migrate-component spinner."
-   "Change data-sol-id to data-testid at Spinner.tsx:42, then re-run."
-   "Run git pull origin main to sync the branch, then re-run /migrate-component spinner.">
-
-══════════════════════════════════════════════════════════════════
+MIGRATION FAILED — <PascalName> [target: <framework>]
+  Step that failed : <Step 6 – File write | Step 7 – Barrel | Step 8 – Build | Step 8 – Tests | Step 9 – Git>
+  Command / action : <exact command or "write <filename>">
+  Error details    : <full untruncated output — every TS error code+line, every failing test name, full git stderr>
+  Root cause       : <1–2 sentences why it failed>
+  Files written    : <list each file written before failure, or "(none)">
+  Rollback result  : <✅/❌ for each: component dir deleted · index.ts restored · working tree clean>
+  Next steps       : <specific actionable fix + re-run command>
 ```
 
-Only proceed to Step 9 when **both** commands exit with code 0.
+Only proceed to Step 9 when all phases that ran exit with code 0.
 
 ### Step 9 — Commit and push
 
@@ -849,106 +690,109 @@ See Steps 1–9 above for full details on each phase.
 
 ## Post-migration verification report
 
-After committing, produce a structured report showing every Angular source file, its React counterpart, timing, and overall stats. Run this step every time a migration completes.
+After committing, print this report. Replace all example values with real data. Omit any section with no entries.
 
 ### How to produce the report
 
-1. Record `startTime` at the very beginning of Step 1 (before the clone/pull). Record `endTime` just before printing this report. Compute `duration = endTime - startTime`.
-2. List all files under `$LOCAL_SOURCE_PATH` recursively from the local clone.
-3. Glob `src/components/<PascalName>/` in the target repo and collect every generated file.
-4. For each Angular source file, determine its expected React target using the mapping rules from Step 6. Mark Angular-only files (modules, validators, ng-package) as `N/A`.
-5. Check whether each expected target file actually exists on disk.
-6. Print the report below, replacing all example values with real data.
+1. Record `startTime` at Step 1 start and `endTime` just before printing. Break down time per phase (read, write, build, test).
+2. List all files in `$LOCAL_SOURCE_PATH` recursively and all files generated under `src/components/<PascalName>/`.
+3. Map each Angular source file to its React target (Step 6 rules). Mark Angular-only files (modules, validators, ng-package) as N/A.
+4. Compute the **AI Automation Score** (see formula below).
+5. Print the report.
+
+### AI Automation Score
+
+Measures how much of the migration was completed automatically without human intervention.
+
+```text
+File coverage  = files_generated / files_expected × 100      (weight 40%)
+Build health   = 100 if clean build, else 0                  (weight 35%)
+Test health    = tests_passed / tests_total × 100            (weight 25%)
+
+AI Score = (file_coverage × 0.40) + (build_health × 0.35) + (test_health × 0.25)
+```
+
+| Score | Label |
+| --- | --- |
+| 90–100% | Fully automated ✅ |
+| 70–89% | Mostly automated — minor review needed ⚠️ |
+| Below 70% | Manual fixes required ❌ |
 
 ### Output format
 
-```text
-╔══════════════════════════════════════════════════════════════════╗
-║           MIGRATION REPORT — Checkbox                            ║
-║           Framework : nextjs    Date : 2026-04-17                ║
-╚══════════════════════════════════════════════════════════════════╝
+Print the report as markdown tables so it renders clearly in the terminal and in Storybook/GitHub.
 
-  Source  →  sol-components/projects/ds-components/checkbox/src/lib/
-  Target  →  src/components/Checkbox/
-  Commit  →  feat(checkbox): migrate Angular SOL Checkbox to nextjs
+---
 
-──────────────────────────────────────────────────────────────────
-  TIMING
-──────────────────────────────────────────────────────────────────
-  Started          : 2026-04-17  14:03:11
-  Finished         : 2026-04-17  14:11:47
-  Total duration   : 8m 36s
-    ├─ Clone / pull source repo   : 0m 12s
-    ├─ Read & analyse source files : 1m 04s
-    ├─ Write target files          : 4m 55s
-    ├─ Build (tsc)                 : 1m 18s
-    └─ Tests (vitest)              : 1m 07s
+## MIGRATION REPORT — `<PascalName>` · `<framework>` · `<date>`
 
-──────────────────────────────────────────────────────────────────
-  FILE MAPPING
-──────────────────────────────────────────────────────────────────
-  Category          Angular source file                       →  React target file
-  ─────────────     ──────────────────────────────────────    ───────────────────────────────────
-  Component    ✅   checkbox.component.ts / .html             →  Checkbox.tsx
-  Styles       ✅   checkbox.component.scss                   →  Checkbox.css
-  Sub-comp     ✅   checkbox-group.component.ts               →  CheckboxGroup.tsx
-  Styles       ✅   checkbox-group.component.scss             →  Checkbox.css          (merged)
-  Types        ✅   checkbox.types.ts                         →  Checkbox.tsx          (inline)
-  Tests        ✅   checkbox.component.spec.ts                →  Checkbox.test.tsx
-  Tests        ✅   checkbox-group.component.spec.ts          →  Checkbox.test.tsx     (merged)
-  E2E          ✅   checkbox.page.ts                          →  _e2e/Checkbox.page.ts
-  E2E          ✅   checkbox-group.page.ts                    →  _e2e/Checkbox.page.ts (merged)
-  Story        ✅   _stories/checkbox.stories.ts              →  _stories/Checkbox.stories.tsx
-  Story        ✅   _stories/checkbox-group.stories.ts        →  _stories/CheckboxGroup.stories.tsx
-  Story        ✅   _stories/checkbox-reactive-forms.stories  →  _stories/CheckboxForms.stories.tsx
-  Story        ✅   _stories/checkbox-group-forms.stories.ts  →  _stories/CheckboxGroupForms.stories.tsx
-  Story        ✅   _stories/overview-checkbox.stories.ts     →  _stories/CheckboxOverview.stories.tsx
-  Docs         ✅   _docs/checkbox-overview.mdx               →  _docs/Checkbox.mdx
-  Docs         ✅   _docs/checkbox-api.mdx                    →  _docs/CheckboxApi.mdx
-  Docs         ✅   _docs/checkbox-group-overview.mdx         →  _docs/CheckboxGroup.mdx
-  Docs         ✅   _docs/checkbox-group-api.mdx              →  _docs/CheckboxGroupApi.mdx
-  Docs         ✅   _docs/checkbox-migrate-from-breeze.mdx    →  _docs/CheckboxMigration.mdx
-  Barrel       ✅   public_api.ts                             →  index.ts
-  N/A          ⬜   checkbox.module.ts                        →  —  (Angular module, not ported)
-  N/A          ⬜   ng-package.json                           →  —  (Angular build config)
-  N/A          ⬜   checkbox-required-validator.ts            →  —  (Angular NG_VALIDATORS)
+| | |
+| --- | --- |
+| Source | `sol-components/projects/ds-components/<kebabName>/src/lib/` |
+| Target | `src/components/<PascalName>/` |
+| Commit | `feat(<kebabName>): migrate Angular SOL <PascalName> to <framework>` |
+| Duration | `<total>`  (read `<t>s` · write `<t>s` · build `<t>s` · test `<t>s`) |
 
-──────────────────────────────────────────────────────────────────
-  STORY COUNT
-──────────────────────────────────────────────────────────────────
-  Angular file                            Stories   React file                          Match
-  ─────────────────────────────────────   ───────   ─────────────────────────────────   ─────
-  checkbox.stories.ts                        1   →  Checkbox.stories.tsx (1)              ✅
-  checkbox-group.stories.ts                  2   →  CheckboxGroup.stories.tsx (2)         ✅
-  checkbox-reactive-forms.stories.ts         1   →  CheckboxForms.stories.tsx (1)         ✅
-  checkbox-group-forms.stories.ts            2   →  CheckboxGroupForms.stories.tsx (2)    ✅
-  overview-checkbox.stories.ts               9   →  CheckboxOverview.stories.tsx (9)      ✅
+---
 
-──────────────────────────────────────────────────────────────────
-  VALIDATION
-──────────────────────────────────────────────────────────────────
-  Build (npm run build)          ✅  clean — 0 errors
-  Tests (npx vitest run)         ✅  32 / 32 passed
+### AI Automation Score: `<N>%` — `<label>`
 
-──────────────────────────────────────────────────────────────────
-  SUMMARY
-──────────────────────────────────────────────────────────────────
-  Angular source files    :  26  total  (21 ported,  3 N/A,  2 Angular-only)
-  React files generated   :  16  (2 components · 1 CSS · 1 test · 5 stories · 5 docs · 1 e2e · 1 barrel)
-  Missing files           :   0
-  Coverage                : 100% ✅
-  Migration time          :  8m 36s  ⚡
-══════════════════════════════════════════════════════════════════
-```
+| Metric | Result | Score | Weight |
+| --- | --- | --- | --- |
+| File coverage | `<generated>/<expected>` files | `<N>%` | ×0.40 |
+| Build health | ✅ clean — 0 errors / ❌ `<N>` errors | `100 / 0` | ×0.35 |
+| Test health | `<passed>/<total>` passed | `<N>%` | ×0.25 |
+| **AI Score** | | **`<N>%`** | |
 
-**If any file is missing**, insert this block before the final `═══` line:
+---
 
-```text
-──────────────────────────────────────────────────────────────────
-  ACTION REQUIRED — 2 missing files
-──────────────────────────────────────────────────────────────────
-  ❌  _docs/CheckboxGroup.mdx              ← expected from checkbox-group-overview.mdx
-  ❌  _stories/CheckboxGroupForms.stories.tsx  ← expected from checkbox-group-forms.stories.ts
-```
+### File Mapping
 
-Replace all example values (file names, counts, timings, dates) with actual data from the current migration run. Omit table rows for file categories that have no entries.
+| Category | Angular Source | React Target | Status |
+| --- | --- | --- | --- |
+| Component | `checkbox.component.ts / .html` | `Checkbox.tsx` | ✅ |
+| Styles | `checkbox.component.scss` | `Checkbox.css` | ✅ |
+| Sub-comp | `checkbox-group.component.ts` | `CheckboxGroup.tsx` | ✅ |
+| Types | `checkbox.types.ts` | `Checkbox.tsx` (inline) | ✅ |
+| Tests | `checkbox.component.spec.ts` | `Checkbox.test.tsx` | ✅ |
+| E2E | `checkbox.page.ts` | `_e2e/Checkbox.page.ts` | ✅ |
+| Story | `_stories/checkbox.stories.ts` | `_stories/Checkbox.stories.tsx` | ✅ |
+| Story | `_stories/overview-checkbox.stories.ts` | `_stories/CheckboxOverview.stories.tsx` | ✅ |
+| Docs | `_docs/checkbox-overview.mdx` | `_docs/Checkbox.mdx` | ✅ |
+| Docs | `_docs/checkbox-api.mdx` | `_docs/CheckboxApi.mdx` | ✅ |
+| Barrel | `public_api.ts` | `index.ts` | ✅ |
+| N/A | `checkbox.module.ts` | — (Angular module, not ported) | ⬜ |
+| N/A | `ng-package.json` | — (Angular build config) | ⬜ |
+
+---
+
+### Story Count
+
+| Angular File | React File | Stories | Match |
+| --- | --- | --- | --- |
+| `checkbox.stories.ts` | `Checkbox.stories.tsx` | 1 | ✅ |
+| `checkbox-group.stories.ts` | `CheckboxGroup.stories.tsx` | 2 | ✅ |
+| `checkbox-reactive-forms.stories.ts` | `CheckboxForms.stories.tsx` | 1 | ✅ |
+| `overview-checkbox.stories.ts` | `CheckboxOverview.stories.tsx` | 9 | ✅ |
+
+---
+
+### Summary
+
+| Metric | Value |
+| --- | --- |
+| Angular source files | `<N>` total (`<N>` ported · `<N>` N/A · `<N>` Angular-only) |
+| React files generated | `<N>` (`<N>` components · `<N>` CSS · `<N>` tests · `<N>` stories · `<N>` docs · `<N>` e2e · 1 barrel) |
+| Missing files | `<N>` |
+| Build | ✅ clean / ❌ failed |
+| Tests | `<passed>/<total>` passed |
+| AI Score | `<N>%` — `<label>` |
+
+---
+
+> ❌ **ACTION REQUIRED — `<N>` missing files** _(omit this section if missing = 0)_
+>
+> | Expected File | Missing From |
+> | --- | --- |
+> | `_docs/CheckboxGroup.mdx` | `checkbox-group-overview.mdx` |
+> | `_stories/CheckboxGroupForms.stories.tsx` | `checkbox-group-forms.stories.ts` |

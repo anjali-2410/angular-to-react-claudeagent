@@ -10,8 +10,7 @@ import { CheckboxGroup } from '../CheckboxGroup';
 const meta: Meta<typeof Checkbox> = {
   title: 'Components/Checkbox/Overview',
   component: Checkbox,
-  parameters: {
-    controls: { disable: true },
+  parameters: { controls: { disable: true },
     actions: { disable: true },
     docs: { disable: false },
   },
