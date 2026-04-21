@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+import vue from '@vitejs/plugin-vue';
 
 // ─── Story discovery ────────────────────────────────────────────────────────
 // Mirrors the Angular SOL Storybook discovery pattern:
@@ -28,6 +29,10 @@ const config: StorybookConfig = {
   },
   docs: {
     autodocs: false, // Manual docs via .mdx files (mirrors Angular SOL setup)
+  },
+  viteFinal: (config) => {
+    config.plugins = [...(config.plugins ?? []), vue()];
+    return config;
   },
 };
 
