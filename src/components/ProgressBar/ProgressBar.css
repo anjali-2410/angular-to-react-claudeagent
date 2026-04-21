@@ -1,0 +1,14 @@
+.sol-progress-bar-determinate {
+  height: 0.5rem;
+  width: 100%;
+  min-width: 4rem;
+  border-radius: var(--sol-size-radius-sm);
+  background: var(--sol-color-background-tone4);
+  outline: var(--sol-size-border-default) solid var(--sol-color-border-status-info);
+}
+
+.sol-progress-bar-fill {
+  background: var(--sol-color-background-action-primary);
+  height: 0.5rem;
+  border-radius: var(--sol-size-radius-sm);
+}

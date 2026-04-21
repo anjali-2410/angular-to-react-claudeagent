@@ -48,3 +48,6 @@ export type { LabelProps } from './components/Label';
 
 export { Switch } from './components/Switch';
 export type { SwitchProps, SwitchSize, SwitchChangeEvent } from './components/Switch';
+
+export { ProgressBar } from './components/ProgressBar';
+export type { ProgressBarProps } from './components/ProgressBar';

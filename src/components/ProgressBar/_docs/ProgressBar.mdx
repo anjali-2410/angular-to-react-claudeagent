@@ -1,0 +1,36 @@
+import { Meta, Canvas } from '@storybook/blocks';
+import * as ProgressBarStories from '../_stories/ProgressBar.stories';
+
+<Meta title="Components/Progress Bar/Overview" />
+
+<div className="toc-right">
+  <p className="toc-heading">On this Page</p>
+  - [Guidelines](#guidelines)
+  - [Component Variants](#component-variants)
+    - [Determinate](#determinate)
+    - [Multiple Determinate](#multiple-determinate)
+</div>
+<div className="toc-left">
+## Progress Bar
+
+A determinate progress bar displays the completion status of a known task length. Use it when you can measure progress toward completion. Avoid showing indeterminate states with this component; use spinner or loading indicators for unknown durations.
+
+### Guidelines
+- Use a clear aria label to describe what is in progress (e.g., "File upload").
+- Keep progress values between 0 and 100; values above 100 are capped.
+- Place above or near the task context so users understand what is progressing.
+- Avoid over-animating; stick to simple fills for accessibility.
+
+<hr />
+### Component Variants
+**Import the ProgressBar component**: `import { ProgressBar } from '@niceltd/sol-react/progress-bar';`
+
+#### Determinate
+Render a single determinate progress bar with accessible labeling.
+<Canvas of={ProgressBarStories.ProgressBarDeterminate} withToolbar />
+
+#### Multiple Determinate
+Display two determinate progress bars side by side.
+<Canvas of={ProgressBarStories.MultipleProgressBarDeterminate} withToolbar />
+
+</div>
