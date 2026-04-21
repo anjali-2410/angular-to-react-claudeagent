@@ -1,3 +1,4 @@
+/// <reference path="../../vue-shim.d.ts" />
 import { render, fireEvent } from '@testing-library/vue';
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import TextArea from './TextArea.vue';

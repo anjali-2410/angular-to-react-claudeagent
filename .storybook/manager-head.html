@@ -1,58 +1,51 @@
 <style>
-  /* ── Common badge styles ─────────────────────────────────────────────────── */
-  div > [data-item-id='components-accordion']::after,
-  div > [data-item-id='components-action-bar']::after,
-  div > [data-item-id='components-autocomplete']::after,
-  div > [data-item-id='components-breadcrumb']::after,
-  div > [data-item-id='components-button']::after,
-  div > [data-item-id='components-calendar']::after,
-  div > [data-item-id='components-card']::after,
-  div > [data-item-id='components-checkbox']::after,
-  div > [data-item-id='components-checkbox-group']::after,
-  div > [data-item-id='components-chip']::after,
-  div > [data-item-id='components-chip-group']::after,
-  div > [data-item-id='components-date-picker']::after,
-  div > [data-item-id='components-label']::after,
-  div > [data-item-id='components-progress-bar']::after,
-  div > [data-item-id='components-switch']::after {
-    font-size: xx-small;
+  /* ── Common badge styles (flex item inside Storybook's sidebar-item div) ── */
+  [data-item-id='components-accordion']::after,
+  [data-item-id='components-action-bar']::after,
+  [data-item-id='components-autocomplete']::after,
+  [data-item-id='components-breadcrumb']::after,
+  [data-item-id='components-button']::after,
+  [data-item-id='components-calendar']::after,
+  [data-item-id='components-card']::after,
+  [data-item-id='components-checkbox']::after,
+  [data-item-id='components-checkbox-group']::after,
+  [data-item-id='components-chip']::after,
+  [data-item-id='components-chip-group']::after,
+  [data-item-id='components-date-picker']::after,
+  [data-item-id='components-label']::after,
+  [data-item-id='components-progress-bar']::after,
+  [data-item-id='components-switch']::after,
+  [data-item-id='components-textarea']::after {
+    display: inline-flex;
+    align-self: center;
+    flex-shrink: 0;
+    margin-left: auto;
+    margin-right: 6px;
+    font-size: 9px;
     font-weight: 700;
+    line-height: 1.4;
     border-radius: 1rem;
-    padding: 0 0.4rem;
-    border: 0.0625rem solid green;
+    padding: 1px 5px;
+    border: 1px solid green;
     color: green;
-    position: absolute;
-    top: 0.4375rem;
-    right: 0;
+    white-space: nowrap;
   }
 
-  div > [data-item-id='components-accordion']::after { content: 'React 18'; }
-  div > [data-item-id='components-action-bar']::after { content: 'React 18'; }
-  div > [data-item-id='components-autocomplete']::after { content: 'React 18'; }
-  div > [data-item-id='components-breadcrumb']::after { content: 'React 18'; }
-  div > [data-item-id='components-button']::after { content: 'React 18'; }
-  div > [data-item-id='components-calendar']::after { content: 'React 18'; }
-  div > [data-item-id='components-card']::after { content: 'React 18'; }
-  div > [data-item-id='components-checkbox']::after { content: 'React 18'; }
-  div > [data-item-id='components-checkbox-group']::after { content: 'React 18'; }
-  div > [data-item-id='components-chip']::after { content: 'React 18'; }
-  div > [data-item-id='components-chip-group']::after { content: 'React 18'; }
-  div > [data-item-id='components-date-picker']::after { content: 'React 18'; }
-  div > [data-item-id='components-label']::after { content: 'React 18'; }
-  div > [data-item-id='components-progress-bar']::after { content: 'React 18'; }
-  div > [data-item-id='components-switch']::after { content: 'Next.js'; }
-  div > [data-item-id='components-textarea']::after { content: 'Vue 3'; }
-
-  /* Vue 3 badge shares the same green styles — add to common block above for future Vue components */
-  div > [data-item-id='components-textarea']::after {
-    font-size: xx-small;
-    font-weight: 700;
-    border-radius: 1rem;
-    padding: 0 0.4rem;
-    border: 0.0625rem solid green;
-    color: green;
-    position: absolute;
-    top: 0.4375rem;
-    right: 0;
-  }
+  /* ── Label per component ── */
+  [data-item-id='components-accordion']::after      { content: 'React 18'; }
+  [data-item-id='components-action-bar']::after     { content: 'React 18'; }
+  [data-item-id='components-autocomplete']::after   { content: 'React 18'; }
+  [data-item-id='components-breadcrumb']::after     { content: 'React 18'; }
+  [data-item-id='components-button']::after         { content: 'React 18'; }
+  [data-item-id='components-calendar']::after       { content: 'React 18'; }
+  [data-item-id='components-card']::after           { content: 'React 18'; }
+  [data-item-id='components-checkbox']::after       { content: 'React 18'; }
+  [data-item-id='components-checkbox-group']::after { content: 'React 18'; }
+  [data-item-id='components-chip']::after           { content: 'React 18'; }
+  [data-item-id='components-chip-group']::after     { content: 'React 18'; }
+  [data-item-id='components-date-picker']::after    { content: 'React 18'; }
+  [data-item-id='components-label']::after          { content: 'React 18'; }
+  [data-item-id='components-progress-bar']::after   { content: 'React 18'; }
+  [data-item-id='components-switch']::after         { content: 'Next.js'; }
+  [data-item-id='components-textarea']::after       { content: 'Vue 3'; }
 </style>
